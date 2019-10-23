@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace VSQLExtractor.ViewModel
+namespace CubeSatCommSim.ViewModel
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
