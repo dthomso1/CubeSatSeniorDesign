@@ -4,9 +4,135 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CubeSatCommSim"
+        xmlns:view="clr-namespace:CubeSatCommSim.View"
         mc:Ignorable="d"
+        ResizeMode="CanResizeWithGrip"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="16"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="6"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+                
+        <!--Menu bar-->
+        <Menu 
+            Grid.Column="0"
+            Grid.Row="0"
+            Grid.ColumnSpan="3"
+        >
+            <MenuItem Header="File" Height="20">
+                <MenuItem Header="Placeholder 1"/>
+                <MenuItem Header="Placeholder 2"/>
+                <MenuItem Header="Placeholder 3"/>
+            </MenuItem>
+            <MenuItem Header="Start" Height="20">
+                <MenuItem Header="Placeholder 1"/>
+                <MenuItem Header="Placeholder 2"/>
+                <MenuItem Header="Placeholder 3"/>
+            </MenuItem>
+            <MenuItem Header="Stop" Height="20">
+                <MenuItem Header="Placeholder 1"/>
+                <MenuItem Header="Placeholder 2"/>
+                <MenuItem Header="Placeholder 3"/>
+            </MenuItem>
+            <MenuItem Header="View" Height="20">
+                <MenuItem Header="Placeholder 1"/>
+                <MenuItem Header="Placeholder 2"/>
+                <MenuItem Header="Placeholder 3"/>
+            </MenuItem>
+            <MenuItem Header="Help" Height="20">
+                <MenuItem Header="Placeholder 1"/>
+                <MenuItem Header="Placeholder 2"/>
+                <MenuItem Header="Placeholder 3"/>
+            </MenuItem>
+        </Menu>
+
+        <!--Monitoring area-->
+        <ScrollViewer
+            Padding="4,4,0,4"
+            Grid.Column="0" 
+            Grid.Row="1"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto"
+        >
+            <StackPanel>
+                <TextBlock Text="Monitor Placeholder 1" Margin="0,2,0,0"/>
+                <view:MonitorExample/>
+                <TextBlock Text="Monitor Placeholder 2" Margin="0,2,0,0"/>
+                <view:MonitorExample/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <GridSplitter 
+            Grid.Column="1"
+            Grid.Row="1"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+        />
+
+        <Grid Grid.Row="1" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!--Tab area-->
+            <TabControl
+                Grid.Column="0"
+                Grid.Row="0"
+            >
+                <TabItem Header="Internal">
+                    <view:InternalSimView/>
+                </TabItem>
+
+                <TabItem Header="External">
+                    <view:ExternalSimView/>
+                </TabItem>
+
+            </TabControl>
+
+            <GridSplitter 
+                Grid.Row="1"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+            />
+            
+            <!--Event Console-->
+            <ScrollViewer
+                Padding="4,4,4,0"
+                Grid.Column="0"
+                Grid.Row="2"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Visible"
+            >
+                <StackPanel 
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                >
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                    <TextBlock Text="Placeholder"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>       
         
     </Grid>
 </Window>
