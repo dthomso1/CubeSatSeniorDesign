@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\SeverityColourConverter.cs" />
     <Compile Include="Model\SimEvent.cs" />
     <Compile Include="Model\EventLog.cs" />
     <Compile Include="ViewModel\ViewModel_EventLog.cs" />
@@ -127,5 +128,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CubeSatCommSim.ViewModel;
 
 namespace CubeSatCommSim.View
 {
@@ -22,38 +23,9 @@ namespace CubeSatCommSim.View
     {
         public EventLogView()
         {
-            var viewModel = new ViewModel.ViewModel_EventLog();
-            DataContext = viewModel;
+            var vm = new ViewModel_EventLog(this);
+            this.DataContext = vm;
             InitializeComponent();
-            /*
-            TextBlock printTextBlock = new TextBlock();
-            printTextBlock.Text = "Hello, World!";
-            this.EventLogPanel.Children.Add(printTextBlock);
-            Button btn = new Button();
-            btn.Content = "Dynamic Button";
-            this.EventLogPanel.Children.Add(btn);
-            */
         }
     }
 }
-
-
-
-/*
- 
-        <TextBlock Text="{Binding Path=FirstName}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-        <TextBlock Text="Placeholder"/>
-     */

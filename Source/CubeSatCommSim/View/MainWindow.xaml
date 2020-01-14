@@ -105,15 +105,7 @@
             />
             
             <!--Event Console-->
-            <ScrollViewer
-                Padding="4,4,4,0"
-                Grid.Column="0"
-                Grid.Row="2"
-                HorizontalScrollBarVisibility="Disabled"
-                VerticalScrollBarVisibility="Visible"
-            >
-              <view:EventLogView/>
-            </ScrollViewer>
+            <view:EventLogView x:Name="EventLogUserControl" Grid.Row="3"/>
         </Grid>       
         
     </Grid>

@@ -18,21 +18,30 @@ namespace CubeSatCommSim.Model
         }
         public EventLog()
         {
-            _EventList = new ObservableCollection<SimEvent>();
-            SimEvent a = new SimEvent("Hello");
-            SimEvent b = new SimEvent("Good Bye");
-            SimEvent c = new SimEvent("World");
-            _EventList.Add(a);
-            _EventList.Add(b);
-            _EventList.Add(c);
+            EventList = new ObservableCollection<SimEvent>();
+
+            //Test data
+            SimEvent a = new SimEvent("Test message 1", EventSeverity.INFO);
+            SimEvent b = new SimEvent("Test message 2", EventSeverity.WARNING);
+            SimEvent c = new SimEvent("Test message 3", EventSeverity.ERROR);
+            SimEvent d = new SimEvent("Test message 4", EventSeverity.FATAL_ERROR);
+            EventList.Add(a);
+            EventList.Add(b);
+            EventList.Add(c);
+            EventList.Add(d);
+            EventList.Add(b);
+            EventList.Add(c);
+            EventList.Add(a);
+            EventList.Add(d);
+            EventList.Add(c);
         }
 
-        public void addLog(SimEvent log)
+        public void AddLog(SimEvent log)
         {
-            _EventList.Add(log);
+            _EventList.Add(log);            
         }
 
-        public void deleteLog()
+        public void ClearLog()
         {
             _EventList.Clear();
         }
