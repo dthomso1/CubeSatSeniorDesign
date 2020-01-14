@@ -112,25 +112,7 @@
                 HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Visible"
             >
-                <StackPanel 
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                >
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                    <TextBlock Text="Placeholder"/>
-                </StackPanel>
+              <view:EventLogView/>
             </ScrollViewer>
         </Grid>       
         
