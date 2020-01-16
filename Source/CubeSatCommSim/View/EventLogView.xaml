@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="CubeSatCommSim.View.EventLogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CubeSatCommSim.View"
+             xmlns:vm="clr-namespace:CubeSatCommSim.ViewModel"
+             xmlns:convert="clr-namespace:CubeSatCommSim.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <convert:SeverityColourConverter x:Key="EventSeverityColourConverter"/>
+    </UserControl.Resources>
+    <ListBox
+        x:Name="EventListBox"
+        ItemsSource="{Binding EventList}"
+        VerticalAlignment="Stretch"
+        HorizontalAlignment="Stretch">
+        <ListBox.ItemContainerStyle>
+            <Style TargetType="ListBoxItem">
+                <Setter Property="Height" Value="14"/>
+                <Setter Property="Padding" Value="2,0,0,0"/>
+                <Setter Property="Margin" Value="0"/>
+            </Style>
+        </ListBox.ItemContainerStyle>
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <TextBlock 
+                    Text="{Binding}"
+                    Foreground="{Binding Severity, Converter={StaticResource EventSeverityColourConverter}}"
+                    Height="14"
+                    FontSize="12"
+                    FontFamily="Courier New">
+                </TextBlock>
+            </DataTemplate>
+        </ListBox.ItemTemplate>    
+    </ListBox>
+</UserControl>

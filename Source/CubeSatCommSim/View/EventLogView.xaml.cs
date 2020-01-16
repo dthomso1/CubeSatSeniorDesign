@@ -14,17 +14,18 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CubeSatCommSim.ViewModel;
 
-namespace CubeSatCommSim
+namespace CubeSatCommSim.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for EventLogView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class EventLogView : UserControl
     {
-        public MainWindow()
+        public EventLogView()
         {
+            var vm = new ViewModel_EventLog(this);
+            this.DataContext = vm;
             InitializeComponent();
         }
-
     }
 }
