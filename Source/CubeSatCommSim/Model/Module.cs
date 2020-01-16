@@ -52,7 +52,9 @@ namespace CubeSatCommSim.Model
             BusConnections.Add(newBus);
             newBus.ConnectModule(this);
             //Log new connection
-            Console.WriteLine("Module " + Name + " has connected to bus " + newBus.Name);
+            EventLog.AddLog(new SimEvent(
+                "Module " + Name + " has connected to bus " + newBus.Name, 
+                EventSeverity.INFO));
         }
 
         public void SendCSPPacket(CSPBus bus, byte destination_addr, byte destination_port, byte source_port, byte priority, short dataSize)
@@ -69,19 +71,25 @@ namespace CubeSatCommSim.Model
             {
                 bus.EnqueuePacket(packet);
                 //Log sending packet
-                Console.WriteLine("Module " + Name + " sends packet " + packet.ToString() + " to bus " + bus.Name);
+                EventLog.AddLog(new SimEvent(
+                    "Module " + Name + " sends packet " + packet.ToString() + " to bus " + bus.Name,
+                    EventSeverity.INFO));
             }
             else
             {
                 //Log failed send
-                Console.WriteLine("Module " + Name + " failed to send packet " + packet.ToString() + " because it is not connected to bus " + bus.Name);
+                EventLog.AddLog(new SimEvent(
+                    "Module " + Name + " failed to send packet " + packet.ToString() + " because it is not connected to bus " + bus.Name,
+                    EventSeverity.ERROR));
             }
         }
 
         public void ReceiveCSPPacket(CSPPacket packet)
         {
             //Log received packet
-            Console.WriteLine("Module " + Name + " received packet: " + packet.ToString());
+            EventLog.AddLog(new SimEvent(
+                "Module " + Name + " received packet: " + packet.ToString(),
+                EventSeverity.INFO));
             //Processing?
         }
     }

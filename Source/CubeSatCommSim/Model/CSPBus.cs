@@ -49,7 +49,9 @@ namespace CubeSatCommSim.Model
             {
                 CurrentPacket = PacketQueue.Dequeue();
                 //Log new packet on bus
-                Console.WriteLine("New packet transmitting on bus " + Name + ": " + CurrentPacket.ToString());
+                EventLog.AddLog(new SimEvent(
+                    "New packet transmitting on bus " + Name + ": " + CurrentPacket.ToString(),
+                    EventSeverity.INFO));
             }
 
             if (CurrentPacket != null)
@@ -59,6 +61,7 @@ namespace CubeSatCommSim.Model
                 {
                     if (module.Address == CurrentPacket.Header[CSPPacket.DestinationAddress])
                     {
+                        destination_exists = true;
                         //Transmit part of the packet based on data rate
                         CurrentPacket.PartTransmitted = (short)Math.Min(CurrentPacket.PartTransmitted + DataRate, CurrentPacket.DataSize);
                         if(CurrentPacket.PartTransmitted >= CurrentPacket.DataSize)
@@ -67,18 +70,20 @@ namespace CubeSatCommSim.Model
                             module.ReceiveCSPPacket(CurrentPacket);
                             //Remove packet after transmission
                             CurrentPacket = null;
+                            break;
                         }
-                        destination_exists = true;
                     }
                 }
 
                 if (!destination_exists)
                 {
                     //log packet going nowhere
-                    Console.WriteLine("Packet was dropped because it has no valid destination: " + CurrentPacket.ToString());
+                    EventLog.AddLog(new SimEvent(
+                        "Packet was dropped because it has no valid destination: " + CurrentPacket.ToString(),
+                        EventSeverity.WARNING));
+                    //Take packet off the bus, since it will just go nowhere
+                    CurrentPacket = null;
                 }
-
-                //Log packet off the bus?
             }
         }
     }

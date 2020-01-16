@@ -8,16 +8,14 @@ namespace CubeSatCommSim.ViewModel
 {
     public class ViewModel_EventLog : ViewModelBase
     {
-        private EventLog md;
         private EventLogView vw;
         public ObservableCollection<SimEvent> EventList {
-            get { return md.EventList; }
+            get { return EventLog.EventList; }
         }
 
         public ViewModel_EventLog(EventLogView vw)
         {
             this.vw = vw;
-            md = new EventLog();
             vw.DataContext = EventList;
         }
     }

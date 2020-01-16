@@ -4,46 +4,19 @@ using System.Collections.ObjectModel;
 
 namespace CubeSatCommSim.Model
 {
-    public class EventLog : ModelBase
+    public static class EventLog
     {
-        private ObservableCollection<SimEvent> _EventList;
-        public ObservableCollection<SimEvent> EventList {
-            get {
-                return _EventList;
-            }
-            set {
-                _EventList = value;
-                NotifyPropertyChanged("EventList");
-            }
-        }
-        public EventLog()
-        {
-            EventList = new ObservableCollection<SimEvent>();
+        public static ObservableCollection<SimEvent> EventList { get; private set; } = new ObservableCollection<SimEvent>();
+        
 
-            //Test data
-            SimEvent a = new SimEvent("Test message 1", EventSeverity.INFO);
-            SimEvent b = new SimEvent("Test message 2", EventSeverity.WARNING);
-            SimEvent c = new SimEvent("Test message 3", EventSeverity.ERROR);
-            SimEvent d = new SimEvent("Test message 4", EventSeverity.FATAL_ERROR);
-            EventList.Add(a);
-            EventList.Add(b);
-            EventList.Add(c);
-            EventList.Add(d);
-            EventList.Add(b);
-            EventList.Add(c);
-            EventList.Add(a);
-            EventList.Add(d);
-            EventList.Add(c);
+        public static void AddLog(SimEvent log)
+        {
+            EventList.Add(log);            
         }
 
-        public void AddLog(SimEvent log)
+        public static void ClearLog()
         {
-            _EventList.Add(log);            
-        }
-
-        public void ClearLog()
-        {
-            _EventList.Clear();
+            EventList.Clear();
         }
     }
 }

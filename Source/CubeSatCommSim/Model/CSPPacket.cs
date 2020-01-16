@@ -40,7 +40,7 @@ namespace CubeSatCommSim.Model
         private short _PartTransmitted;
         public short PartTransmitted
         {
-            get { return PartTransmitted; }
+            get { return _PartTransmitted; }
             set
             {
                 _PartTransmitted = value;
