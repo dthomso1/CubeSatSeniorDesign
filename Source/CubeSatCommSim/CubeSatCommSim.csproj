@@ -55,6 +55,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\Bus.cs" />
+    <Compile Include="Model\CSPBus.cs" />
+    <Compile Include="Model\CSPPacket.cs" />
+    <Compile Include="Model\Module.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\MonitorExample.xaml.cs">
       <DependentUpon>MonitorExample.xaml</DependentUpon>
