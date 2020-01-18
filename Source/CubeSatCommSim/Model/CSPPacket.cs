@@ -1,8 +1,9 @@
 ﻿using System.Collections.Specialized;
+using System;
 
 namespace CubeSatCommSim.Model
 {
-    public class CSPPacket : ModelBase
+    public class CSPPacket : ModelBase, IComparable
     {
         public static BitVector32.Section CRC = BitVector32.CreateSection(1);                                   //0 = CRC32 Checksum
         public static BitVector32.Section RDP = BitVector32.CreateSection(1, CRC);                              //1 = RDP Header
@@ -75,6 +76,11 @@ namespace CubeSatCommSim.Model
                         + " " + Header[RDP]
                         + " " + Header[CRC]
                         + "},DataSize=" + DataSize; 
+        }
+
+        int IComparable.CompareTo(object obj)
+        {
+            return Header[Priority].CompareTo(((CSPPacket)obj).Header[Priority]);
         }
     }
 }

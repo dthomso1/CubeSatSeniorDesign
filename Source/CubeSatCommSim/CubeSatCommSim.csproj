@@ -56,10 +56,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\SeverityColourConverter.cs" />
+    <Compile Include="Model\BHeap.cs" />
     <Compile Include="Model\Bus.cs" />
     <Compile Include="Model\CSPBus.cs" />
     <Compile Include="Model\CSPPacket.cs" />
     <Compile Include="Model\Module.cs" />
+    <Compile Include="Model\PriorityQueue.cs" />
     <Compile Include="Model\SimEvent.cs" />
     <Compile Include="Model\EventLog.cs" />
     <Compile Include="ViewModel\ViewModel_EventLog.cs" />

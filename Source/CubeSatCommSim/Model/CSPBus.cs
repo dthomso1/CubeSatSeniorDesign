@@ -28,13 +28,13 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        private Queue<CSPPacket> PacketQueue;
+        private PriorityQueue<CSPPacket> PacketQueue;
 
         public CSPBus(string name, int dataRate = 1) : base(name)
         {
             CurrentPacket = null;
             DataRate = dataRate;
-            PacketQueue = new Queue<CSPPacket>();
+            PacketQueue = new PriorityQueue<CSPPacket>();
         }
 
         public void EnqueuePacket(CSPPacket pkt)

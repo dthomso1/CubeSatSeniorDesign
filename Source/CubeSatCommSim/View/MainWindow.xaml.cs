@@ -35,9 +35,8 @@ namespace CubeSatCommSim
             Module Module2 = new Module("Module2", 1);
 
             //Temporary loop of 10 steps
-            for (int step = 1; step < 11; step++)
+            for (int step = 1; step < 12; step++)
             {
-                Console.WriteLine("Step: " + step);
                 //Example simulation event sequence
                 switch (step)
                 {
@@ -52,11 +51,17 @@ namespace CubeSatCommSim
                         Module2.ConnectCSP(CSPBus1);
                         break;
                     case 6:
-                        Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 0, 1);
+                        //Module 2 has priority -- should it be higher num first instead?
+                        Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 1, 1);
                         Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 0, 1);
                         break;
                     case 7:
                         Module1.SendCSPPacket(CSPBus1, 2, 0, 0, 0, 1);
+                        break;
+                    case 9:
+                        //Module 1 has priority
+                        Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 0, 1);
+                        Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 1, 1);
                         break;
                     default:
                         break;
