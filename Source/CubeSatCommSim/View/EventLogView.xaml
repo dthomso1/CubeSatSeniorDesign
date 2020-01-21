@@ -11,28 +11,44 @@
     <UserControl.Resources>
         <convert:SeverityColourConverter x:Key="EventSeverityColourConverter"/>
     </UserControl.Resources>
-    <ListBox
-        x:Name="EventListBox"
-        ItemsSource="{Binding EventList}"
-        VerticalAlignment="Stretch"
-        HorizontalAlignment="Stretch">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="20"/>
+      </Grid.RowDefinitions>
+      <ListBox
+          Grid.Row="0"
+          x:Name="EventListBox"
+          ItemsSource="{Binding EventList}"
+          VerticalAlignment="Stretch"
+          HorizontalAlignment="Stretch">
         <ListBox.ItemContainerStyle>
-            <Style TargetType="ListBoxItem">
-                <Setter Property="Height" Value="14"/>
-                <Setter Property="Padding" Value="2,0,0,0"/>
-                <Setter Property="Margin" Value="0"/>
-            </Style>
+          <Style TargetType="ListBoxItem">
+            <Setter Property="Height" Value="14"/>
+            <Setter Property="Padding" Value="2,0,0,0"/>
+            <Setter Property="Margin" Value="0"/>
+          </Style>
         </ListBox.ItemContainerStyle>
         <ListBox.ItemTemplate>
-            <DataTemplate>
-                <TextBlock 
-                    Text="{Binding}"
-                    Foreground="{Binding Severity, Converter={StaticResource EventSeverityColourConverter}}"
-                    Height="14"
-                    FontSize="12"
-                    FontFamily="Courier New">
-                </TextBlock>
-            </DataTemplate>
-        </ListBox.ItemTemplate>    
-    </ListBox>
+          <DataTemplate>
+            <TextBlock
+                Text="{Binding}"
+                Foreground="{Binding Severity, Converter={StaticResource EventSeverityColourConverter}}"
+                Height="14"
+                FontSize="12"
+                FontFamily="Courier New">
+            </TextBlock>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <Button Grid.Column="1"
+                Content="Clear Log"
+                Command="{Binding ClearCommand}"/>
+      </Grid>
+    </Grid>
 </UserControl>
