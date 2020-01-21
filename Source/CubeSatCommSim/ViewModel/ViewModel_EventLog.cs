@@ -20,7 +20,7 @@ namespace CubeSatCommSim.ViewModel
             vw.DataContext = EventList;
         }
 
-        public void ClearLog_vm() => md.ClearLog();
+        public void ClearLog_vm() => EventLog.ClearLog();
 
         RelayCommand _clearCommand;
         public ICommand ClearCommand
