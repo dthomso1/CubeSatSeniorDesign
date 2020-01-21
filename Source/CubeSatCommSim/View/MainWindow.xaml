@@ -106,7 +106,7 @@
             />
             
             <!--Event Console-->
-            <view:EventLogView x:Name="EventLogUserControl" Grid.Row="3"/>
+            <view:EventLogView x:Name="EventLogUserControl" Grid.Row="2"/>
         </Grid>       
         
     </Grid>
