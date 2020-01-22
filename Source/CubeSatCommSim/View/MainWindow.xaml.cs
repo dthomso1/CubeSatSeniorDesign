@@ -22,54 +22,17 @@ namespace CubeSatCommSim
     /// </summary>
     public partial class MainWindow : Window
     {
+        private InternalSimController testSimController;
+
         public MainWindow()
         {
             InitializeComponent();
+            testSimController = new InternalSimController();
         }
         
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //TEMP CODE FOR TESTING
-            CSPBus CSPBus1 = new CSPBus("CSPBus1");
-            Module Module1 = new Module("Module1", 0);
-            Module Module2 = new Module("Module2", 1);
-
-            //Temporary loop of 10 steps
-            for (int step = 1; step < 12; step++)
-            {
-                //Example simulation event sequence
-                switch (step)
-                {
-                    case 1:
-                        Module1.ConnectCSP(CSPBus1);
-                        break;
-                    case 2:
-                        Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 0, 1);
-                        Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 0, 1);
-                        break;
-                    case 4:
-                        Module2.ConnectCSP(CSPBus1);
-                        break;
-                    case 6:
-                        //Module 2 has priority -- should it be higher num first instead?
-                        Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 1, 1);
-                        Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 0, 1);
-                        break;
-                    case 7:
-                        Module1.SendCSPPacket(CSPBus1, 2, 0, 0, 0, 1);
-                        break;
-                    case 9:
-                        //Module 1 has priority
-                        Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 0, 1);
-                        Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 1, 1);
-                        break;
-                    default:
-                        break;
-                }
-
-                CSPBus1.Process(step);
-            }
-            //END OF TEST CODE
+            testSimController.TestSim();
         }
     }
 }
