@@ -7,6 +7,7 @@
         xmlns:view="clr-namespace:CubeSatCommSim.View"
         mc:Ignorable="d"
         ResizeMode="CanResizeWithGrip"
+        Loaded="Window_Loaded"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
