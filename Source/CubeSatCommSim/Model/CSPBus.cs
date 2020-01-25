@@ -29,12 +29,14 @@ namespace CubeSatCommSim.Model
         }
 
         private PriorityQueue<CSPPacket> PacketQueue;
+        private Stack<CSPPacket> InterruptStack;
 
         public CSPBus(string name, int dataRate = 1) : base(name)
         {
             CurrentPacket = null;
             DataRate = dataRate;
             PacketQueue = new PriorityQueue<CSPPacket>();
+            InterruptStack = new Stack<CSPPacket>();
         }
 
         public void EnqueuePacket(CSPPacket pkt)
@@ -45,17 +47,47 @@ namespace CubeSatCommSim.Model
         public override void Process(int step)
         {
             //Transmit next packet if possible
-            if (CurrentPacket == null && PacketQueue.Count > 0)
+            if (CurrentPacket == null)
             {
-                CurrentPacket = PacketQueue.Dequeue();
-                //Log new packet on bus
-                EventLog.AddLog(new SimEvent(
-                    "New packet transmitting on bus " + Name + ": " + CurrentPacket.ToString(),
-                    EventSeverity.INFO));
+                //If interrupt stack is not empty, service any interrupted packets first
+                if(InterruptStack.Count > 0)
+                {
+                    //Check if there is still a higher priority packet in queue.
+                    //If not, return the interrupted packet to the bus.
+                    if (!(PacketQueue.Count > 0 && InterruptStack.Peek().Header[CSPPacket.Priority] > PacketQueue.Peek().Header[CSPPacket.Priority]))
+                    {
+                        CurrentPacket = InterruptStack.Pop();
+                        //Log new packet returning to bus
+                        EventLog.AddLog(new SimEvent(
+                            "Interrupted packet continuing transmission on bus " + Name + ": " + CurrentPacket.ToString(),
+                            EventSeverity.INFO));
+                    }
+                }
+                else if(PacketQueue.Count > 0)
+                {
+                    CurrentPacket = PacketQueue.Dequeue();
+                    //Log new packet on bus
+                    EventLog.AddLog(new SimEvent(
+                        "New packet transmitting on bus " + Name + ": " + CurrentPacket.ToString(),
+                        EventSeverity.INFO));
+                }
             }
 
             if (CurrentPacket != null)
             {
+                //If next packet in queue is higher priority, interrupt this packet
+                if (PacketQueue.Count > 0 && PacketQueue.Peek().Header[CSPPacket.Priority] < CurrentPacket.Header[CSPPacket.Priority])
+                {
+                    //Log interruption
+                    EventLog.AddLog(new SimEvent(
+                        "Packet " + CurrentPacket.ToString() + 
+                        " was interrupted by packet " + PacketQueue.Peek().ToString() +
+                        " on bus " + Name,
+                        EventSeverity.INFO));
+                    InterruptStack.Push(CurrentPacket);
+                    CurrentPacket = PacketQueue.Dequeue();
+                }
+
                 bool destination_exists = false;
                 foreach (Module module in ConnectedModules)
                 {
