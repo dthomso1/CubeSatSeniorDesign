@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ErrorInfo>
+	<Error>
+		<id>1</id>
+		<description>test error 1</description>
+		<isFatal>true</isFatal>
+	</Error>
+</ErrorInfo>
