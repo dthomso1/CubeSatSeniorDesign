@@ -6,7 +6,22 @@
              xmlns:local="clr-namespace:CubeSatCommSim.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="Internal simulation view here"/>
-    </Grid>
+
+  <UserControl.Resources>
+    <XmlDataProvider Source="C:\Users\David\Source\Repos\CubeSatSeniorDesign\Source\CubeSatCommSim\Data\ErrorInfo.xml"
+                     x:Key="ErrorData" />
+  </UserControl.Resources>
+  <Grid>
+    <DataGrid Name="ErrorGrid" AutoGenerateColumns="False"
+              ItemsSource="{Binding Source={StaticResource ErrorData},XPath=//Error}">
+      <DataGrid.Columns>
+        <DataGridTextColumn Binding="{Binding XPath=id}"
+                            Header="ID" />
+        <DataGridTextColumn Binding="{Binding XPath=description}"
+                            Header="Description" />
+        <DataGridTextColumn Binding="{Binding XPath=isFatal}"
+                            Header="isFatal" />
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
 </UserControl>
