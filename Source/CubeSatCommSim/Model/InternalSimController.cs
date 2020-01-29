@@ -34,7 +34,7 @@ namespace CubeSatCommSim.Model
         public void TestSim()
         {
             //Temporary loop of 10 steps
-            for (int step = 1; step < 12; step++)
+            for (int step = 1; step < 16; step++)
             {
                 //Example simulation event sequence
                 switch (step)
@@ -50,22 +50,28 @@ namespace CubeSatCommSim.Model
                         Module2.ConnectCSP(CSPBus1);
                         break;
                     case 6:
-                        //Module 2 has priority -- should it be higher num first instead?
-                        Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 1, 1);
-                        Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 0, 1);
+                        //Module 2 has priority in next step
+                        Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 1, 3);
                         break;
                     case 7:
-                        Module1.SendCSPPacket(CSPBus1, 2, 0, 0, 0, 1);
+                        //This one should interrupt the last one when its 1/3 transmitted
+                        Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 0, 1);
                         break;
-                    case 9:
+                    case 11:
                         //Module 1 has priority
                         Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 0, 1);
                         Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 1, 1);
+                        break;
+                    case 14:
+                        Module1.SendCSPPacket(CSPBus1, 2, 0, 0, 0, 1);
                         break;
                     default:
                         break;
                 }
 
+                //Modules step
+
+                //Buses step
                 CSPBus1.Process(step);
             }
             //END OF TEST CODE
