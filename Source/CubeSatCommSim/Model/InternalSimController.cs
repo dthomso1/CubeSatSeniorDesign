@@ -33,6 +33,17 @@ namespace CubeSatCommSim.Model
 
         public void TestSim()
         {
+            /*/test stuff
+            View.CSPBusEditDialog v2 = new View.CSPBusEditDialog();
+            ViewModel.CSPBusVM vm2 = new ViewModel.CSPBusVM(CSPBus1);
+            v2.DataContext = vm2;
+            v2.ShowDialog();
+
+            View.ModuleEditDialog v = new View.ModuleEditDialog();
+            ViewModel.ModuleVM vm = new ViewModel.ModuleVM(Module1);
+            v.DataContext = vm;
+            v.ShowDialog();//*/
+
             //Temporary loop of 10 steps
             for (int step = 1; step < 16; step++)
             {
@@ -40,14 +51,14 @@ namespace CubeSatCommSim.Model
                 switch (step)
                 {
                     case 1:
-                        Module1.ConnectCSP(CSPBus1);
+                        Module1.ConnectBus(CSPBus1);
                         break;
                     case 2:
                         Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 0, 1);
                         Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 0, 1);
                         break;
                     case 4:
-                        Module2.ConnectCSP(CSPBus1);
+                        Module2.ConnectBus(CSPBus1);
                         break;
                     case 6:
                         //Module 2 has priority in next step

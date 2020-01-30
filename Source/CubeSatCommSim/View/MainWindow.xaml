@@ -90,7 +90,7 @@
                 Grid.Row="0"
             >
                 <TabItem Header="Internal">
-                    <view:InternalSimView/>
+                    <view:InternalSimView x:Name="InternalSimViewPanel"/>
                 </TabItem>
 
                 <TabItem Header="External">

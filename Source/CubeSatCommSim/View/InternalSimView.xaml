@@ -6,7 +6,129 @@
              xmlns:local="clr-namespace:CubeSatCommSim.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="Internal simulation view here"/>
-    </Grid>
+
+    <ScrollViewer
+        HorizontalScrollBarVisibility="Auto"
+        VerticalScrollBarVisibility="Auto"
+    >
+        <Grid>
+            <!--Buses-->
+            <ItemsControl
+                Padding="0,136,0,0"
+                Grid.Column="0" Grid.Row="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                ItemsSource="{Binding Buses}"
+            >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas Grid.Column="1" Grid.Row="0"
+                            Background="White"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                        />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="96"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24"/>
+                            </Grid.RowDefinitions>
+                            <Button Grid.Column="0" Grid.Row="0"
+                                Content="{Binding Name}"
+                                Height="24"
+                                Width="96"                          
+                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.BusEditCommand}"
+                                CommandParameter="{Binding}"      
+                            />
+                            <Line Grid.Column="1" Grid.Row="0"
+                                Stroke="Black"
+                                StrokeThickness="2"
+                                X1="0" X2="512" 
+                                Y1="12" Y2="12"
+                            />
+                            <ItemsControl
+                                ItemsSource="{Binding ConnectedModules}" 
+                                Grid.Column="1" Grid.Row="0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"   
+                            >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Ellipse
+                                                Margin="53,0,56,0"
+                                                Fill="Black"                                             
+                                                Height="6"
+                                                Width="6"
+                                                
+                                            />
+                                            <Line
+                                                Margin="0,0,56,0"
+                                                Stroke="Black"
+                                                StrokeThickness="2"
+                                                X1="56" X2="56" 
+                                                Y1="12" Y2="-64"
+                                            />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+               
+            </ItemsControl>
+
+            <!--Modules-->
+            <ItemsControl
+                Margin="96, 16, 16, 16"            
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                ItemsSource="{Binding Modules}"
+            >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button
+                            Margin="8,0"
+                            Height="96"
+                            Width="96"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"                            
+                            Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.ModuleEditCommand}"
+                            CommandParameter="{Binding}"                        
+                        >
+                            <Button.Content>
+                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0}
+                                                      A:{1} P:{2}" Mode="OneWay">
+                                            <Binding Path="Name" Mode="OneWay"/>
+                                            <Binding Path="Address" Mode="OneWay"/>
+                                            <Binding Path="Priority" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Button.Content>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

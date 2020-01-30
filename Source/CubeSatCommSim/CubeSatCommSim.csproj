@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\ModuleConnectionConverter.cs" />
     <Compile Include="Converters\SeverityColourConverter.cs" />
     <Compile Include="Model\BHeap.cs" />
     <Compile Include="Model\Bus.cs" />
@@ -66,14 +67,28 @@
     <Compile Include="Model\SimEvent.cs" />
     <Compile Include="Model\EventLog.cs" />
     <Compile Include="ViewModel\Commands\RelayCommand.cs" />
+    <Compile Include="ViewModel\CSPBusVM.cs" />
+    <Compile Include="ViewModel\InternalSimVM.cs" />
+    <Compile Include="ViewModel\ViewModel_CSPBus.cs" />
     <Compile Include="ViewModel\ViewModel_EventLog.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="ViewModel\ModuleVM.cs" />
+    <Compile Include="View\CSPBusEditDialog.xaml.cs">
+      <DependentUpon>CSPBusEditDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\EventLogView.xaml.cs">
       <DependentUpon>EventLogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ModuleEditDialog.xaml.cs">
+      <DependentUpon>ModuleEditDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MonitorExample.xaml.cs">
       <DependentUpon>MonitorExample.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\CSPBusEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\EventLogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -104,6 +119,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\ModuleEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MonitorExample.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -29,6 +29,17 @@ namespace CubeSatCommSim.Model
             }
         }
 
+        private int _Priority;
+        public int Priority
+        {
+            get { return _Priority; }
+            set
+            {
+                _Priority = value;
+                NotifyPropertyChanged("Priority");
+            }
+        }
+
         private ObservableCollection<Bus> _BusConnections;
         public ObservableCollection<Bus> BusConnections
         {
@@ -47,13 +58,29 @@ namespace CubeSatCommSim.Model
             BusConnections = new ObservableCollection<Bus>();
         }
 
-        public void ConnectCSP(CSPBus newBus)
+        public void ConnectBus(Bus newBus)
         {
-            BusConnections.Add(newBus);
-            newBus.ConnectModule(this);
+            if (!BusConnections.Contains(newBus))
+            {
+                BusConnections.Add(newBus);
+                newBus.ConnectModule(this);
+                //Log new connection
+                EventLog.AddLog(new SimEvent(
+                    "Module " + Name + " has connected to bus " + newBus.Name, 
+                    EventSeverity.INFO));
+            }
+        }
+
+        public void DisconnectBus(Bus bus)
+        {
+            if (BusConnections.Contains(bus))
+            {
+                BusConnections.Remove(bus);
+            }
+            bus.DisconnectModule(this);
             //Log new connection
             EventLog.AddLog(new SimEvent(
-                "Module " + Name + " has connected to bus " + newBus.Name, 
+                "Module " + Name + " has disconnected from bus " + bus.Name,
                 EventSeverity.INFO));
         }
 
