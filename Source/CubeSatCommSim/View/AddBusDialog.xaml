@@ -1,13 +1,13 @@
-﻿<Window x:Class="CubeSatCommSim.View.CSPBusEditDialog"
+﻿<Window x:Class="CubeSatCommSim.View.AddBusDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CubeSatCommSim.View"
         mc:Ignorable="d"
-        SizeToContent="Height"
         Background="WhiteSmoke"
-        Title="Edit Bus" Width="300">
+        SizeToContent="Height"
+        Title="Add Bus" Width="300">
     <Grid Margin="8,2,4,2">
         <Grid.RowDefinitions>
             <RowDefinition Height="24"/>
@@ -48,20 +48,20 @@
             HorizontalAlignment="Stretch"
         >
             <Button 
-                Content="Delete" 
+                Content="Cancel" 
                 Width="64"
                 Height="24"
                 DockPanel.Dock="Left"  
                 HorizontalAlignment="Left"
-                Click="Delete_Click"
+                Click="Cancel_Click"
             />
             <Button 
-                Content="Close" 
+                Content="OK" 
                 Width="64"
                 Height="24"
                 DockPanel.Dock="Right"  
                 HorizontalAlignment="Right"
-                Click="Close_Click"
+                Click="OK_Click"
             />
         </DockPanel>
     </Grid>

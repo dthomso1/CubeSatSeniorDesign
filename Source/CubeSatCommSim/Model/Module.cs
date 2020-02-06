@@ -23,9 +23,12 @@ namespace CubeSatCommSim.Model
         {
             get { return _Address; }
             set
-            {
-                _Address = value;
-                NotifyPropertyChanged("Address");
+            {              
+                if(value >= 0 && value < 32)
+                {
+                    _Address = value;
+                    NotifyPropertyChanged("Address");
+                }
             }
         }
 
@@ -35,8 +38,11 @@ namespace CubeSatCommSim.Model
             get { return _Priority; }
             set
             {
-                _Priority = value;
-                NotifyPropertyChanged("Priority");
+                if(value >= 0 && value < 4)
+                {
+                    _Priority = value;
+                    NotifyPropertyChanged("Priority");
+                }
             }
         }
 
@@ -51,7 +57,7 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        public Module(string name, byte address)
+        public Module(string name, int address)
         {
             Name = name;
             Address = address;

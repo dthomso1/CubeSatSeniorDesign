@@ -11,7 +11,7 @@ namespace CubeSatCommSim.ViewModel
 {
     class CSPBusVM : ViewModelBase
     {
-        private CSPBus md;
+        public CSPBus md;
         
         public string Name
         {

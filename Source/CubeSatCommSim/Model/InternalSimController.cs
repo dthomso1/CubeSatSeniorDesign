@@ -13,8 +13,8 @@ namespace CubeSatCommSim.Model
         public ObservableCollection<Bus> Buses { get; }
 
         //For testing
-        private CSPBus CSPBus1;
-        private Module Module1, Module2;
+        private CSPBus CSPBus1, CSPBus2, CSPBus3, CSPBus4;
+        private Module Module1, Module2, Module3, Module4;
 
         public InternalSimController()
         {
@@ -23,12 +23,22 @@ namespace CubeSatCommSim.Model
 
             //TEMP CODE FOR TESTING
             CSPBus1 = new CSPBus("CSPBus1");
+            CSPBus2 = new CSPBus("CSPBus2");
+            CSPBus3 = new CSPBus("CSPBus3");
+            CSPBus4 = new CSPBus("CSPBus4");
             Module1 = new Module("Module1", 0);
             Module2 = new Module("Module2", 1);
+            Module3 = new Module("Module3", 2);
+            Module4 = new Module("Module4", 3);
 
             Buses.Add(CSPBus1);
+            Buses.Add(CSPBus2);
+            Buses.Add(CSPBus3);
+            Buses.Add(CSPBus4);
             Modules.Add(Module1);
             Modules.Add(Module2);
+            Modules.Add(Module3);
+            Modules.Add(Module4);
         }
 
         public void TestSim()

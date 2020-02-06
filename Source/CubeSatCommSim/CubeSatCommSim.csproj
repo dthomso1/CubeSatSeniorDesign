@@ -56,6 +56,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\ModuleConnectionConverter.cs" />
+    <Compile Include="Converters\ModuleIndexConverter.cs" />
+    <Compile Include="Converters\BusLinePositionConverter.cs" />
+    <Compile Include="Converters\BusConnectionVisibilityConverter.cs" />
+    <Compile Include="Converters\ModuleLinePositionConverter.cs" />
     <Compile Include="Converters\SeverityColourConverter.cs" />
     <Compile Include="Model\BHeap.cs" />
     <Compile Include="Model\Bus.cs" />
@@ -73,6 +77,12 @@
     <Compile Include="ViewModel\ViewModel_EventLog.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\ModuleVM.cs" />
+    <Compile Include="View\AddBusDialog.xaml.cs">
+      <DependentUpon>AddBusDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddModuleDialog.xaml.cs">
+      <DependentUpon>AddModuleDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\CSPBusEditDialog.xaml.cs">
       <DependentUpon>CSPBusEditDialog.xaml</DependentUpon>
     </Compile>
@@ -85,6 +95,14 @@
     <Compile Include="View\MonitorExample.xaml.cs">
       <DependentUpon>MonitorExample.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\AddBusDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddModuleDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\CSPBusEditDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

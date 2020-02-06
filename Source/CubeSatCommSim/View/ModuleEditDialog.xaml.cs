@@ -21,9 +21,11 @@ namespace CubeSatCommSim.View
                 BusList.DataContext = value;
             }
         }
+        private InternalSimController simController;
 
-        public ModuleEditDialog()
+        public ModuleEditDialog(InternalSimController controller)
         {
+            simController = controller;
             InitializeComponent();
         }
 
@@ -45,6 +47,22 @@ namespace CubeSatCommSim.View
             Module module = ((ModuleVM)DataContext).md;
             Bus bus = (Bus)((CheckBox)sender).DataContext;
             module.DisconnectBus(bus);
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            if(MessageBox.Show(
+                    "Are you sure you want to delete '" + ((ModuleVM)DataContext).Name + "'?",
+                    "Deleting Module",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning
+                ) == MessageBoxResult.Yes)
+            {
+                simController.Modules.Remove(((ModuleVM)DataContext).md);
+                EventLog.AddLog(new SimEvent("Module '" + ((ModuleVM)DataContext).Name + "' was deleted", EventSeverity.INFO));
+                DialogResult = true;
+                Close();
+            }
         }
     }
 }

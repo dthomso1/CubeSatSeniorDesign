@@ -4,34 +4,65 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CubeSatCommSim.View"
+             xmlns:convert="clr-namespace:CubeSatCommSim.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <convert:BusLinePositionConverter x:Key="BusLinePositionConverter"/>
+        <convert:ModuleLinePositionConverter x:Key="ModuleLinePositionConverter"/>
+        <convert:BusConnectionVisibilityConverter x:Key="BusConnectionVisibilityConverter"/>
+    </UserControl.Resources>
 
     <ScrollViewer
         HorizontalScrollBarVisibility="Auto"
         VerticalScrollBarVisibility="Auto"
     >
-        <Grid>
-            <!--Buses-->
-            <ItemsControl
-                Padding="0,136,0,0"
+        <Grid Margin="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="96"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="136"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!--Buttons-->
+            <StackPanel
                 Grid.Column="0" Grid.Row="0"
+                Orientation="Vertical"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+            >
+                <Button
+                    Margin="0,0,0,8"
+                    Content="Add Module"
+                    Height="24" Width="80"
+                    Command="{Binding AddModuleCommand}"
+                />
+                <Button
+                    Content="Add Bus"
+                    Height="24" Width="80"
+                    Command="{Binding AddBusCommand}"
+                />
+            </StackPanel>
+
+            <!--Buses-->
+            <ItemsControl x:Name="BusesControl"
+                Grid.Column="0" Grid.Row="1"
+                Grid.ColumnSpan="2"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 ItemsSource="{Binding Buses}"
             >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <Canvas Grid.Column="1" Grid.Row="0"
-                            Background="White"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                        />
+                        <StackPanel Orientation="Vertical"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
+                        <Grid Margin="0,2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="96"/>
                                 <ColumnDefinition Width="*"/>
@@ -49,37 +80,58 @@
                             <Line Grid.Column="1" Grid.Row="0"
                                 Stroke="Black"
                                 StrokeThickness="2"
-                                X1="0" X2="512" 
+                                X1="0"
                                 Y1="12" Y2="12"
-                            />
-                            <ItemsControl
-                                ItemsSource="{Binding ConnectedModules}" 
+                            >
+                                <Line.X2>
+                                    <MultiBinding 
+                                        Mode="OneWay" 
+                                        Converter="{StaticResource BusLinePositionConverter}"
+                                        ConverterParameter="112"
+                                    >
+                                        <Binding Path="" Mode="OneWay"/>
+                                        <Binding Path="DataContext" Mode="OneWay" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}"/>
+                                    </MultiBinding>
+                                </Line.X2>
+                            </Line>
+                            <ItemsControl x:Name="ModuleConnectionsControl"
+                                ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Modules}" 
                                 Grid.Column="1" Grid.Row="0"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"   
                             >
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal"/>
-                                    </ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>                                    </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Grid>
+                                            <Grid.Visibility>
+                                                <MultiBinding Mode="OneWay" Converter="{StaticResource BusConnectionVisibilityConverter}">
+                                                    <Binding Path="DataContext.ConnectedModules" Mode="OneWay" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}"/>
+                                                    <Binding Path="" Mode="OneWay"/>
+                                                </MultiBinding>
+                                            </Grid.Visibility>
                                             <Ellipse
-                                                Margin="53,0,56,0"
+                                                Margin="52,0,52,0"                                                
                                                 Fill="Black"                                             
-                                                Height="6"
-                                                Width="6"
-                                                
+                                                Height="8"
+                                                Width="8"                                                
                                             />
                                             <Line
-                                                Margin="0,0,56,0"
                                                 Stroke="Black"
                                                 StrokeThickness="2"
-                                                X1="56" X2="56" 
-                                                Y1="12" Y2="-64"
-                                            />
+                                                X1="56" X2="56"
+                                                Y1="12"
+                                            >
+                                                <Line.Y2>
+                                                    <MultiBinding Mode="OneWay" ConverterParameter="28" Converter="{StaticResource ModuleLinePositionConverter}">
+                                                        <Binding Path="ItemsSource" Mode="OneWay" ElementName="BusesControl"/>
+                                                        <Binding Path="DataContext" Mode="OneWay" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=2}"/>
+                                                    </MultiBinding>
+                                                </Line.Y2>
+                                            </Line>
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -91,8 +143,8 @@
             </ItemsControl>
 
             <!--Modules-->
-            <ItemsControl
-                Margin="96, 16, 16, 16"            
+            <ItemsControl x:Name="ModulesControl"
+                Grid.Column="1" Grid.Row="0"    
                 VerticalAlignment="Top"
                 HorizontalAlignment="Left"
                 ItemsSource="{Binding Modules}"

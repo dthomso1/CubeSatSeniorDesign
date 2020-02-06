@@ -46,6 +46,32 @@ namespace CubeSatCommSim.ViewModel
             }
         }
 
+        RelayCommand _AddModuleCommand;
+        public ICommand AddModuleCommand
+        {
+            get
+            {
+                if(_AddModuleCommand == null)
+                {
+                    _AddModuleCommand = new RelayCommand(param => this.AddModule());
+                }
+                return _AddModuleCommand;
+            }
+        }
+
+        RelayCommand _AddBusCommand;
+        public ICommand AddBusCommand
+        {
+            get
+            {
+                if (_AddBusCommand == null)
+                {
+                    _AddBusCommand = new RelayCommand(param => this.AddBus());
+                }
+                return _AddBusCommand;
+            }
+        }
+
         public InternalSimVM(InternalSimController model)
         {
             md = model;
@@ -58,13 +84,14 @@ namespace CubeSatCommSim.ViewModel
         {
             Module module = (Module)parameter;
             ModuleVM moduleVM = new ModuleVM(module);
-            ModuleEditDialog editDialog = new ModuleEditDialog();
+            ModuleEditDialog editDialog = new ModuleEditDialog(md);
             editDialog.DataContext = moduleVM;
             editDialog.BusListDataContext = Buses;
             editDialog.ShowDialog();
 
             //Forces binding of button text to update
             Modules.Refresh();
+            Buses.Refresh();
         }
 
         //Opens bus edit dialog on the clicked bus
@@ -72,11 +99,39 @@ namespace CubeSatCommSim.ViewModel
         {
             if (parameter is CSPBus)
             {
-                CSPBusEditDialog editDialog = new CSPBusEditDialog();
+                CSPBusEditDialog editDialog = new CSPBusEditDialog(md);
                 CSPBusVM busVM = new CSPBusVM((CSPBus)parameter);
                 editDialog.DataContext = busVM;
                 editDialog.ShowDialog();
                 Buses.Refresh();
+            }
+        }
+
+        public void AddModule()
+        {
+            Module m = new Module("New module", Math.Min(md.Modules.Last().Address + 1, 31));
+            ModuleVM vm = new ModuleVM(m);
+            AddModuleDialog dlg = new AddModuleDialog();
+            dlg.DataContext = vm;
+
+            if (dlg.ShowDialog() == true)
+            {
+                md.Modules.Add(m);
+                EventLog.AddLog(new SimEvent("A new module was added: '" + m.Name + "'", EventSeverity.INFO));
+            }
+        }
+
+        public void AddBus()
+        {
+            CSPBus b = new CSPBus("New bus");
+            CSPBusVM vm = new CSPBusVM(b);
+            AddBusDialog dlg = new AddBusDialog();
+            dlg.DataContext = vm;
+
+            if(dlg.ShowDialog() == true)
+            {
+                md.Buses.Add(b);
+                EventLog.AddLog(new SimEvent("A new bus was added: '" + b.Name + "'", EventSeverity.INFO));
             }
         }
     }
