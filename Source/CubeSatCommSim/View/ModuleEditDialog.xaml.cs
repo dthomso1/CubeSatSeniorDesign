@@ -58,7 +58,7 @@ namespace CubeSatCommSim.View
                     MessageBoxImage.Warning
                 ) == MessageBoxResult.Yes)
             {
-                simController.Modules.Remove(((ModuleVM)DataContext).md);
+                simController.RemoveModule(((ModuleVM)DataContext).md);
                 EventLog.AddLog(new SimEvent("Module '" + ((ModuleVM)DataContext).Name + "' was deleted", EventSeverity.INFO));
                 DialogResult = true;
                 Close();

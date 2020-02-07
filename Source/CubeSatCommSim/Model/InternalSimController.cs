@@ -41,6 +41,25 @@ namespace CubeSatCommSim.Model
             Modules.Add(Module4);
         }
 
+
+        public void RemoveModule(Module m)
+        {
+            Modules.Remove(m);
+            foreach (Bus b in m.BusConnections)
+            {
+                b.ConnectedModules.Remove(m);
+            }
+        }
+
+        public void RemoveBus(Bus b)
+        {
+            Buses.Remove(b);
+            foreach (Module m in b.ConnectedModules)
+            {
+                m.BusConnections.Remove(b);
+            }
+        }
+
         public void TestSim()
         {
             /*/test stuff

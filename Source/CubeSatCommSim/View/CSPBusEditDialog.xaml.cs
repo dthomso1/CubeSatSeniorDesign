@@ -44,7 +44,7 @@ namespace CubeSatCommSim.View
                     MessageBoxImage.Warning
                 ) == MessageBoxResult.Yes)
             {
-                simController.Buses.Remove(((CSPBusVM)DataContext).md);
+                simController.RemoveBus(((CSPBusVM)DataContext).md);
                 EventLog.AddLog(new SimEvent("Bus '" + ((CSPBusVM)DataContext).Name + "' was deleted", EventSeverity.INFO));
                 DialogResult = true;
                 Close();
