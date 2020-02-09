@@ -22,6 +22,7 @@ namespace CubeSatCommSim.View
     {
         public ExternalSimView()
         {
+            List<ErrorObject> data = new List<ErrorObject>();
             InitializeComponent();
         }
     }

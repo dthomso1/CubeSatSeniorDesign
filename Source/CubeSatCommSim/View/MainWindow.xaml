@@ -96,6 +96,10 @@
                 <TabItem Header="External">
                     <view:ExternalSimView/>
                 </TabItem>
+             
+                <TabItem Header="Errors">
+                    <view:ExternalSimView/>
+                </TabItem>
 
             </TabControl>
 
