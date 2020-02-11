@@ -4,11 +4,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace CubeSatCommSim_UnitTestss
 {
     [TestClass]
-    public class UnitTest1
+    public class BusTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void _()
         {
+
         }
     }
 }

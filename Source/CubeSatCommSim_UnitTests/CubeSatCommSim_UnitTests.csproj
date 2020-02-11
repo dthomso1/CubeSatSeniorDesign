@@ -49,8 +49,12 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="SimEvent_UnitTest.cs" />
+    <Compile Include="Bus_UnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Module_UnitTest.cs" />
+    <Compile Include="CSPPacket_UnitTest.cs" />
+    <Compile Include="BHeap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
