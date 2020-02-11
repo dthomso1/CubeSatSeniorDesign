@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CubeSatCommSim.ViewModel;
+
 
 namespace CubeSatCommSim.View
 {
@@ -22,6 +24,8 @@ namespace CubeSatCommSim.View
     {
         public ExternalSimView()
         {
+            var vm = new ErrorDataViewModel(this);
+            this.DataContext = vm;
             InitializeComponent();
         }
     }

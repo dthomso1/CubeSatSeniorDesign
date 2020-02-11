@@ -94,6 +94,9 @@
                 </TabItem>
 
                 <TabItem Header="External">
+                </TabItem>
+             
+                <TabItem Header="Errors">
                     <view:ExternalSimView/>
                 </TabItem>
 
