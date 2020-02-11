@@ -1,0 +1,17 @@
+Error Attribute Search 
+
+  XAML displays a list of errors. Each error has an id number. User selects error by asserting its checkbox. A model is created.  
+
+  C#  
+
+    - Parses for the id number of the selected error.  
+
+    - Finds the id number,  
+
+    - Gets the attributes. 
+
+    - Creates an array for error list. 
+
+    - Creates an error object. 
+
+    - Puts error object into the array.  
