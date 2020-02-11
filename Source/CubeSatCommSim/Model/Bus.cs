@@ -38,7 +38,18 @@ namespace CubeSatCommSim.Model
 
         public void ConnectModule(Module newModule)
         {
-            ConnectedModules.Add(newModule);
+            if (!ConnectedModules.Contains(newModule))
+            {
+                ConnectedModules.Add(newModule);
+            }
+        }
+
+        public void DisconnectModule(Module module)
+        {
+            if (ConnectedModules.Contains(module))
+            {
+                ConnectedModules.Remove(module);
+            }
         }
     }
 }
