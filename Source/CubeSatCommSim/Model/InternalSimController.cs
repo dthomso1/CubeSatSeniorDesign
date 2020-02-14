@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace CubeSatCommSim.Model
 {
@@ -60,6 +61,8 @@ namespace CubeSatCommSim.Model
             }
         }
 
+        
+
         public void TestSim()
         {
             /*/test stuff
@@ -113,6 +116,8 @@ namespace CubeSatCommSim.Model
 
                 //Buses step
                 CSPBus1.Process(step);
+
+                //Thread.Sleep(1);
             }
             //END OF TEST CODE
         }

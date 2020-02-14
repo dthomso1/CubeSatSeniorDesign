@@ -29,11 +29,26 @@ namespace CubeSatCommSim.Model
                 }
             }
         }
-        
-        public ErrorObject(int ID, bool IsSelected)
+
+        private string _ModuleAffected;
+        public string ModuleAffected
+        {
+            get { return _ModuleAffected; }
+            set
+            {
+                if (!value.Equals(_ModuleAffected))
+                {
+                    _ModuleAffected = value;
+                    NotifyPropertyChanged("ModuleAffected");
+                }
+            }
+        }
+
+        public ErrorObject(int ID, bool IsSelected, string module_affected)
         {
             id = ID;
-            isSelected = isSelected;
+            isSelected = IsSelected;
+            ModuleAffected = module_affected;
         }
     }
 }
