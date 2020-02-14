@@ -66,6 +66,7 @@
     <Compile Include="Model\SimEvent.cs" />
     <Compile Include="Model\EventLog.cs" />
     <Compile Include="Model\ErrorObject.cs" />
+    <Compile Include="Model\ErrorObjectList.cs" />
     <Compile Include="ViewModel\Commands\RelayCommand.cs" />
     <Compile Include="ViewModel\ViewModel_EventLog.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
