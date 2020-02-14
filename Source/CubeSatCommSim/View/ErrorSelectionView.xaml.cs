@@ -18,11 +18,11 @@ using CubeSatCommSim.ViewModel;
 namespace CubeSatCommSim.View
 {
     /// <summary>
-    /// Interaction logic for ExternalSimView.xaml
+    /// Interaction logic for ErrorSelectionView.xaml
     /// </summary>
-    public partial class ExternalSimView : UserControl
+    public partial class ErrorSelectionView : UserControl
     {
-        public ExternalSimView()
+        public ErrorSelectionView()
         {
             var vm = new ErrorDataViewModel(this);
             this.DataContext = vm;
