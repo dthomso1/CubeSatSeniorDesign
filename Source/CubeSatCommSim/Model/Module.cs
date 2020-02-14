@@ -23,9 +23,26 @@ namespace CubeSatCommSim.Model
         {
             get { return _Address; }
             set
+            {              
+                if(value >= 0 && value < 32)
+                {
+                    _Address = value;
+                    NotifyPropertyChanged("Address");
+                }
+            }
+        }
+
+        private int _Priority;
+        public int Priority
+        {
+            get { return _Priority; }
+            set
             {
-                _Address = value;
-                NotifyPropertyChanged("Address");
+                if(value >= 0 && value < 4)
+                {
+                    _Priority = value;
+                    NotifyPropertyChanged("Priority");
+                }
             }
         }
 
@@ -40,20 +57,36 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        public Module(string name, byte address)
+        public Module(string name, int address)
         {
             Name = name;
             Address = address;
             BusConnections = new ObservableCollection<Bus>();
         }
 
-        public void ConnectCSP(CSPBus newBus)
+        public void ConnectBus(Bus newBus)
         {
-            BusConnections.Add(newBus);
-            newBus.ConnectModule(this);
+            if (!BusConnections.Contains(newBus))
+            {
+                BusConnections.Add(newBus);
+                newBus.ConnectModule(this);
+                //Log new connection
+                EventLog.AddLog(new SimEvent(
+                    "Module " + Name + " has connected to bus " + newBus.Name, 
+                    EventSeverity.INFO));
+            }
+        }
+
+        public void DisconnectBus(Bus bus)
+        {
+            if (BusConnections.Contains(bus))
+            {
+                BusConnections.Remove(bus);
+            }
+            bus.DisconnectModule(this);
             //Log new connection
             EventLog.AddLog(new SimEvent(
-                "Module " + Name + " has connected to bus " + newBus.Name, 
+                "Module " + Name + " has disconnected from bus " + bus.Name,
                 EventSeverity.INFO));
         }
 

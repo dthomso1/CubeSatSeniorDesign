@@ -22,16 +22,16 @@ namespace CubeSatCommSim
     /// </summary>
     public partial class MainWindow : Window
     {
-        private InternalSimController testSimController;
-
         public MainWindow()
         {
             InitializeComponent();
-            testSimController = new InternalSimController();
         }
         
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            var testSimController = new InternalSimController();
+            var testSimControllerVM = new InternalSimVM(testSimController);
+            InternalSimViewPanel.DataContext = testSimControllerVM;
             testSimController.TestSim();
         }
     }
