@@ -15,6 +15,9 @@ namespace CubeSatCommSim_UnitTests
             CSPPacket packet = new CSPPacket(-997195777, size);
             //76546047
             //-1040187392
+
+            
+
             String expected = "Header={" + 3
                         + " " + 2
                         + " " + 8
@@ -25,7 +28,7 @@ namespace CubeSatCommSim_UnitTests
                         + " " + 1
                         + " " + 1
                         + " " + 1
-                        + "},DataSize=" + size;
+                        + "},Tx/Size=" + packet.PartTransmitted + "/" + size;
             String actual = packet.ToString();
 
             Assert.AreEqual(actual, expected);
@@ -50,12 +53,12 @@ namespace CubeSatCommSim_UnitTests
                         + " " + 1
                         + " " + 1
                         + " " + 1
-                        + "},DataSize=" + size;
+                        + "},Tx/Size=" + packet.PartTransmitted + "/" + size;
             String actual = packet.ToString();
 
             Assert.AreEqual(actual, expected);
 
         }
-
+        
     }
 }

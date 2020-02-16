@@ -49,12 +49,12 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SimEvent_UnitTest.cs" />
-    <Compile Include="Bus_UnitTest.cs" />
+    <Compile Include="Model\SimEvent_UnitTest.cs" />
+    <Compile Include="Model\Bus_UnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Module_UnitTest.cs" />
-    <Compile Include="CSPPacket_UnitTest.cs" />
-    <Compile Include="BHeap.cs" />
+    <Compile Include="Model\Module_UnitTest.cs" />
+    <Compile Include="Model\CSPPacket_UnitTest.cs" />
+    <Compile Include="Model\BHeap_UnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -65,6 +65,7 @@
       <Name>CubeSatCommSim</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
