@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         ResizeMode="CanResizeWithGrip"
         Loaded="Window_Loaded"
-        Title="MainWindow" Height="450" Width="800">
+        Title="CubeSat Communication Simulator" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -90,10 +90,13 @@
                 Grid.Row="0"
             >
                 <TabItem Header="Internal">
-                    <view:InternalSimView/>
+                    <view:InternalSimView x:Name="InternalSimViewPanel"/>
                 </TabItem>
 
                 <TabItem Header="External">
+                </TabItem>
+             
+                <TabItem Header="Errors">
                     <view:ExternalSimView/>
                 </TabItem>
 

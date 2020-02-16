@@ -1,0 +1,119 @@
+﻿<Window x:Class="CubeSatCommSim.View.ModuleEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CubeSatCommSim.View"
+        xmlns:convert="clr-namespace:CubeSatCommSim.Converters"
+        mc:Ignorable="d"
+        Background="WhiteSmoke"
+        Title="Edit Module" Height="300" Width="300">
+    <Window.Resources>
+        <convert:ModuleConnectionConverter x:Key="ModuleConnectionConverter"/>
+    </Window.Resources>
+    <Grid Margin="8,2,4,2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="28"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="96"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock 
+            Text="Name:" 
+            Grid.Row="0" Grid.Column="0"
+            Height="20"
+            VerticalAlignment="Center"
+        />
+        <TextBox 
+            Grid.Column="1" Grid.Row="0"
+            Text="{Binding Name}"
+            Height="20"
+        />
+
+        <TextBlock 
+            Text="Address:" 
+            Grid.Row="1" Grid.Column="0"
+            Height="20"
+            VerticalAlignment="Center"
+        />
+        <TextBox 
+             Grid.Row="1" Grid.Column="1"
+            Text="{Binding Address}"
+            Height="20"
+        />
+
+        <TextBlock 
+            Text="Priority:" 
+            Grid.Row="2" Grid.Column="0"
+            Height="20"
+            VerticalAlignment="Center"
+        />
+        <TextBox 
+            Grid.Row="2" Grid.Column="1" 
+            Text="{Binding Priority}"
+            Height="20"
+        />
+
+        <TextBlock 
+            Text="Bus Connections:" 
+            Grid.Row="3" Grid.Column="0"
+            Height="20"
+            VerticalAlignment="Top"
+            Margin="0,2,0,0"
+        />
+        <ListBox x:Name="BusList"
+            Grid.Row="3" Grid.Column="1"
+            Margin="0,2"
+            ItemsSource="{Binding}"
+        >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox 
+                        Content="{Binding Name}"
+                        Checked="CheckBox_Checked"
+                        Unchecked="CheckBox_Unchecked"
+                    >
+                        <CheckBox.IsChecked>
+                            <MultiBinding Mode="OneWay" Converter="{StaticResource ModuleConnectionConverter}">
+                                <Binding Path="ConnectedModules" Mode="OneWay"/>
+                                <Binding 
+                                    RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type Window}}"
+                                    Path="DataContext"
+                                    Mode="OneWay"
+                                />
+                            </MultiBinding>
+                        </CheckBox.IsChecked>
+                    </CheckBox>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <DockPanel 
+            Grid.Row="4" Grid.ColumnSpan="2"
+            HorizontalAlignment="Stretch"
+        >
+            <Button 
+                Content="Delete" 
+                Width="64"
+                Height="24"
+                DockPanel.Dock="Left"  
+                HorizontalAlignment="Left"
+                Click="Delete_Click"
+            />
+            <Button 
+                Content="Close" 
+                Width="64"
+                Height="24"
+                DockPanel.Dock="Right"  
+                HorizontalAlignment="Right"
+                Click="Close_Click"
+            />
+        </DockPanel>
+    </Grid>
+</Window>

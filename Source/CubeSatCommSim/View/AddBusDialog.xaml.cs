@@ -10,23 +10,30 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using CubeSatCommSim.ViewModel;
-
 
 namespace CubeSatCommSim.View
 {
     /// <summary>
-    /// Interaction logic for ExternalSimView.xaml
+    /// Interaction logic for AddBusDialog.xaml
     /// </summary>
-    public partial class ExternalSimView : UserControl
+    public partial class AddBusDialog : Window
     {
-        public ExternalSimView()
+        public AddBusDialog()
         {
-            var vm = new ErrorDataViewModel(this);
-            this.DataContext = vm;
             InitializeComponent();
+        }
+
+        private void OK_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+            Close();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
         }
     }
 }

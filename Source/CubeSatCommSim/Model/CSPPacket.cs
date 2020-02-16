@@ -75,12 +75,12 @@ namespace CubeSatCommSim.Model
                         + " " + Header[XTEA]
                         + " " + Header[RDP]
                         + " " + Header[CRC]
-                        + "},DataSize=" + DataSize; 
+                        + "},Tx/Size=" + PartTransmitted + "/" + DataSize; 
         }
 
         int IComparable.CompareTo(object obj)
         {
-            return Header[Priority].CompareTo(((CSPPacket)obj).Header[Priority]);
+            return this.Header[Priority].CompareTo(((CSPPacket)obj).Header[Priority]);
         }
     }
 }
