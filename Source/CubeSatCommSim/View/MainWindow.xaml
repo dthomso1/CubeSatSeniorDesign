@@ -93,11 +93,11 @@
                     <view:InternalSimView x:Name="InternalSimViewPanel"/>
                 </TabItem>
 
-                <TabItem Header="External">
-                </TabItem>
+                <!--TabItem Header="External">
+                </-->
              
                 <TabItem Header="Errors">
-                    <view:ExternalSimView/>
+                    <view:ErrorSelectionView/>
                 </TabItem>
 
             </TabControl>

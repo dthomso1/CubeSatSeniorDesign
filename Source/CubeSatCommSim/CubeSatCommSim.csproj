@@ -70,6 +70,8 @@
     <Compile Include="Model\PriorityQueue.cs" />
     <Compile Include="Model\SimEvent.cs" />
     <Compile Include="Model\EventLog.cs" />
+    <Compile Include="Model\ErrorObject.cs" />
+    <Compile Include="Model\ErrorObjectList.cs" />
     <Compile Include="ViewModel\Commands\RelayCommand.cs" />
     <Compile Include="ViewModel\CSPBusVM.cs" />
     <Compile Include="ViewModel\InternalSimVM.cs" />
@@ -112,7 +114,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ExternalSimView.xaml">
+    <Page Include="View\ErrorSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -128,8 +130,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="View\ExternalSimView.xaml.cs">
-      <DependentUpon>ExternalSimView.xaml</DependentUpon>
+    <Compile Include="View\ErrorSelectionView.xaml.cs">
+      <DependentUpon>ErrorSelectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\InternalSimView.xaml.cs">
       <DependentUpon>InternalSimView.xaml</DependentUpon>
