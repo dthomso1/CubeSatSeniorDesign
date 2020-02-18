@@ -17,7 +17,7 @@ namespace CubeSatCommSim.ViewModel
         public ErrorDataViewModel(ExternalSimView vw)
         {
             this.vw = vw;
-            vw.DataContext = ErrorList;
+            ErrorObjectList.fillErrorList();
         }
     }
 }

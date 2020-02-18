@@ -20,7 +20,7 @@ namespace CubeSatCommSim.Model
         {
             Modules = new ObservableCollection<Module>();
             Buses = new ObservableCollection<Bus>();
-
+            
             //TEMP CODE FOR TESTING
             CSPBus1 = new CSPBus("CSPBus1");
             Module1 = new Module("Module1", 0);
