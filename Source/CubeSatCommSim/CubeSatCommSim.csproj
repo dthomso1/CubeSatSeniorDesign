@@ -60,6 +60,7 @@
     <Compile Include="Converters\BusLinePositionConverter.cs" />
     <Compile Include="Converters\BusConnectionVisibilityConverter.cs" />
     <Compile Include="Converters\ModuleLinePositionConverter.cs" />
+    <Compile Include="Converters\SeverityWeightConverter.cs" />
     <Compile Include="Converters\SeverityColourConverter.cs" />
     <Compile Include="Model\BHeap.cs" />
     <Compile Include="Model\Bus.cs" />

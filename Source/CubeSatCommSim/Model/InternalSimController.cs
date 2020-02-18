@@ -31,7 +31,6 @@ namespace CubeSatCommSim.Model
             Module2 = new Module("Module2", 1);
             Module3 = new Module("Module3", 2);
             Module4 = new Module("Module4", 3);
-
             Buses.Add(CSPBus1);
             Buses.Add(CSPBus2);
             Buses.Add(CSPBus3);
@@ -61,37 +60,64 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        
-
-        public void TestSim()
+        //Looks through the error list and applies the selected errors to the matching modules
+        public void RegisterErrors()
         {
-            /*/test stuff
-            View.CSPBusEditDialog v2 = new View.CSPBusEditDialog();
-            ViewModel.CSPBusVM vm2 = new ViewModel.CSPBusVM(CSPBus1);
-            v2.DataContext = vm2;
-            v2.ShowDialog();
-
-            View.ModuleEditDialog v = new View.ModuleEditDialog();
-            ViewModel.ModuleVM vm = new ViewModel.ModuleVM(Module1);
-            v.DataContext = vm;
-            v.ShowDialog();//*/
-
-            //Temporary loop of 10 steps
-            for (int step = 1; step < 16; step++)
+            foreach(ErrorObject err in ErrorObjectList.ErrorList)
             {
+                if (err.isSelected)
+                {
+                    foreach(Module m in Modules)
+                    {
+                        if (err.ModuleAffected.Equals(m.Name))
+                        {
+                            m.RegisteredErrors.Add(err);
+                        }
+                    }
+                }
+            }
+        }
+
+        //Tells each module which errors are being applied to them
+        public void UnregisterErrors()
+        {
+            foreach (Module m in Modules)
+            {
+                m.RegisteredErrors.Clear();
+            }
+
+        }
+
+        //Runs the chosen simulation script
+        public void RunSim()
+        {
+            EventLog.AddLog(new SimEvent("Starting simulation...", EventSeverity.IMPORTANT));
+
+            //Register the errors with the modules
+            RegisterErrors();
+
+            int step = 0;
+            while (step < 100)
+            {
+                //Modules step
+                foreach (Module m in Modules)
+                {
+                    //m.Process(step);
+                }
+
                 //Example simulation event sequence
                 switch (step)
                 {
-                    case 1:
+                    /*case 1:
                         Module1.ConnectBus(CSPBus1);
-                        break;
+                        break;*/
                     case 2:
                         Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 0, 1);
                         Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 0, 1);
                         break;
-                    case 4:
+                    /*case 4:
                         Module2.ConnectBus(CSPBus1);
-                        break;
+                        break;*/
                     case 6:
                         //Module 2 has priority in next step
                         Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 1, 3);
@@ -112,14 +138,21 @@ namespace CubeSatCommSim.Model
                         break;
                 }
 
-                //Modules step
-
                 //Buses step
-                CSPBus1.Process(step);
+                foreach(Bus b in Buses)
+                {
+                   b.Process(step);
+                }
 
                 //Thread.Sleep(1);
+
+                step++;
             }
-            //END OF TEST CODE
+
+            //Unregister the errors so that they will be re-registered next time the sim runs
+            UnregisterErrors();
+
+            EventLog.AddLog(new SimEvent("Simulation complete", EventSeverity.IMPORTANT));
         }
     }
 }

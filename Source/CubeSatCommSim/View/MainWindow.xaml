@@ -16,7 +16,7 @@
             <RowDefinition Height="16"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0"/>
             <ColumnDefinition Width="6"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
@@ -32,10 +32,7 @@
                 <MenuItem Header="Placeholder 2"/>
                 <MenuItem Header="Placeholder 3"/>
             </MenuItem>
-            <MenuItem Header="Start" Height="20">
-                <MenuItem Header="Placeholder 1"/>
-                <MenuItem Header="Placeholder 2"/>
-                <MenuItem Header="Placeholder 3"/>
+            <MenuItem Header="Start" Height="20" Click="StartSimulation_Click">
             </MenuItem>
             <MenuItem Header="Stop" Height="20">
                 <MenuItem Header="Placeholder 1"/>

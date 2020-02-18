@@ -2,11 +2,13 @@
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace CubeSatCommSim.Model
 {
     public class Module : ModelBase
     {
+
         private string _Name;
         public string Name
         {
@@ -57,11 +59,23 @@ namespace CubeSatCommSim.Model
             }
         }
 
+        private ObservableCollection<ErrorObject> _RegisteredErrors;
+        public ObservableCollection<ErrorObject> RegisteredErrors
+        {
+            get { return _RegisteredErrors; }
+            private set
+            {
+                _RegisteredErrors = value;
+                NotifyPropertyChanged("RegisteredErrors");
+            }
+        }
+
         public Module(string name, int address)
         {
             Name = name;
             Address = address;
             BusConnections = new ObservableCollection<Bus>();
+            RegisteredErrors = new ObservableCollection<ErrorObject>();
         }
 
         public void ConnectBus(Bus newBus)
