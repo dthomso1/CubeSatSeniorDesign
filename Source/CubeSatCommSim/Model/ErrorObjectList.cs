@@ -17,22 +17,25 @@ namespace CubeSatCommSim.Model
             ErrorList.Add(error);
         }
 
-        public static void fillErrorList()
+        public static void FillErrorList()
         {
             //string xmlString =  System.IO.File.ReadAllText(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\ErrorInfo.xml");
-
             var filepath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data\ErrorInfo.xml");
-            var com = from p in  XElement.Load(filepath).Elements("id")
-                                 .Elements("isFatal")
-                       orderby (string)p.Element("id") ascending
-                       select new ErrorObject
-                       {
-                          id = (int)p.Element("id"),
-                          isFatal = (bool)p.Element("isFatal")
-                       };
-
-            foreach (var c in com)
-                ErrorList.Add(c);
+            XDocument doc = XDocument.Parse(filepath);
+            IEnumerable<ErrorObject> result = from c in doc.Descendants("Error")
+                                              select new ErrorObject()
+                                              {
+                                                  id = (int)c.Attribute("id"),
+                                                  isFatal = (bool)c.Attribute("isFatal")
+                                              };
+            
+            for(int i = 0; i < result.Count(); i++)
+            {
+                ErrorObject toAdd = new ErrorObject();
+                toAdd.id = result.Skip(i).First().id;
+                toAdd.isFatal = result.Skip(i).First().isFatal;
+                ErrorList.Add(toAdd);
+            }
 
         }
     }
