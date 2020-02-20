@@ -16,6 +16,19 @@ namespace CubeSatCommSim.Model
             }
         }
 
+        private bool _isFatal;
+        public bool isFatal
+        {
+            get { return _isFatal; }
+            set
+            {
+                if(_isFatal != value)
+                {
+                    _isFatal = value;
+                    NotifyPropertyChanged("isFatal");
+                }
+            }
+        }
         private bool _isSelected;
         public bool isSelected
         {
@@ -77,13 +90,11 @@ namespace CubeSatCommSim.Model
         {
 
         }
-
-        public ErrorObject(int ID, bool IsSelected, bool IsFatal, string module_affected)
+        
+        /*public ErrorObject(int ID, bool IsFatal)
         {
             id = ID;
-            isSelected = IsSelected;
-            isFatal = IsFatal;
-            ModuleAffected = module_affected;
-        }
+            isFatal = isFatal;
+        }*/
     }
 }
