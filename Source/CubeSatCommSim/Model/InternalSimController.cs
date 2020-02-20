@@ -24,21 +24,11 @@ namespace CubeSatCommSim.Model
             
             //TEMP CODE FOR TESTING
             CSPBus1 = new CSPBus("CSPBus1");
-            CSPBus2 = new CSPBus("CSPBus2");
-            CSPBus3 = new CSPBus("CSPBus3");
-            CSPBus4 = new CSPBus("CSPBus4");
-            Module1 = new Module("Module1", 0);
-            Module2 = new Module("Module2", 1);
-            Module3 = new Module("Module3", 2);
-            Module4 = new Module("Module4", 3);
+            Module1 = new Module("SASI", 0);
+            Module2 = new Module("EPS", 1);
             Buses.Add(CSPBus1);
-            Buses.Add(CSPBus2);
-            Buses.Add(CSPBus3);
-            Buses.Add(CSPBus4);
             Modules.Add(Module1);
             Modules.Add(Module2);
-            Modules.Add(Module3);
-            Modules.Add(Module4);
         }
 
 
@@ -102,22 +92,16 @@ namespace CubeSatCommSim.Model
                 //Modules step
                 foreach (Module m in Modules)
                 {
-                    //m.Process(step);
+                    m.Process(step);
                 }
 
                 //Example simulation event sequence
                 switch (step)
                 {
-                    /*case 1:
-                        Module1.ConnectBus(CSPBus1);
-                        break;*/
                     case 2:
                         Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 0, 1);
                         Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 0, 1);
                         break;
-                    /*case 4:
-                        Module2.ConnectBus(CSPBus1);
-                        break;*/
                     case 6:
                         //Module 2 has priority in next step
                         Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 1, 3);
@@ -136,7 +120,7 @@ namespace CubeSatCommSim.Model
                         break;
                     default:
                         break;
-                }
+                }//*/
 
                 //Buses step
                 foreach(Bus b in Buses)

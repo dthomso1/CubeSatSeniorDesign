@@ -8,7 +8,6 @@ namespace CubeSatCommSim.Model
 {
     public class Module : ModelBase
     {
-
         private string _Name;
         public string Name
         {
@@ -70,12 +69,54 @@ namespace CubeSatCommSim.Model
             }
         }
 
+        private bool _Crashed;
+        public bool Crashed
+        {
+            get { return _Crashed; }
+            private set
+            {
+                if(_Crashed != value)
+                {
+                    _Crashed = value;
+                    NotifyPropertyChanged("Crashed");
+                }
+            }
+        }
+
         public Module(string name, int address)
         {
+            Crashed = false;
             Name = name;
             Address = address;
             BusConnections = new ObservableCollection<Bus>();
             RegisteredErrors = new ObservableCollection<ErrorObject>();
+        }
+
+        public void Process(int step)
+        {
+            if (Crashed) return; //Module cannot do anything if it has crashed
+
+            //Check for fatal errors
+            foreach(ErrorObject err in RegisteredErrors)
+            {
+                if (err.IsFatal)
+                {
+                    Crashed = true;
+                    EventLog.AddLog(new SimEvent(
+                                            "Module " + Name +
+                                            " has ceased operation due to a fatal error: "
+                                            + err.Description,
+                                            EventSeverity.FATAL_ERROR
+                                        )
+                                    );
+                    return;
+                }
+            }
+
+            //for each command in scripted command list
+            //  if step = command step
+            //      account for errors that may affect the command
+            //      do the command    
         }
 
         public void ConnectBus(Bus newBus)
@@ -138,6 +179,11 @@ namespace CubeSatCommSim.Model
                 "Module " + Name + " received packet: " + packet.ToString(),
                 EventSeverity.INFO));
             //Processing?
+        }
+
+        public void Reset()
+        {
+            Crashed = false;
         }
     }
 }

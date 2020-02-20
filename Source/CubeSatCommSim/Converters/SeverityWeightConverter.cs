@@ -13,13 +13,13 @@ namespace CubeSatCommSim.Converters
 {
     class SeverityWeightConverter : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
 
             switch ((EventSeverity)value)
             {
                 case EventSeverity.IMPORTANT:
+                case EventSeverity.FATAL_ERROR:
                     return FontWeights.Bold;
                 default:
                     return FontWeights.Normal;

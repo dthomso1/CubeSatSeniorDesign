@@ -94,6 +94,16 @@ namespace CubeSatCommSim.Model
                     if (module.Address == CurrentPacket.Header[CSPPacket.DestinationAddress])
                     {
                         destination_exists = true;
+                        if (module.Crashed)
+                        {
+                            //log packet going to crashed module
+                            EventLog.AddLog(new SimEvent(
+                                "Packet was dropped because the destination module " + module.Name + " has crashed: " + CurrentPacket.ToString(),
+                                EventSeverity.WARNING));
+                            //Take packet off the bus, since it will just go nowhere
+                            CurrentPacket = null;
+                            break;
+                        }
                         //Transmit part of the packet based on data rate
                         CurrentPacket.PartTransmitted = (short)Math.Min(CurrentPacket.PartTransmitted + DataRate, CurrentPacket.DataSize);
                         if(CurrentPacket.PartTransmitted >= CurrentPacket.DataSize)
