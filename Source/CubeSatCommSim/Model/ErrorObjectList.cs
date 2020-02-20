@@ -19,17 +19,21 @@ namespace CubeSatCommSim.Model
         {
             //string xmlString =  System.IO.File.ReadAllText(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\ErrorInfo.xml");
 
-            var com = from p in  XElement.Load(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\ErrorInfo.xml").Elements("id")
-                                 .Elements("isFatal")
-                       orderby (string)p.Element("id") ascending
-                       select new ErrorObject
-                       {
-                          id = (int)p.Element("id"),
-                          isFatal = (bool)p.Element("isFatal")
-                       };
-
-            foreach (var c in com)
-                ErrorList.Add(c);
+            XDocument doc = XDocument.Parse(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\ErrorInfo.xml");
+            IEnumerable<ErrorObject> result = from c in doc.Descendants("Error")
+                                              select new ErrorObject()
+                                              {
+                                                  id = (int)c.Attribute("id"),
+                                                  isFatal = (bool)c.Attribute("isFatal")
+                                              };
+            
+            for(int i = 0; i < result.Count(); i++)
+            {
+                ErrorObject toAdd = new ErrorObject();
+                toAdd.id = result.Skip(i).First().id;
+                toAdd.isFatal = result.Skip(i).First().isFatal;
+                ErrorList.Add(toAdd);
+            }
 
         }
     }
