@@ -65,7 +65,7 @@ namespace CubeSatCommSim.Model
         {
             foreach(ErrorObject err in ErrorObjectList.ErrorList)
             {
-                if (err.isSelected)
+                if (err.IsActive)
                 {
                     foreach(Module m in Modules)
                     {

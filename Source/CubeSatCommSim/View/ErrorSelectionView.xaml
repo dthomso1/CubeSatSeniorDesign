@@ -7,26 +7,28 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <DataGrid Name="ErrorGrid" AutoGenerateColumns="False"
+        <DataGrid Name="ErrorGrid" 
+                  AutoGenerateColumns="False"
                   ItemsSource="{Binding ErrorList}">
-
-
 
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn
-                    Header=""
-                    Binding="{Binding isSelected}"
+                    Header="Active"
+                    Binding="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 />
-                <!-- Binding="{Binding ErrorsSelected}" -->
 
-                <DataGridTextColumn Binding="{Binding id}"
-                                Header="ID" />
-                <DataGridTextColumn Binding="{Binding description}"
-                                Header="Description" />
-                <DataGridTextColumn Binding="{Binding isFatal}"
-                                Header="isFatal" />
-                <DataGridTextColumn Binding="{Binding ModuleAffected}"
-                                Header="Module Affected" />
+                <DataGridTextColumn Binding="{Binding id, Mode=OneWay}"
+                                    Header="ID" 
+                                    IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding ModuleAffected, Mode=OneWay}"
+                                    Header="Module Affected"
+                                    IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding IsFatal, Mode=OneWay}"
+                                    Header="Fatal" 
+                                    IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding Description, Mode=OneWay}"
+                                    Header="Description" 
+                                    IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

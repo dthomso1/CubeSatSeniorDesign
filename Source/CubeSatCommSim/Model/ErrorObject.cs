@@ -16,44 +16,29 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        private bool _isFatal;
-        public bool isFatal
+        private bool _IsFatal;
+        public bool IsFatal
         {
-            get { return _isFatal; }
+            get { return _IsFatal; }
             set
             {
-                if(_isFatal != value)
+                if(_IsFatal != value)
                 {
-                    _isFatal = value;
-                    NotifyPropertyChanged("isFatal");
+                    _IsFatal = value;
+                    NotifyPropertyChanged("IsFatal");
                 }
             }
         }
-        private bool _isSelected;
-        public bool isSelected
+        private bool _IsActive;
+        public bool IsActive
         {
-            get { return _isSelected; }
+            get { return _IsActive; }
             set
             {
-                if (_isSelected != value)
+                if (_IsActive != value)
                 {
-                    _isSelected = value;
-                    NotifyPropertyChanged("isSelected");
-                }
-            }
-        }
-        
-
-        private bool _isFatal;
-        public bool isFatal
-        {
-            get { return _isFatal; }
-            set
-            {
-                if (_isFatal != value)
-                {
-                    _isFatal = value;
-                    NotifyPropertyChanged("isFatal");
+                    _IsActive = value;
+                    NotifyPropertyChanged("IsActive");
                 }
             }
         }
@@ -72,29 +57,20 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        private string _description;
-        public string description
+        private string _Description;
+        public string Description
         {
-            get { return _description; }
+            get { return _Description; }
             set
             {
-                if (!value.Equals(description))
+                if (!value.Equals(Description))
                 {
-                    _description = value;
-                    NotifyPropertyChanged("description");
+                    _Description = value;
+                    NotifyPropertyChanged("Description");
                 }
             }
         }
 
-        public ErrorObject()
-        {
-
-        }
-        
-        /*public ErrorObject(int ID, bool IsFatal)
-        {
-            id = ID;
-            isFatal = isFatal;
-        }*/
+        public ErrorObject() { }
     }
 }
