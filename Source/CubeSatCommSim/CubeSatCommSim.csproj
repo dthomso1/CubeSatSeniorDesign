@@ -69,6 +69,7 @@
     <Compile Include="Model\InternalSimController.cs" />
     <Compile Include="Model\Module.cs" />
     <Compile Include="Model\PriorityQueue.cs" />
+    <Compile Include="Model\ScriptedEvent.cs" />
     <Compile Include="Model\SimEvent.cs" />
     <Compile Include="Model\EventLog.cs" />
     <Compile Include="Model\ErrorObject.cs" />

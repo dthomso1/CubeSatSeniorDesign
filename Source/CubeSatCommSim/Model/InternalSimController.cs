@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.IO;
+using System.Windows;
+using Microsoft.Win32;
 
 namespace CubeSatCommSim.Model
 {
@@ -14,8 +17,8 @@ namespace CubeSatCommSim.Model
         public ObservableCollection<Bus> Buses { get; }
 
         //For testing
-        private CSPBus CSPBus1, CSPBus2, CSPBus3, CSPBus4;
-        private Module Module1, Module2, Module3, Module4;
+        private CSPBus CSPBus1;
+        private Module Module1, Module2;
 
         public InternalSimController()
         {
@@ -75,12 +78,68 @@ namespace CubeSatCommSim.Model
             {
                 m.RegisteredErrors.Clear();
             }
+        }
 
+        //Reads a script file to determine the sequence of events that will take place in the simulation
+        private List<ScriptedEvent> LoadScript()
+        {
+            var scriptedEventList = new List<ScriptedEvent>();
+            var dlg = new OpenFileDialog();
+            dlg.Title = "Open Simulation Script";
+            dlg.DefaultExt = ".csv";
+            dlg.Filter = "CSV files (.csv)|*.csv";
+            dlg.CheckFileExists = true;
+            if(dlg.ShowDialog() == true)
+            {
+                //Open script file
+                if (File.Exists(dlg.FileName))
+                {
+                    using(FileStream fs = new FileStream(dlg.FileName, FileMode.Open))
+                    {
+                        using (StreamReader sr = new StreamReader(fs))
+                        {
+                            //Read each line as an event in the simulation
+                            while (!sr.EndOfStream)
+                            {
+                                try
+                                {
+                                    var line = sr.ReadLine();
+                                    var values = line.Split(',');
+                                    var scriptEvent = new ScriptedEvent();
+
+                                    scriptEvent.Time = int.Parse(values[0]);
+                                    scriptEvent.Module = values[1];
+                                    scriptEvent.Command = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), values[2].ToUpper()));
+                                    string[] cmdParams = new string[values.Length - 3];
+                                    for (int i = 3; i < values.Length; i++)
+                                    {
+                                        scriptEvent.Parameters.Add(values[i]);
+                                    }
+
+                                    scriptedEventList.Add(scriptEvent);
+                                }
+                                catch(Exception ex)
+                                {
+                                    MessageBox.Show(
+                                        "An error occured while trying to read the script file: " + ex.Message,
+                                        "Error Reading File",
+                                        MessageBoxButton.OK,
+                                        MessageBoxImage.Error
+                                    );
+                                }
+                            }
+                        }
+                    }                    
+                }
+            }
+            return scriptedEventList;
         }
 
         //Runs the chosen simulation script
         public void RunSim()
         {
+            var eventList = LoadScript();
+
             EventLog.AddLog(new SimEvent("Starting simulation...", EventSeverity.IMPORTANT));
 
             //Register the errors with the modules
