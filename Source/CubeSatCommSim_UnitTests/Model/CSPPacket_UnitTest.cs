@@ -59,6 +59,33 @@ namespace CubeSatCommSim_UnitTests
             Assert.AreEqual(actual, expected);
 
         }
-        
+
+        [TestMethod]
+        public void CSPPacket_CompareTo() {
+            //priority = 1
+            CSPPacket packet1 = new CSPPacket(2147483647, 10000);
+            //priority = 3
+            CSPPacket packet2 = new CSPPacket(-1, 10000);
+            //priority = 3
+            CSPPacket packet3 = new CSPPacket(-1073741824, 10000);
+
+            int actual;
+            //Test - lower
+            actual = packet1.CompareTo(packet2);
+            Assert.AreEqual(actual, -1);
+            
+            //Test - Higher
+            actual = packet2.CompareTo(packet1);
+            Assert.AreEqual(actual, 1);
+
+            //Test - Equal 3to2
+            actual = packet3.CompareTo(packet2);
+            Assert.AreEqual(actual, 0);
+
+            //Test - Equal 2to3
+            actual = packet2.CompareTo(packet3);
+            Assert.AreEqual(actual, 0);
+        }
+
     }
 }

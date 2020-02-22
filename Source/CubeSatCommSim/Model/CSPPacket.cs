@@ -78,7 +78,7 @@ namespace CubeSatCommSim.Model
                         + "},Tx/Size=" + PartTransmitted + "/" + DataSize; 
         }
 
-        int IComparable.CompareTo(object obj)
+        public int CompareTo(object obj)
         {
             return this.Header[Priority].CompareTo(((CSPPacket)obj).Header[Priority]);
         }

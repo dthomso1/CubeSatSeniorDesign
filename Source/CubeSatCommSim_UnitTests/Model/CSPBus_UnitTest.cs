@@ -2,14 +2,15 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CubeSatCommSim.Model;
 
-namespace CubeSatCommSim_UnitTests
+namespace CubeSatCommSim_UnitTests.Model
 {
     [TestClass]
-    public class BHeap_UnitTest
+    public class CSPBus_UnitTest
     {
         [TestMethod]
         public void TestMethod1()
         {
+
         }
     }
 }

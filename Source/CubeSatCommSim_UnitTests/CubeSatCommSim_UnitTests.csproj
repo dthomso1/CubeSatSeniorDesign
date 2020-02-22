@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="Model\SimEvent_UnitTest.cs" />
     <Compile Include="Model\Bus_UnitTest.cs" />
+    <Compile Include="Model\CSPBus_UnitTest.cs" />
+    <Compile Include="Model\PriorityQueue_UnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Module_UnitTest.cs" />
     <Compile Include="Model\CSPPacket_UnitTest.cs" />

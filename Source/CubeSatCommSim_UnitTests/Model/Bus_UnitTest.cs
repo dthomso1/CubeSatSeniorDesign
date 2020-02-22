@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using CubeSatCommSim.Model;
 
 namespace CubeSatCommSim_UnitTestss
 {
@@ -7,9 +8,13 @@ namespace CubeSatCommSim_UnitTestss
     public class Bus_UnitTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TestSetGetName()
         {
-
+            Bus bus1 = new CSPBus("bus1");
+            
+            bus1.Name = "bus2";
+            String actual = bus1.Name;
+            Assert.AreEqual(actual, "bus2");
         }
     }
 }
