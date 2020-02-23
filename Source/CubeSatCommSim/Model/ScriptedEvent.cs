@@ -43,6 +43,10 @@ namespace CubeSatCommSim.Model
             }
         }
 
+        //Paramaters:
+        //[0] -> target module
+        //[1] -> target bus
+        //others -> anything else
         private List<string> _Parameters;
         public List<string> Parameters
         {

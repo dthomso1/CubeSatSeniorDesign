@@ -35,11 +35,18 @@ namespace CubeSatCommSim
             IntSimController = new InternalSimController();
             IntSimControllerVM = new InternalSimVM(IntSimController);
             InternalSimViewPanel.DataContext = IntSimControllerVM;
+            MenuBarStart.DataContext = IntSimControllerVM;
+            MenuBarStop.DataContext = IntSimControllerVM;
         }
 
         private void StartSimulation_Click(object sender, RoutedEventArgs e)
         {
             IntSimController.RunSim();
+        }
+
+        private void StopSimulation_Click(object sender, RoutedEventArgs e)
+        {
+            IntSimController.StopSim();
         }
     }
 }

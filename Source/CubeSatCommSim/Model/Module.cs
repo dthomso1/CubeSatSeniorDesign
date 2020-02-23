@@ -46,6 +46,17 @@ namespace CubeSatCommSim.Model
                 }
             }
         }
+        
+        private bool _Idle;
+        public bool Idle
+        {
+            get { return _Idle; }
+            set
+            {
+                _Idle = value;
+                NotifyPropertyChanged("Idle");
+            }
+        }
 
         private ObservableCollection<Bus> _BusConnections;
         public ObservableCollection<Bus> BusConnections
@@ -85,6 +96,7 @@ namespace CubeSatCommSim.Model
 
         public Module(string name, int address)
         {
+            Idle = true;
             Crashed = false;
             Name = name;
             Address = address;
@@ -99,24 +111,25 @@ namespace CubeSatCommSim.Model
             //Check for fatal errors
             foreach(ErrorObject err in RegisteredErrors)
             {
-                if (err.IsFatal)
+                if (err.IsActive)
                 {
-                    Crashed = true;
-                    EventLog.AddLog(new SimEvent(
-                                            "Module " + Name +
-                                            " has ceased operation due to a fatal error: "
-                                            + err.Description,
-                                            EventSeverity.FATAL_ERROR
-                                        )
-                                    );
-                    return;
+                    if (err.IsFatal)
+                    {
+                        Crashed = true;
+                        EventLog.AddLog(new SimEvent(
+                                                "Module " + Name +
+                                                " has ceased operation due to a fatal error: "
+                                                + err.Description,
+                                                EventSeverity.FATAL_ERROR
+                                            )
+                                        );
+                        return;
+                    }
                 }
             }
 
-            //for each command in scripted command list
-            //  if step = command step
-            //      account for errors that may affect the command
-            //      do the command    
+            //Modules are not really doing any processing in this version of the program, so Idle is always true
+            Idle = true;
         }
 
         public void ConnectBus(Bus newBus)
@@ -154,8 +167,15 @@ namespace CubeSatCommSim.Model
             packetHeader[CSPPacket.DestinationPort] = destination_port;
             packetHeader[CSPPacket.Priority] = priority;
             CSPPacket packet = new CSPPacket(packetHeader, dataSize);
-
-            if (BusConnections.Contains(bus))
+            
+            if(bus == null)
+            {
+                //Log failed send
+                EventLog.AddLog(new SimEvent(
+                    "Module " + Name + " failed to send a packet because the target bus does not exist (check that the bus in your script exists in the simulation)",
+                    EventSeverity.ERROR));
+            }
+            else if (BusConnections.Contains(bus))
             {
                 bus.EnqueuePacket(packet);
                 //Log sending packet

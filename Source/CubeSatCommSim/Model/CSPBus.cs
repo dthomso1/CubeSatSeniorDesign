@@ -28,6 +28,7 @@ namespace CubeSatCommSim.Model
             }
         }
 
+
         private PriorityQueue<CSPPacket> PacketQueue;
         private Stack<CSPPacket> InterruptStack;
 
@@ -127,6 +128,8 @@ namespace CubeSatCommSim.Model
                     CurrentPacket = null;
                 }
             }
+
+            Idle = (CurrentPacket == null && PacketQueue.Count == 0);
         }
     }
 }

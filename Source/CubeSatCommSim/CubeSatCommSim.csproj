@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BoolNOTConverter.cs" />
     <Compile Include="Converters\ModuleConnectionConverter.cs" />
     <Compile Include="Converters\ModuleIndexConverter.cs" />
     <Compile Include="Converters\BusLinePositionConverter.cs" />
