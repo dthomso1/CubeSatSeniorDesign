@@ -6,28 +6,30 @@
              xmlns:local="clr-namespace:CubeSatCommSim.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-  <UserControl.Resources>
-    <XmlDataProvider Source="C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\ErrorInfo.xml"
-                     x:Key="ErrorData" />
-  </UserControl.Resources>
-  <Grid>
-    <DataGrid Name="ErrorGrid" AutoGenerateColumns="False"
-              ItemsSource="{Binding Source={StaticResource ErrorData},XPath=//Error}">
+    <Grid>
+        <DataGrid Name="ErrorGrid" 
+                  AutoGenerateColumns="False"
+                  ItemsSource="{Binding ErrorList}">
 
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn
+                    Header="Active"
+                    Binding="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                />
 
-
-      <DataGrid.Columns>
-        <DataGridCheckBoxColumn
-           Header=""/>
-        <!-- Binding="{Binding ErrorsSelected}" -->
-
-        <DataGridTextColumn Binding="{Binding XPath=id}"
-                            Header="ID" />
-        <DataGridTextColumn Binding="{Binding XPath=description}"
-                            Header="Description" />
-        <DataGridTextColumn Binding="{Binding XPath=isFatal}"
-                            Header="isFatal" />
-      </DataGrid.Columns>
-    </DataGrid>
-  </Grid>
+                <DataGridTextColumn Binding="{Binding id, Mode=OneWay}"
+                                    Header="ID" 
+                                    IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding ModuleAffected, Mode=OneWay}"
+                                    Header="Module Affected"
+                                    IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding IsFatal, Mode=OneWay}"
+                                    Header="Fatal" 
+                                    IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding Description, Mode=OneWay}"
+                                    Header="Description" 
+                                    IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </UserControl>

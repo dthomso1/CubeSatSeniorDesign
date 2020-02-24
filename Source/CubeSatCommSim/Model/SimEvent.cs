@@ -7,7 +7,8 @@ namespace CubeSatCommSim.Model
         INFO,
         WARNING,
         ERROR,
-        FATAL_ERROR
+        FATAL_ERROR,
+        IMPORTANT
     }
 
     public class SimEvent : ModelBase

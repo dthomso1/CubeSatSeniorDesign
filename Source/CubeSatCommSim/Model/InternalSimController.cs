@@ -4,6 +4,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using System.IO;
+using System.Windows;
+using Microsoft.Win32;
 
 namespace CubeSatCommSim.Model
 {
@@ -12,36 +16,40 @@ namespace CubeSatCommSim.Model
         public ObservableCollection<Module> Modules { get; }
         public ObservableCollection<Bus> Buses { get; }
 
+        private bool _SimulationRunning;
+        public bool SimulationRunning
+        {
+            get { return _SimulationRunning; }
+            set
+            {
+                _SimulationRunning = value;
+                NotifyPropertyChanged("SimulationRunning");
+            }
+        }
+
+        private List<ScriptedEvent> eventList;
+        private bool abort;
+
         //For testing
-        private CSPBus CSPBus1, CSPBus2, CSPBus3, CSPBus4;
-        private Module Module1, Module2, Module3, Module4;
+        private CSPBus CSPBus1;
+        private Module Module1, Module2;
 
         public InternalSimController()
         {
+            eventList = new List<ScriptedEvent>();
+            abort = false;
             Modules = new ObservableCollection<Module>();
             Buses = new ObservableCollection<Bus>();
-
+            
             //TEMP CODE FOR TESTING
-            CSPBus1 = new CSPBus("CSPBus1");
-            CSPBus2 = new CSPBus("CSPBus2");
-            CSPBus3 = new CSPBus("CSPBus3");
-            CSPBus4 = new CSPBus("CSPBus4");
-            Module1 = new Module("Module1", 0);
-            Module2 = new Module("Module2", 1);
-            Module3 = new Module("Module3", 2);
-            Module4 = new Module("Module4", 3);
-
+            CSPBus1 = new CSPBus("CANBUS", 100);
+            Module1 = new Module("OBC", 0);
+            Module2 = new Module("SASI", 1);
             Buses.Add(CSPBus1);
-            Buses.Add(CSPBus2);
-            Buses.Add(CSPBus3);
-            Buses.Add(CSPBus4);
             Modules.Add(Module1);
             Modules.Add(Module2);
-            Modules.Add(Module3);
-            Modules.Add(Module4);
         }
-
-
+        
         public void RemoveModule(Module m)
         {
             Modules.Remove(m);
@@ -60,61 +68,220 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        public void TestSim()
+        //Looks through the error list and applies the selected errors to the matching modules
+        public void RegisterErrors()
         {
-            /*/test stuff
-            View.CSPBusEditDialog v2 = new View.CSPBusEditDialog();
-            ViewModel.CSPBusVM vm2 = new ViewModel.CSPBusVM(CSPBus1);
-            v2.DataContext = vm2;
-            v2.ShowDialog();
-
-            View.ModuleEditDialog v = new View.ModuleEditDialog();
-            ViewModel.ModuleVM vm = new ViewModel.ModuleVM(Module1);
-            v.DataContext = vm;
-            v.ShowDialog();//*/
-
-            //Temporary loop of 10 steps
-            for (int step = 1; step < 16; step++)
+            foreach(ErrorObject err in ErrorObjectList.ErrorList)
             {
-                //Example simulation event sequence
-                switch (step)
+                foreach(Module m in Modules)
                 {
-                    case 1:
-                        Module1.ConnectBus(CSPBus1);
-                        break;
-                    case 2:
-                        Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 0, 1);
-                        Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 0, 1);
-                        break;
-                    case 4:
-                        Module2.ConnectBus(CSPBus1);
-                        break;
-                    case 6:
-                        //Module 2 has priority in next step
-                        Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 1, 3);
-                        break;
-                    case 7:
-                        //This one should interrupt the last one when its 1/3 transmitted
-                        Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 0, 1);
-                        break;
-                    case 11:
-                        //Module 1 has priority
-                        Module1.SendCSPPacket(CSPBus1, 1, 0, 0, 0, 1);
-                        Module2.SendCSPPacket(CSPBus1, 0, 0, 0, 1, 1);
-                        break;
-                    case 14:
-                        Module1.SendCSPPacket(CSPBus1, 2, 0, 0, 0, 1);
-                        break;
-                    default:
-                        break;
+                    if (err.ModuleAffected.Equals(m.Name))
+                    {
+                        m.RegisteredErrors.Add(err);
+                    }
+                }
+            }
+        }
+
+        //Tells each module which errors are being applied to them
+        public void UnregisterErrors()
+        {
+            foreach (Module m in Modules)
+            {
+                m.RegisteredErrors.Clear();
+            }
+        }
+
+        //Reads a script file to determine the sequence of events that will take place in the simulation, returns the latest time of any event
+        private int LoadScript()
+        {
+            int latestEventTime = 0;
+
+            var dlg = new OpenFileDialog();
+            dlg.Title = "Open Simulation Script";
+            dlg.DefaultExt = ".csv";
+            dlg.Filter = "CSV files (.csv)|*.csv";
+            dlg.CheckFileExists = true;
+            if(dlg.ShowDialog() == true)
+            {
+                //Open script file
+                if (File.Exists(dlg.FileName))
+                {
+                    using(FileStream fs = new FileStream(dlg.FileName, FileMode.Open))
+                    {
+                        using (StreamReader sr = new StreamReader(fs))
+                        {
+                            eventList.Clear();
+                            //Read each line as an event in the simulation
+                            while (!sr.EndOfStream)
+                            {
+                                try
+                                {
+                                    var line = sr.ReadLine();
+                                    var values = line.Split(',');
+                                    var scriptEvent = new ScriptedEvent();
+
+                                    scriptEvent.Time = int.Parse(values[0]);
+                                    scriptEvent.Module = values[1];
+                                    scriptEvent.Command = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), values[2].ToUpper()));
+                                    string[] cmdParams = new string[values.Length - 3];
+                                    for (int i = 3; i < values.Length; i++)
+                                    {
+                                        scriptEvent.Parameters.Add(values[i]);
+                                    }
+
+                                    //Update latest event time and add new event
+                                    latestEventTime = scriptEvent.Time > latestEventTime ? scriptEvent.Time : latestEventTime;
+                                    eventList.Add(scriptEvent);
+                                }
+                                catch(Exception ex)
+                                {
+                                    MessageBox.Show(
+                                        "An error occured while trying to read the script file: " + ex.Message,
+                                        "Error Reading File",
+                                        MessageBoxButton.OK,
+                                        MessageBoxImage.Error
+                                    );
+                                }
+                            }
+                        }
+                    }                    
+                }
+            }
+            return latestEventTime;
+        }
+
+        //Returns true if all buses are idling, false if at least one is busy
+        public bool AllBusesIdle()
+        {
+            foreach(Bus b in Buses)
+            {
+                if (!b.Idle)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        //Returns true if all modules are idling, false if at least one is busy
+        public bool AllModulesIdle()
+        {
+            foreach (Module m in Modules)
+            {
+                if (!m.Crashed && !m.Idle)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        //Runs the chosen simulation script
+        public async void RunSim()
+        {
+            if (SimulationRunning) return;
+            abort = false;
+            bool scriptWarningShown = false;
+
+            var latestEventTime = LoadScript();
+            if (latestEventTime <= 0) return;
+
+            SimulationRunning = true;
+
+            EventLog.AddLog(new SimEvent("Starting simulation...", EventSeverity.IMPORTANT));
+
+            //Register the errors with the modules
+            RegisterErrors();
+
+            int step = 0;
+            //Continue the simulation until it is aborted, or until all modules and buses are idle after the last event occurs
+            while (!abort && (!(AllBusesIdle() && AllModulesIdle()) || step < latestEventTime))
+            {
+                //Run each scripted event scheduled for the current time step
+                foreach(ScriptedEvent ev in eventList.Where(ev => ev.Time == step))
+                {
+                    switch (ev.Command)
+                    {
+                        //Send packet with given data size from source to target over target bus 
+                        case ModuleCommand.SEND:
+
+                            //Parse parameters
+                            Module source = Modules.Where(m => m.Name.Equals(ev.Module)).FirstOrDefault();
+                            byte dest_address;
+                            if(!byte.TryParse(ev.Parameters[0], out dest_address)){
+                                MessageBox.Show("An event in your script has an invalid parameter. This simulation will now abort.", "Parameter Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                abort = true;
+                                break;
+                            }
+                            Bus targetBus = Buses.Where(b => b.Name.Equals(ev.Parameters[1])).FirstOrDefault();
+                            short dataSize;
+                            if(!short.TryParse(ev.Parameters[2], out dataSize))
+                            {
+                                dataSize = 1;
+                            }
+
+                            //Check source module exists
+                            if(source == null)
+                            {
+                                if (!scriptWarningShown)
+                                {
+                                    scriptWarningShown = true;
+                                    if(MessageBox.Show("A scripted event cannot be run because the source module does not exist. Continue the simulation?", "Script Error", MessageBoxButton.YesNo, MessageBoxImage.Warning)
+                                        == MessageBoxResult.No)
+                                    {
+                                        abort = true;
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+
+                            //Send a packet
+                            if(targetBus is CSPBus)
+                            {
+                                source.SendCSPPacket((CSPBus)targetBus, dest_address, 0, 0, (byte)source.Priority, dataSize);
+                            }
+                            break;
+
+
+                        default:
+                            break;
+                    }
                 }
 
-                //Modules step
+                if (!abort)
+                {
+                    //Modules step
+                    foreach (Module m in Modules)
+                    {
+                        m.Process(step);
+                    }
 
-                //Buses step
-                CSPBus1.Process(step);
+                    //Buses step
+                    foreach (Bus b in Buses)
+                    {
+                        b.Process(step);
+                    }
+
+                    await Task.Delay(1000);
+
+                    step++;
+                }
             }
-            //END OF TEST CODE
+
+            //Unregister the errors so that they will be re-registered next time the sim runs
+            UnregisterErrors();
+
+            EventLog.AddLog(new SimEvent("Simulation complete", EventSeverity.IMPORTANT));
+
+            SimulationRunning = false;
+        }
+
+        //Aborts the current simulation
+        public void StopSim()
+        {
+            abort = true;
         }
     }
 }
