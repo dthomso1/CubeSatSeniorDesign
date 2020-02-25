@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CubeSatCommSim.Model;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace CubeSatCommSim_UnitTests
 {
@@ -61,27 +62,45 @@ namespace CubeSatCommSim_UnitTests
             byte priority = 2;
             short dataSize = 5000;
 
-            module1.SendCSPPacket(bus, destination_addr, destination_port, source_port, priority, dataSize);
-            
-            Assert.AreEqual(bus.PacketQueue.contains(packet), true);
-
-            //Assert
-        }
-
-
-    }
-}
-
-
-
-/*
- EventLog.EventList.Contains(null);
-
             BitVector32 packetHeader = new BitVector32(0x00000000);
-            packetHeader[CSPPacket.SourceAddress] = Address;
+            packetHeader[CSPPacket.SourceAddress] = module1.Address;
             packetHeader[CSPPacket.DestinationAddress] = destination_addr;
             packetHeader[CSPPacket.SourcePort] = source_port;
             packetHeader[CSPPacket.DestinationPort] = destination_port;
             packetHeader[CSPPacket.Priority] = priority;
             CSPPacket packet = new CSPPacket(packetHeader, dataSize);
-     */
+
+            //Log failed send
+            module1.SendCSPPacket(bus, destination_addr, destination_port, source_port, priority, dataSize);
+            String expected1 = "Module " + module1.Name + " failed to send packet " + packet.ToString() + 
+                " because it is not connected to bus " + bus.Name;
+
+            Assert.AreEqual(EventLog.EventList.Last().Log, expected1);
+            Assert.AreEqual(EventLog.EventList.Last().Severity, CubeSatCommSim.Model.EventSeverity.ERROR);
+            
+            //Connect bus to module
+            module1.ConnectBus(bus);
+
+            //Log sending packet
+            module1.SendCSPPacket(bus, destination_addr, destination_port, source_port, priority, dataSize);
+
+            String expected2 = "Module " + module1.Name + " sends packet " + packet.ToString() + " to bus " + bus.Name;
+
+            Assert.AreEqual(EventLog.EventList.Last().Log, expected2);
+            Assert.AreEqual(EventLog.EventList.Last().Severity, CubeSatCommSim.Model.EventSeverity.INFO);
+        }
+
+        [TestMethod]
+        public void Module_ReceiveCSPPacket() {
+            Module module1 = new Module("Module", 41);
+            CSPPacket packet = new CSPPacket(-1, 10000);
+
+            String expected1 = "Module " + module1.Name + " received packet: " + packet.ToString();
+            module1.ReceiveCSPPacket(packet);
+
+            Assert.AreEqual(EventLog.EventList.Last().Log, expected1);
+            Assert.AreEqual(EventLog.EventList.Last().Severity, CubeSatCommSim.Model.EventSeverity.INFO);
+        }
+
+    }
+}
