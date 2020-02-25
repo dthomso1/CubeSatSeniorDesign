@@ -273,8 +273,14 @@ namespace CubeSatCommSim.Model
             //Unregister the errors so that they will be re-registered next time the sim runs
             UnregisterErrors();
 
-            EventLog.AddLog(new SimEvent("Simulation complete", EventSeverity.IMPORTANT));
-
+            if (abort)
+            {
+                EventLog.AddLog(new SimEvent("Simulation aborted", EventSeverity.IMPORTANT));
+            }
+            else
+            {
+                EventLog.AddLog(new SimEvent("Simulation complete", EventSeverity.IMPORTANT));
+            }
             SimulationRunning = false;
         }
 
