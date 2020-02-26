@@ -5,10 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CubeSatCommSim"
         xmlns:view="clr-namespace:CubeSatCommSim.View"
+        xmlns:convert="clr-namespace:CubeSatCommSim.Converters"
         mc:Ignorable="d"
         ResizeMode="CanResizeWithGrip"
         Loaded="Window_Loaded"
         Title="CubeSat Communication Simulator" Height="450" Width="800">
+    <Window.Resources>
+        <convert:BoolNOTConverter x:Key="BoolNOTConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -16,7 +20,7 @@
             <RowDefinition Height="16"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0"/>
             <ColumnDefinition Width="6"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
@@ -32,15 +36,21 @@
                 <MenuItem Header="Placeholder 2"/>
                 <MenuItem Header="Placeholder 3"/>
             </MenuItem>
-            <MenuItem Header="Start" Height="20">
-                <MenuItem Header="Placeholder 1"/>
-                <MenuItem Header="Placeholder 2"/>
-                <MenuItem Header="Placeholder 3"/>
+            <MenuItem x:Name="MenuBarStart"
+                      Header="Start" 
+                      Height="20" 
+                      Click="StartSimulation_Click"
+                      IsEnabled="{Binding SimulationRunning,
+                                          Mode=OneWay,
+                                          Converter={StaticResource BoolNOTConverter}}">
             </MenuItem>
-            <MenuItem Header="Stop" Height="20">
-                <MenuItem Header="Placeholder 1"/>
-                <MenuItem Header="Placeholder 2"/>
-                <MenuItem Header="Placeholder 3"/>
+            <MenuItem x:Name="MenuBarStop"
+                      Header="Stop"
+                      Height="20"
+                      Click="StopSimulation_Click"
+                      IsEnabled="{Binding SimulationRunning,
+                                          Mode=OneWay,
+                                          FallbackValue=false}">
             </MenuItem>
             <MenuItem Header="View" Height="20">
                 <MenuItem Header="Placeholder 1"/>

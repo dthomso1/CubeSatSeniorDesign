@@ -15,7 +15,7 @@ namespace CubeSatCommSim.ViewModel
 {
     class InternalSimVM : ViewModelBase
     {
-        private InternalSimController md;
+        private InternalSimController md;        
 
         public ICollectionView Modules { get; private set; }
         public ICollectionView Buses { get; private set; }
@@ -72,11 +72,22 @@ namespace CubeSatCommSim.ViewModel
             }
         }
 
+        public bool SimulationRunning
+        {
+            get { return md.SimulationRunning; }
+        }
+
         public InternalSimVM(InternalSimController model)
         {
             md = model;
             Modules = CollectionViewSource.GetDefaultView(md.Modules);
             Buses = CollectionViewSource.GetDefaultView(md.Buses);
+            md.PropertyChanged += ModelPropertyChanged;
+        }
+
+        private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            NotifyPropertyChanged(e.PropertyName);
         }
 
         //Opens module edit dialog on the clicked module

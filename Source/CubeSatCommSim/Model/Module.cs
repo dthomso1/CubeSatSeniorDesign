@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace CubeSatCommSim.Model
 {
@@ -45,6 +46,17 @@ namespace CubeSatCommSim.Model
                 }
             }
         }
+        
+        private bool _Idle;
+        public bool Idle
+        {
+            get { return _Idle; }
+            set
+            {
+                _Idle = value;
+                NotifyPropertyChanged("Idle");
+            }
+        }
 
         private ObservableCollection<Bus> _BusConnections;
         public ObservableCollection<Bus> BusConnections
@@ -57,11 +69,67 @@ namespace CubeSatCommSim.Model
             }
         }
 
+        private ObservableCollection<ErrorObject> _RegisteredErrors;
+        public ObservableCollection<ErrorObject> RegisteredErrors
+        {
+            get { return _RegisteredErrors; }
+            private set
+            {
+                _RegisteredErrors = value;
+                NotifyPropertyChanged("RegisteredErrors");
+            }
+        }
+
+        private bool _Crashed;
+        public bool Crashed
+        {
+            get { return _Crashed; }
+            private set
+            {
+                if(_Crashed != value)
+                {
+                    _Crashed = value;
+                    NotifyPropertyChanged("Crashed");
+                }
+            }
+        }
+
         public Module(string name, int address)
         {
+            Idle = true;
+            Crashed = false;
             Name = name;
             Address = address;
             BusConnections = new ObservableCollection<Bus>();
+            RegisteredErrors = new ObservableCollection<ErrorObject>();
+        }
+
+        public void Process(int step)
+        {
+            if (Crashed) return; //Module cannot do anything if it has crashed
+
+            //Check for fatal errors
+            foreach(ErrorObject err in RegisteredErrors)
+            {
+                if (err.IsActive)
+                {
+                    if (err.IsFatal)
+                    {
+                        Crashed = true;
+                        EventLog.AddLog(new SimEvent(
+                                                "Module " + Name +
+                                                " has ceased operation due to a fatal error: "
+                                                + err.Description,
+                                                EventSeverity.FATAL_ERROR
+                                            )
+                                        );
+                        return;
+                    }
+                }
+            }
+
+            //Modules are not really doing any processing in this version of the program, so Idle is always true
+            Idle = true;
         }
 
         public void ConnectBus(Bus newBus)
@@ -99,8 +167,15 @@ namespace CubeSatCommSim.Model
             packetHeader[CSPPacket.DestinationPort] = destination_port;
             packetHeader[CSPPacket.Priority] = priority;
             CSPPacket packet = new CSPPacket(packetHeader, dataSize);
-
-            if (BusConnections.Contains(bus))
+            
+            if(bus == null)
+            {
+                //Log failed send
+                EventLog.AddLog(new SimEvent(
+                    "Module " + Name + " failed to send a packet because the target bus does not exist (check that the bus in your script exists in the simulation)",
+                    EventSeverity.ERROR));
+            }
+            else if (BusConnections.Contains(bus))
             {
                 bus.EnqueuePacket(packet);
                 //Log sending packet
@@ -124,6 +199,11 @@ namespace CubeSatCommSim.Model
                 "Module " + Name + " received packet: " + packet.ToString(),
                 EventSeverity.INFO));
             //Processing?
+        }
+
+        public void Reset()
+        {
+            Crashed = false;
         }
     }
 }

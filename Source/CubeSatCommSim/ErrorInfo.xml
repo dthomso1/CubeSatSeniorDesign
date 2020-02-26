@@ -3,19 +3,16 @@
 	<Error>
 		<id>26</id>
 		<description>EE-Battery pack failure</description>
-    <moduleAffected>EPS</moduleAffected>
 		<isFatal>true</isFatal>
 	</Error>
   <Error>
     <id>30</id>
     <description>EE-EPS microcontroller hardware failure</description>
-    <moduleAffected>EPS</moduleAffected>
     <isFatal>true</isFatal>
   </Error>
   <Error>
     <id>47</id>
     <description>SWE-SASI mission software flow failure</description>
-    <moduleAffected>SASI</moduleAffected>
     <isFatal>false</isFatal>
   </Error>
 </ErrorInfo>

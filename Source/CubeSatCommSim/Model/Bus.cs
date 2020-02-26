@@ -27,9 +27,21 @@ namespace CubeSatCommSim.Model
                 NotifyPropertyChanged("ConnectedModules");
             }
         }
-        
+
+        private bool _Idle;
+        public bool Idle
+        {
+            get { return _Idle; }
+            set
+            {
+                _Idle = value;
+                NotifyPropertyChanged("Idle");
+            }
+        }
+
         public Bus(string name)
         {
+            Idle = true;
             Name = name;
             ConnectedModules = new ObservableCollection<Module>();
         }

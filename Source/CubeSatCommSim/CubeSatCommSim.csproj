@@ -55,11 +55,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BoolNOTConverter.cs" />
     <Compile Include="Converters\ModuleConnectionConverter.cs" />
     <Compile Include="Converters\ModuleIndexConverter.cs" />
     <Compile Include="Converters\BusLinePositionConverter.cs" />
     <Compile Include="Converters\BusConnectionVisibilityConverter.cs" />
     <Compile Include="Converters\ModuleLinePositionConverter.cs" />
+    <Compile Include="Converters\SeverityWeightConverter.cs" />
     <Compile Include="Converters\SeverityColourConverter.cs" />
     <Compile Include="Model\BHeap.cs" />
     <Compile Include="Model\Bus.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Model\InternalSimController.cs" />
     <Compile Include="Model\Module.cs" />
     <Compile Include="Model\PriorityQueue.cs" />
+    <Compile Include="Model\ScriptedEvent.cs" />
     <Compile Include="Model\SimEvent.cs" />
     <Compile Include="Model\EventLog.cs" />
     <Compile Include="Model\ErrorObject.cs" />
@@ -176,6 +179,10 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Data\ErrorInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
