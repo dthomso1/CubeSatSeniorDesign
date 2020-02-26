@@ -49,6 +49,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\EventLog_UnitTest.cs" />
     <Compile Include="Model\SimEvent_UnitTest.cs" />
     <Compile Include="Model\Bus_UnitTest.cs" />
     <Compile Include="Model\CSPBus_UnitTest.cs" />
