@@ -14,11 +14,11 @@ namespace CubeSatCommSim_UnitTests.Model
             //rate = 1000
             CSPBus bus = new CSPBus("testBus", 1000);
 
-            SimEvent expected = EventLog.EventList.Last();
+            int expected = EventLog.EventList.Count;
 
             bus.Process(1);
 
-            Assert.AreEqual(EventLog.EventList.Last(), expected);
+            Assert.AreEqual(EventLog.EventList.Count, expected);
         }
 
         [TestMethod]
