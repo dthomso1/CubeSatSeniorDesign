@@ -9,6 +9,20 @@ namespace CubeSatCommSim_UnitTests.Model
     public class CSPBus_UnitTest
     {
         [TestMethod]
+        public void CSPBus_SetGetName()
+        {
+            CSPBus newBus = new CSPBus("BadTest");
+
+            string expectedName = "Name";
+
+            newBus.Name = expectedName;
+
+            string actualName = newBus.Name;
+
+            Assert.AreEqual(expectedName, actualName);
+        }
+
+        [TestMethod]
         public void CSPBus_Process_Nothing()
         {
             //rate = 1000
@@ -18,7 +32,7 @@ namespace CubeSatCommSim_UnitTests.Model
 
             bus.Process(1);
 
-            Assert.AreEqual(EventLog.EventList.Count, expected);
+            Assert.AreEqual(expected, EventLog.EventList.Count);
         }
 
         [TestMethod]
@@ -35,10 +49,10 @@ namespace CubeSatCommSim_UnitTests.Model
 
             String expected = "Packet was dropped because it has no valid destination: " + packet1.ToString();
 
-            Assert.AreEqual(EventLog.EventList.Last().Log, expected);
-            Assert.AreEqual(EventLog.EventList.Last().Severity, CubeSatCommSim.Model.EventSeverity.WARNING);
+            Assert.AreEqual(expected, EventLog.EventList.Last().Log);
+            Assert.AreEqual(CubeSatCommSim.Model.EventSeverity.WARNING, EventLog.EventList.Last().Severity);
 
-            Assert.AreEqual(bus.CurrentPacket, null);
+            Assert.AreEqual(null, bus.CurrentPacket);
         }
 
         [TestMethod]
@@ -59,7 +73,7 @@ namespace CubeSatCommSim_UnitTests.Model
             Assert.AreEqual(EventLog.EventList.Last().Log, expected1);
             Assert.AreEqual(EventLog.EventList.Last().Severity, CubeSatCommSim.Model.EventSeverity.INFO);
 
-            Assert.AreEqual(bus.CurrentPacket, null);
+            Assert.AreEqual(null, bus.CurrentPacket);
         }
 
         [TestMethod]
@@ -85,8 +99,8 @@ namespace CubeSatCommSim_UnitTests.Model
 
             bus.Process(1);
 
-            Assert.AreEqual(packet1.PartTransmitted, expectedTransmit);
-            Assert.AreEqual(bus.CurrentPacket, packet1);
+            Assert.AreEqual(expectedTransmit, packet1.PartTransmitted);
+            Assert.AreEqual(packet1, bus.CurrentPacket);
         }
 
         [TestMethod]
@@ -117,7 +131,7 @@ namespace CubeSatCommSim_UnitTests.Model
             bus.EnqueuePacket(packet2);
             bus.Process(1);
 
-            Assert.AreEqual(bus.CurrentPacket, null);
+            Assert.AreEqual(null, bus.CurrentPacket);
 
             Assert.AreEqual(expectedLog1, EventLog.EventList.ElementAt(EventLog.EventList.Count - 2).Log);
             Assert.AreEqual(CubeSatCommSim.Model.EventSeverity.INFO, EventLog.EventList.ElementAt(EventLog.EventList.Count - 2).Severity);

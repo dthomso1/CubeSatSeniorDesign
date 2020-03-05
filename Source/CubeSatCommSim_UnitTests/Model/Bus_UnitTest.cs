@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CubeSatCommSim.Model;
 
-namespace CubeSatCommSim_UnitTestss
+namespace CubeSatCommSim_UnitTests.Model
 {
     [TestClass]
     public class Bus_UnitTest
@@ -14,7 +14,7 @@ namespace CubeSatCommSim_UnitTestss
             
             bus1.Name = "bus2";
             String actual = bus1.Name;
-            Assert.AreEqual(actual, "bus2");
+            Assert.AreEqual("bus2", actual);
         }
     }
 }

@@ -3,11 +3,54 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CubeSatCommSim.Model;
 using System.Collections.Specialized;
 
-namespace CubeSatCommSim_UnitTests
+namespace CubeSatCommSim_UnitTests.Model
 {
     [TestClass]
     public class CSPPacket_UnitTest
     {
+        [TestMethod]
+        public void TestSetGetHeader()
+        {
+            int headerVal = 25;
+            short exdataS = 5000;
+            BitVector32 exheader = new BitVector32(headerVal);
+            
+            CSPPacket newCSPPacket = new CSPPacket(exheader, exdataS);
+
+            BitVector32 actualHeader = newCSPPacket.Header;
+
+            Assert.AreEqual(exheader, actualHeader);
+        }
+
+        [TestMethod]
+        public void TestSetGetDataSize()
+        {
+            int headerVal = 25;
+            short exdataS = 5000;
+            BitVector32 exheader = new BitVector32(headerVal);
+
+            CSPPacket newCSPPacket = new CSPPacket(headerVal, exdataS);
+
+            short actualDataSize = newCSPPacket.DataSize;
+            Assert.AreEqual(exdataS, actualDataSize);
+        }
+
+        [TestMethod]
+        public void TestSetGetPartTransmitted()
+        {
+            int headerVal = 25;
+            short exdataS = 5000;
+            BitVector32 exheader = new BitVector32(headerVal);
+            short ExpectedPartTransmitted = 1500;
+
+            CSPPacket newCSPPacket = new CSPPacket(headerVal, exdataS);
+
+            newCSPPacket.PartTransmitted = ExpectedPartTransmitted;
+
+            short actualPart = newCSPPacket.PartTransmitted;
+            Assert.AreEqual(ExpectedPartTransmitted, actualPart);
+        }
+
         [TestMethod]
         public void CSPPacket_FromValue_ToString()
         {
@@ -31,7 +74,7 @@ namespace CubeSatCommSim_UnitTests
                         + "},Tx/Size=" + packet.PartTransmitted + "/" + size;
             String actual = packet.ToString();
 
-            Assert.AreEqual(actual, expected);
+            Assert.AreEqual(expected, actual);
 
         }
 
@@ -56,7 +99,7 @@ namespace CubeSatCommSim_UnitTests
                         + "},Tx/Size=" + packet.PartTransmitted + "/" + size;
             String actual = packet.ToString();
 
-            Assert.AreEqual(actual, expected);
+            Assert.AreEqual(expected, actual);
 
         }
 
@@ -84,7 +127,7 @@ namespace CubeSatCommSim_UnitTests
 
             //Test - Equal 2to3
             actual = packet2.CompareTo(packet3);
-            Assert.AreEqual(actual, 0);
+            Assert.AreEqual(0, actual);
         }
 
     }

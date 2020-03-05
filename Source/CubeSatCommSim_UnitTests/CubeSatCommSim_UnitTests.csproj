@@ -54,6 +54,8 @@
     <Compile Include="Model\Bus_UnitTest.cs" />
     <Compile Include="Model\CSPBus_UnitTest.cs" />
     <Compile Include="Model\PriorityQueue_UnitTest.cs" />
+    <Compile Include="Model\ErrorObject_UnitTest.cs" />
+    <Compile Include="Model\BHeap_UnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Module_UnitTest.cs" />
     <Compile Include="Model\CSPPacket_UnitTest.cs" />
