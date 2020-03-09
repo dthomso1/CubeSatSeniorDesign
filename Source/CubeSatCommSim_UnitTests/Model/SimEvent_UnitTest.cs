@@ -30,17 +30,16 @@ namespace CubeSatCommSim_UnitTests.Model
 
             Assert.AreEqual(expectedSeverity, actualSeverity);
         }
-        /*
+ 
         [TestMethod]
         public void SimEvent_Test_AddingInfo_ToString()
         {
             String log = "Test log";
-            EventSeverity severity = new EventSeverity();
-            severity.set(SimEvent.INFO);
+            EventSeverity severity = (EventSeverity)Enum.Parse(typeof(EventSeverity), "INFO");
             SimEvent testEvent = new SimEvent(log, severity);
             Assert.areEquals("[INFO] Test log", testEvent.toString());
 
         }
-        */
+        
     }
 }
