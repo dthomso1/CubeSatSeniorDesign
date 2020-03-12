@@ -49,6 +49,17 @@ namespace CubeSatCommSim.Model
             }
         }
 
+        private bool _ErrorDetected;
+        public bool ErrorDetected
+        {
+            get { return _ErrorDetected; }
+            set
+            {
+                _ErrorDetected = value;
+                NotifyPropertyChanged("ErrorDetected");
+            }
+        }
+
         public CSPPacket(int headerValues, short dataSize)
         {
             PartTransmitted = 0;
@@ -61,6 +72,7 @@ namespace CubeSatCommSim.Model
             PartTransmitted = 0;
             DataSize = dataSize;
             Header = header;
+            ErrorDetected = false;
         }
 
         public override string ToString()
@@ -80,7 +92,15 @@ namespace CubeSatCommSim.Model
 
         int IComparable.CompareTo(object obj)
         {
-            return this.Header[Priority].CompareTo(((CSPPacket)obj).Header[Priority]);
+            var priorityCompare = this.Header[Priority].CompareTo(((CSPPacket)obj).Header[Priority]);
+            if(priorityCompare == 0)
+            {
+                return this.Header[SourceAddress].CompareTo(((CSPPacket)obj).Header[SourceAddress]);
+            }
+            else
+            {
+                return priorityCompare;
+            }
         }
     }
 }

@@ -16,16 +16,16 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        private bool _IsFatal;
-        public bool IsFatal
+        private string _Behaviour;
+        public string Behaviour
         {
-            get { return _IsFatal; }
+            get { return _Behaviour; }
             set
             {
-                if(_IsFatal != value)
+                if(!value.Equals(_Behaviour))
                 {
-                    _IsFatal = value;
-                    NotifyPropertyChanged("IsFatal");
+                    _Behaviour = value;
+                    NotifyPropertyChanged("Behaviour");
                 }
             }
         }

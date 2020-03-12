@@ -4,18 +4,30 @@
 		<id>26</id>
 		<description>EE-Battery pack failure</description>
     <moduleAffected>EPS</moduleAffected>
-		<isFatal>true</isFatal>
+		<behaviour>Fatal</behaviour>
 	</Error>
   <Error>
     <id>30</id>
     <description>EE-EPS microcontroller hardware failure</description>
     <moduleAffected>EPS</moduleAffected>
-    <isFatal>true</isFatal>
+    <behaviour>Fatal</behaviour>
   </Error>
   <Error>
     <id>47</id>
     <description>SWE-SASI mission software flow failure</description>
     <moduleAffected>SASI</moduleAffected>
-    <isFatal>false</isFatal>
+    <behaviour>unknown</behaviour>
+  </Error>
+  <Error>
+    <id>50</id>
+    <description>Test error for bit randomization</description>
+    <moduleAffected>SASI</moduleAffected>
+    <behaviour>Randomize destination address</behaviour>
+  </Error>
+  <Error>
+    <id>51</id>
+    <description>Test error for bit randomization</description>
+    <moduleAffected>SASI</moduleAffected>
+    <behaviour>Randomize priority</behaviour>
   </Error>
 </ErrorInfo>
