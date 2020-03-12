@@ -8,6 +8,9 @@ namespace CubeSatCommSim.Model
 {
     public class Module : ModelBase
     {
+        //public static List<int> UsedPriorities = new List<int>();
+        public static List<int> UsedAddresses = new List<int>();
+
         private string _Name;
         public string Name
         {
@@ -25,10 +28,18 @@ namespace CubeSatCommSim.Model
             get { return _Address; }
             set
             {              
-                if(value >= 0 && value < 32)
+                if(value != _Address && (value >= 0 && value < 32))
                 {
-                    _Address = value;
-                    NotifyPropertyChanged("Address");
+                    if (!UsedAddresses.Contains(value))
+                    {
+                        if (UsedAddresses.Contains(_Address))
+                        {
+                            UsedAddresses.Remove(_Address);
+                        }
+                        UsedAddresses.Add(value);
+                        _Address = value;
+                        NotifyPropertyChanged("Address");
+                    }
                 }
             }
         }
@@ -39,7 +50,7 @@ namespace CubeSatCommSim.Model
             get { return _Priority; }
             set
             {
-                if(value >= 0 && value < 4)
+                if(value != _Priority && (value >= 0 && value < 4))
                 {
                     _Priority = value;
                     NotifyPropertyChanged("Priority");

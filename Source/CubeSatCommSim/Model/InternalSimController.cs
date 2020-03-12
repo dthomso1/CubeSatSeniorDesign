@@ -92,6 +92,15 @@ namespace CubeSatCommSim.Model
             }
         }
 
+        //Resets all the modules
+        public void ResetCrashedModules()
+        {
+            foreach (Module m in Modules)
+            {
+                m.Reset();
+            }
+        }
+
         //Reads a script file to determine the sequence of events that will take place in the simulation, returns the latest time of any event
         private int LoadScript()
         {
@@ -196,7 +205,7 @@ namespace CubeSatCommSim.Model
 
             int step = 0;
             //Continue the simulation until it is aborted, or until all modules and buses are idle after the last event occurs
-            while (!abort && (!(AllBusesIdle() && AllModulesIdle()) || step < latestEventTime))
+            while (!abort && (!(AllBusesIdle() && AllModulesIdle()) || step <= latestEventTime))
             {
                 //Run each scripted event scheduled for the current time step
                 foreach(ScriptedEvent ev in eventList.Where(ev => ev.Time == step))
@@ -272,9 +281,16 @@ namespace CubeSatCommSim.Model
 
             //Unregister the errors so that they will be re-registered next time the sim runs
             UnregisterErrors();
+            ResetCrashedModules();
 
-            EventLog.AddLog(new SimEvent("Simulation complete", EventSeverity.IMPORTANT));
-
+            if (abort)
+            {
+                EventLog.AddLog(new SimEvent("Simulation aborted", EventSeverity.IMPORTANT));
+            }
+            else
+            {
+                EventLog.AddLog(new SimEvent("Simulation complete", EventSeverity.IMPORTANT));
+            }
             SimulationRunning = false;
         }
 
