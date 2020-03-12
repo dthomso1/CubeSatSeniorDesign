@@ -129,7 +129,7 @@ namespace CubeSatCommSim.Model
             //Check for fatal errors
             foreach(ErrorObject err in RegisteredErrors)
             {
-                if (err.Behaviour.ToUpper().Equals("FATAL"))
+                if (err.Behaviour == ErrorBehaviour.FATAL)
                 {
                     if (err.IsActive)
                     {
@@ -144,23 +144,23 @@ namespace CubeSatCommSim.Model
                         return;
                     }
                 }
-                else if (err.Behaviour.ToUpper().Equals("RANDOMIZE PRIORITY"))
+                else if (err.Behaviour == ErrorBehaviour.RANDOM_PRIORITY)
                 {
                     randomPriority = err.IsActive;
                 }
-                else if (err.Behaviour.ToUpper().Equals("RANDOMIZE DESTINATION ADDRESS"))
+                else if (err.Behaviour == ErrorBehaviour.RANDOM_DESTINATION_ADDRESS)
                 {
                     randomDestination = err.IsActive;
                 }
-                else if (err.Behaviour.ToUpper().Equals("RANDOMIZE SOURCE ADDRESS"))
+                else if (err.Behaviour == ErrorBehaviour.RANDOM_SOURCE_ADDRESS)
                 {
                     randomSource = err.IsActive;
                 }
-                else if (err.Behaviour.ToUpper().Equals("RANDOMIZE DESTINATION PORT"))
+                else if (err.Behaviour == ErrorBehaviour.RANDOM_DESTINATION_PORT)
                 {
                     randomDestinationPort = err.IsActive;
                 }
-                else if (err.Behaviour.ToUpper().Equals("RANDOMIZE SOURCE PORT"))
+                else if (err.Behaviour == ErrorBehaviour.RANDOM_SOURCE_PORT)
                 {
                     randomSourcePort = err.IsActive;
                 }
@@ -196,7 +196,7 @@ namespace CubeSatCommSim.Model
                 EventSeverity.INFO));
         }
 
-        public void SendCSPPacket(CSPBus bus, byte destination_addr, byte destination_port, byte source_port, byte priority, short dataSize)
+        public void SendCSPPacket(CSPBus bus, byte destination_addr, byte destination_port, byte source_port, byte priority, short dataSize, ModuleCommand command)
         {
             var rnd = new Random();
             BitVector32 packetHeader = new BitVector32(0x00000000);
@@ -205,7 +205,7 @@ namespace CubeSatCommSim.Model
             packetHeader[CSPPacket.SourcePort] = randomSourcePort ? ((byte)(rnd.Next(0, 64))) : source_port;
             packetHeader[CSPPacket.DestinationPort] = randomDestinationPort ? ((byte)(rnd.Next(0, 64))) : destination_port;
             packetHeader[CSPPacket.Priority] = randomPriority ? ((byte)(rnd.Next(0,4))) : priority;
-            CSPPacket packet = new CSPPacket(packetHeader, dataSize);
+            CSPPacket packet = new CSPPacket(packetHeader, dataSize, command);
             
             if(bus == null)
             {
@@ -277,7 +277,7 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        public void ReceiveCSPPacket(CSPPacket packet)
+        public void ReceiveCSPPacket(CSPPacket packet, CSPBus bus)
         {
             if (packet.ErrorDetected)
             {
@@ -292,7 +292,20 @@ namespace CubeSatCommSim.Model
                 EventLog.AddLog(new SimEvent(
                     "Module " + Name + " received packet: " + packet.ToString(),
                     EventSeverity.INFO));
-                //Processing?
+                //Processing
+                if(packet.Command == ModuleCommand.PING)
+                {
+                    //Respond to the ping with an equally sized packet over the same bus
+                    SendCSPPacket(
+                        bus,
+                        (byte)packet.Header[CSPPacket.SourceAddress],
+                        (byte)packet.Header[CSPPacket.SourcePort],
+                        (byte)packet.Header[CSPPacket.DestinationPort],
+                        (byte)Priority,
+                        packet.DataSize,
+                        ModuleCommand.SEND
+                    );
+                }
             }
         }
 

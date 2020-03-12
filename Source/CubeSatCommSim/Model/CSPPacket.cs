@@ -60,19 +60,33 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        public CSPPacket(int headerValues, short dataSize)
+        private ModuleCommand _Command;
+        public ModuleCommand Command
+        {
+            get { return _Command; }
+            set
+            {
+                _Command = value;
+                NotifyPropertyChanged("Command");
+            }
+        }
+
+        public CSPPacket(int headerValues, short dataSize, ModuleCommand command)
         {
             PartTransmitted = 0;
             DataSize = dataSize;
             Header = new BitVector32(headerValues);
+            ErrorDetected = false;
+            Command = command;
         }
 
-        public CSPPacket(BitVector32 header, short dataSize)
+        public CSPPacket(BitVector32 header, short dataSize, ModuleCommand command)
         {
             PartTransmitted = 0;
             DataSize = dataSize;
             Header = header;
             ErrorDetected = false;
+            Command = command;
         }
 
         public override string ToString()

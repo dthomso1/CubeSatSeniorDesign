@@ -210,53 +210,47 @@ namespace CubeSatCommSim.Model
                 //Run each scripted event scheduled for the current time step
                 foreach(ScriptedEvent ev in eventList.Where(ev => ev.Time == step))
                 {
-                    switch (ev.Command)
+                    //Send packet with given data size from source to target over target bus 
+                    if(ev.Command == ModuleCommand.SEND || ev.Command == ModuleCommand.PING)
                     {
-                        //Send packet with given data size from source to target over target bus 
-                        case ModuleCommand.SEND:
+                        //Parse parameters
+                        Module source = Modules.Where(m => m.Name.Equals(ev.Module)).FirstOrDefault();
+                        byte dest_address;
+                        if (!byte.TryParse(ev.Parameters[0], out dest_address))
+                        {
+                            MessageBox.Show("An event in your script has an invalid parameter. This simulation will now abort.", "Parameter Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            abort = true;
+                            break;
+                        }
+                        Bus targetBus = Buses.Where(b => b.Name.Equals(ev.Parameters[1])).FirstOrDefault();
+                        short dataSize;
+                        if (!short.TryParse(ev.Parameters[2], out dataSize))
+                        {
+                            dataSize = 1;
+                        }
 
-                            //Parse parameters
-                            Module source = Modules.Where(m => m.Name.Equals(ev.Module)).FirstOrDefault();
-                            byte dest_address;
-                            if(!byte.TryParse(ev.Parameters[0], out dest_address)){
-                                MessageBox.Show("An event in your script has an invalid parameter. This simulation will now abort.", "Parameter Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                abort = true;
-                                break;
-                            }
-                            Bus targetBus = Buses.Where(b => b.Name.Equals(ev.Parameters[1])).FirstOrDefault();
-                            short dataSize;
-                            if(!short.TryParse(ev.Parameters[2], out dataSize))
+                        //Check source module exists
+                        if (source == null)
+                        {
+                            if (!scriptWarningShown)
                             {
-                                dataSize = 1;
-                            }
-
-                            //Check source module exists
-                            if(source == null)
-                            {
-                                if (!scriptWarningShown)
+                                scriptWarningShown = true;
+                                if (MessageBox.Show("A scripted event cannot be run because the source module does not exist. Continue the simulation?", "Script Error", MessageBoxButton.YesNo, MessageBoxImage.Warning)
+                                    == MessageBoxResult.No)
                                 {
-                                    scriptWarningShown = true;
-                                    if(MessageBox.Show("A scripted event cannot be run because the source module does not exist. Continue the simulation?", "Script Error", MessageBoxButton.YesNo, MessageBoxImage.Warning)
-                                        == MessageBoxResult.No)
-                                    {
-                                        abort = true;
-                                        break;
-                                    }
+                                    abort = true;
+                                    break;
                                 }
-                                break;
-                            }
-
-                            //Send a packet
-                            if(targetBus is CSPBus)
-                            {
-                                source.SendCSPPacket((CSPBus)targetBus, dest_address, 0, 0, (byte)source.Priority, dataSize);
                             }
                             break;
+                        }
 
-
-                        default:
-                            break;
-                    }
+                        //Send a packet
+                        if (targetBus is CSPBus)
+                        {
+                            source.SendCSPPacket((CSPBus)targetBus, dest_address, 0, 0, (byte)source.Priority, dataSize, ev.Command);
+                        }
+                    }                    
                 }
 
                 if (!abort)

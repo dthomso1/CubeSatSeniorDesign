@@ -110,7 +110,7 @@ namespace CubeSatCommSim.Model
                         if(CurrentPacket.PartTransmitted >= CurrentPacket.DataSize)
                         {
                             //If packet is fully transmitted, receive it
-                            module.ReceiveCSPPacket(CurrentPacket);
+                            module.ReceiveCSPPacket(CurrentPacket, this);
                             //Remove packet after transmission
                             CurrentPacket = null;
                             break;

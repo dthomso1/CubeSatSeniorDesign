@@ -28,7 +28,7 @@ namespace CubeSatCommSim.Model
                                               select new ErrorObject()
                                               {
                                                   id = int.Parse(c.Element("id").Value),
-                                                  Behaviour = c.Element("behaviour").Value,
+                                                  Behaviour = (ErrorBehaviour)(int.Parse(c.Element("behaviour").Value)),
                                                   Description = c.Element("description").Value,
                                                   ModuleAffected = c.Element("moduleAffected").Value
                                               };
