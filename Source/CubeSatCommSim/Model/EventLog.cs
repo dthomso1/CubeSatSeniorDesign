@@ -18,5 +18,16 @@ namespace CubeSatCommSim.Model
         {
             EventList.Clear();
         }
+
+        public static void SaveLog()
+        {
+            /*
+            //EventList.Save();
+            foreach (SimEvent data in EventList) {
+                //printToFile(data.ToString());
+            }
+            //we can specify a file path, not sure what to do for a default program location
+            */
+        }
     }
 }
