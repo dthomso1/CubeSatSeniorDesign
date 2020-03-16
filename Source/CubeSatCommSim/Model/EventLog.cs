@@ -18,9 +18,5 @@ namespace CubeSatCommSim.Model
         {
             EventList.Clear();
         }
-
-        public static void SaveLog() {
-            //EventList.Save();
-        }
     }
 }

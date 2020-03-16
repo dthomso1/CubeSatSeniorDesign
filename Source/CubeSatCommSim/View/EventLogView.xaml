@@ -47,18 +47,10 @@
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="*"/>
           <ColumnDefinition Width="100"/>
-          <ColumnDefinition Width="100"/>
         </Grid.ColumnDefinitions>
-            <Button Grid.Column="1"
-                Content="Save Log"
-                Command="{Binding SaveCommand}"/>
-            <Button Grid.Column="2"
+        <Button Grid.Column="1"
                 Content="Clear Log"
                 Command="{Binding ClearCommand}"/>
-        </Grid>
+      </Grid>
     </Grid>
 </UserControl>
-
-
-
-
