@@ -34,5 +34,20 @@ namespace CubeSatCommSim.ViewModel
                 return _clearCommand;
             }
         }
+
+        public void SaveLog_vm() => EventLog.SaveLog();
+
+        RelayCommand _saveCommand;
+        public ICommand SaveCommand
+        {
+            get
+            {
+                if (_saveCommand == null)
+                {
+                    _saveCommand = new RelayCommand(param => this.SaveLog_vm());
+                }
+                return _saveCommand;
+            }
+        }
     }
 }
