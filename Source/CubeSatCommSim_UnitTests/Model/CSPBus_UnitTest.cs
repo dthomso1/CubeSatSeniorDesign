@@ -127,6 +127,83 @@ namespace CubeSatCommSim_UnitTests.Model
                         " was interrupted by packet " + packet2.ToString() +
                         " on bus " + bus.Name;
 
+            //Fully Transmit packet2 and interrupt packet1
+            bus.EnqueuePacket(packet2);
+            bus.Process(1);
+
+            Assert.AreEqual(null, bus.CurrentPacket);
+
+            Assert.AreEqual(expectedLog1, EventLog.EventList.ElementAt(EventLog.EventList.Count - 2).Log);
+            Assert.AreEqual(CubeSatCommSim.Model.EventSeverity.INFO, EventLog.EventList.ElementAt(EventLog.EventList.Count - 2).Severity);
+
+            //Expected Received Packet Log
+            String expectedLog2 = "Module " + module1.Name + " received packet: " + packet2.ToString();
+
+            Assert.AreEqual(expectedLog2, EventLog.EventList.Last().Log);
+            Assert.AreEqual(CubeSatCommSim.Model.EventSeverity.INFO, EventLog.EventList.Last().Severity);
+        }
+
+        [TestMethod]
+        public void CSPBus_Process_ValidAddress_InterruptAndRestart()
+        {
+            //rate = 1000
+            CSPBus bus = new CSPBus("testBus", 1000);
+            //Priority = 2, Address = 30, Size = 5000
+            CSPPacket packet1 = new CSPPacket(-2116026368, 5000);
+            //Priority = 1, Address = 30, Size = 1000
+            CSPPacket packet2 = new CSPPacket(1105199104, 1000);
+            //Address = 30
+            Module module1 = new Module("Module", 30);
+
+            module1.ConnectBus(bus);
+
+            //Part Transmit packet1 2000/5000
+            bus.EnqueuePacket(packet1);
+            bus.Process(1);
+            bus.Process(1);
+
+            //Fully Transmit packet2 and interrupt packet1
+            bus.EnqueuePacket(packet2);
+            bus.Process(1);
+
+            String expectedLog = "Interrupted packet continuing transmission on bus " + bus.Name + ": " + packet1.ToString();
+
+            //Transmit packet1
+            bus.Process(1);
+            
+            Assert.AreEqual(packet1, bus.CurrentPacket);
+
+            Assert.AreEqual(expectedLog, EventLog.EventList.Last().Log);
+            Assert.AreEqual(CubeSatCommSim.Model.EventSeverity.INFO, EventLog.EventList.Last().Severity);
+        }
+
+
+
+        /*
+        [TestMethod]
+        public void CSPBus_Process_ValidAddress_CrashedModule() {
+            //rate = 1000
+            CSPBus bus = new CSPBus("testBus", 1000);
+            //Priority = 2, Address = 30, Size = 5000
+            CSPPacket packet1 = new CSPPacket(-2116026368, 5000);
+            //Priority = 1, Address = 30, Size = 1000
+            CSPPacket packet2 = new CSPPacket(1105199104, 1000);
+            //Address = 30
+            Module module1 = new Module("Module", 30);
+
+            module1.ConnectBus(bus);
+            //module1.Crashed = true;
+
+            //Part Transmit packet1 2000/5000
+            bus.EnqueuePacket(packet1);
+            bus.Process(1);
+            bus.Process(1);
+
+            //Expected Packet Interrupted Log
+            String expectedLog1 = "Packet " + packet1.ToString() +
+                        " was interrupted by packet " + packet2.ToString() +
+                        " on bus " + bus.Name;
+
             //Fully Transmit packet2
             bus.EnqueuePacket(packet2);
             bus.Process(1);
@@ -142,18 +219,8 @@ namespace CubeSatCommSim_UnitTests.Model
             Assert.AreEqual(expectedLog2, EventLog.EventList.Last().Log);
             Assert.AreEqual(CubeSatCommSim.Model.EventSeverity.INFO, EventLog.EventList.Last().Severity);
         }
-        /*
-        [TestMethod]
-        public void test() {
-            //Expected Final Partial Transmit
-            short expectedTransmit = 3000;
-
-            //Part Transmit 3000/5000
-            bus.Process(1);
-
-            Assert.AreEqual(expectedTransmit, packet1.PartTransmitted);
-            Assert.AreEqual(packet1, bus.CurrentPacket);
-        }
         */
+
+
     }
 }
