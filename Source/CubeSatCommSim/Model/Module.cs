@@ -8,6 +8,9 @@ namespace CubeSatCommSim.Model
 {
     public class Module : ModelBase
     {
+        //public static List<int> UsedPriorities = new List<int>();
+        public static List<int> UsedAddresses = new List<int>();
+
         private string _Name;
         public string Name
         {
@@ -25,10 +28,18 @@ namespace CubeSatCommSim.Model
             get { return _Address; }
             set
             {              
-                if(value >= 0 && value < 32)
+                if(value != _Address && (value >= 0 && value < 32))
                 {
-                    _Address = value;
-                    NotifyPropertyChanged("Address");
+                    if (!UsedAddresses.Contains(value))
+                    {
+                        if (UsedAddresses.Contains(_Address))
+                        {
+                            UsedAddresses.Remove(_Address);
+                        }
+                        UsedAddresses.Add(value);
+                        _Address = value;
+                        NotifyPropertyChanged("Address");
+                    }
                 }
             }
         }
@@ -39,7 +50,7 @@ namespace CubeSatCommSim.Model
             get { return _Priority; }
             set
             {
-                if(value >= 0 && value < 4)
+                if(value != _Priority && (value >= 0 && value < 4))
                 {
                     _Priority = value;
                     NotifyPropertyChanged("Priority");
@@ -94,8 +105,15 @@ namespace CubeSatCommSim.Model
             }
         }
 
+        private bool randomPriority, randomDestination, randomSource, randomDestinationPort, randomSourcePort;
+
         public Module(string name, int address)
         {
+            randomPriority = false;
+            randomDestination = false;
+            randomSource = false;
+            randomDestinationPort = false;
+            randomSourcePort = false;
             Idle = true;
             Crashed = false;
             Name = name;
@@ -111,9 +129,9 @@ namespace CubeSatCommSim.Model
             //Check for fatal errors
             foreach(ErrorObject err in RegisteredErrors)
             {
-                if (err.IsActive)
+                if (err.Behaviour == ErrorBehaviour.FATAL)
                 {
-                    if (err.IsFatal)
+                    if (err.IsActive)
                     {
                         Crashed = true;
                         EventLog.AddLog(new SimEvent(
@@ -125,6 +143,26 @@ namespace CubeSatCommSim.Model
                                         );
                         return;
                     }
+                }
+                else if (err.Behaviour == ErrorBehaviour.RANDOM_PRIORITY)
+                {
+                    randomPriority = err.IsActive;
+                }
+                else if (err.Behaviour == ErrorBehaviour.RANDOM_DESTINATION_ADDRESS)
+                {
+                    randomDestination = err.IsActive;
+                }
+                else if (err.Behaviour == ErrorBehaviour.RANDOM_SOURCE_ADDRESS)
+                {
+                    randomSource = err.IsActive;
+                }
+                else if (err.Behaviour == ErrorBehaviour.RANDOM_DESTINATION_PORT)
+                {
+                    randomDestinationPort = err.IsActive;
+                }
+                else if (err.Behaviour == ErrorBehaviour.RANDOM_SOURCE_PORT)
+                {
+                    randomSourcePort = err.IsActive;
                 }
             }
 
@@ -158,15 +196,16 @@ namespace CubeSatCommSim.Model
                 EventSeverity.INFO));
         }
 
-        public void SendCSPPacket(CSPBus bus, byte destination_addr, byte destination_port, byte source_port, byte priority, short dataSize)
+        public void SendCSPPacket(CSPBus bus, byte destination_addr, byte destination_port, byte source_port, byte priority, short dataSize, ModuleCommand command)
         {
+            var rnd = new Random();
             BitVector32 packetHeader = new BitVector32(0x00000000);
-            packetHeader[CSPPacket.SourceAddress] = Address;
-            packetHeader[CSPPacket.DestinationAddress] = destination_addr;
-            packetHeader[CSPPacket.SourcePort] = source_port;
-            packetHeader[CSPPacket.DestinationPort] = destination_port;
-            packetHeader[CSPPacket.Priority] = priority;
-            CSPPacket packet = new CSPPacket(packetHeader, dataSize);
+            packetHeader[CSPPacket.SourceAddress] = randomSource ? ((byte)(rnd.Next(0, 32))) : Address;
+            packetHeader[CSPPacket.DestinationAddress] = randomDestination ? ((byte)(rnd.Next(0, 32))) : destination_addr;
+            packetHeader[CSPPacket.SourcePort] = randomSourcePort ? ((byte)(rnd.Next(0, 64))) : source_port;
+            packetHeader[CSPPacket.DestinationPort] = randomDestinationPort ? ((byte)(rnd.Next(0, 64))) : destination_port;
+            packetHeader[CSPPacket.Priority] = randomPriority ? ((byte)(rnd.Next(0,4))) : priority;
+            CSPPacket packet = new CSPPacket(packetHeader, dataSize, command);
             
             if(bus == null)
             {
@@ -177,11 +216,57 @@ namespace CubeSatCommSim.Model
             }
             else if (BusConnections.Contains(bus))
             {
+                //We are assuming that all packets with randomized bits are considered in error because the
+                //probablity that the error is not detected is negligible
+                if (randomPriority)
+                {
+                    packet.ErrorDetected = true;
+                    //Log sending packet with random priority
+                    EventLog.AddLog(new SimEvent(
+                        "Module " + Name + " sends a packet containing a random priority: " + packet.ToString() + " to bus " + bus.Name,
+                        EventSeverity.WARNING));
+                }
+                if (randomDestination)
+                {
+                    packet.ErrorDetected = true;
+                    //Log sending packet with random destination
+                    EventLog.AddLog(new SimEvent(
+                        "Module " + Name + " sends a packet containing a random destination address: " + packet.ToString() + " to bus " + bus.Name,
+                        EventSeverity.WARNING));
+                }
+                if (randomSource)
+                {
+                    packet.ErrorDetected = true;
+                    //Log sending packet with random psource
+                    EventLog.AddLog(new SimEvent(
+                        "Module " + Name + " sends a packet containing a random source address: " + packet.ToString() + " to bus " + bus.Name,
+                        EventSeverity.WARNING));
+                }
+                if (randomDestinationPort)
+                {
+                    packet.ErrorDetected = true;
+                    //Log sending packet with random psource
+                    EventLog.AddLog(new SimEvent(
+                        "Module " + Name + " sends a packet containing a random destination port: " + packet.ToString() + " to bus " + bus.Name,
+                        EventSeverity.WARNING));
+                }
+                if (randomSourcePort)
+                {
+                    packet.ErrorDetected = true;
+                    //Log sending packet with random psource
+                    EventLog.AddLog(new SimEvent(
+                        "Module " + Name + " sends a packet containing a random source port: " + packet.ToString() + " to bus " + bus.Name,
+                        EventSeverity.WARNING));
+                }
+
                 bus.EnqueuePacket(packet);
-                //Log sending packet
-                EventLog.AddLog(new SimEvent(
-                    "Module " + Name + " sends packet " + packet.ToString() + " to bus " + bus.Name,
-                    EventSeverity.INFO));
+                if(!(randomPriority || randomDestination || randomSource || randomDestinationPort || randomSourcePort))
+                {
+                    //Log sending normal packet
+                    EventLog.AddLog(new SimEvent(
+                        "Module " + Name + " sends packet " + packet.ToString() + " to bus " + bus.Name,
+                        EventSeverity.INFO));
+                }
             }
             else
             {
@@ -192,18 +277,46 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        public void ReceiveCSPPacket(CSPPacket packet)
+        public void ReceiveCSPPacket(CSPPacket packet, CSPBus bus)
         {
-            //Log received packet
-            EventLog.AddLog(new SimEvent(
-                "Module " + Name + " received packet: " + packet.ToString(),
-                EventSeverity.INFO));
-            //Processing?
+            if (packet.ErrorDetected)
+            {
+                //Log received packet
+                EventLog.AddLog(new SimEvent(
+                    "Module " + Name + " detected an error in received packet: " + packet.ToString() + ", the packet was discarded",
+                    EventSeverity.ERROR));
+            }
+            else
+            {
+                //Log received packet
+                EventLog.AddLog(new SimEvent(
+                    "Module " + Name + " received packet: " + packet.ToString(),
+                    EventSeverity.INFO));
+                //Processing
+                if(packet.Command == ModuleCommand.PING)
+                {
+                    //Respond to the ping with an equally sized packet over the same bus
+                    SendCSPPacket(
+                        bus,
+                        (byte)packet.Header[CSPPacket.SourceAddress],
+                        (byte)packet.Header[CSPPacket.SourcePort],
+                        (byte)packet.Header[CSPPacket.DestinationPort],
+                        (byte)Priority,
+                        packet.DataSize,
+                        ModuleCommand.SEND
+                    );
+                }
+            }
         }
 
         public void Reset()
         {
             Crashed = false;
+            randomDestination = false;
+            randomPriority = false;
+            randomSource = false;
+            randomDestinationPort = false;
+            randomSourcePort = false;
         }
     }
 }

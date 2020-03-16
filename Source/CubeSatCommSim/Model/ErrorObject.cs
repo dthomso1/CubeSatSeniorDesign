@@ -4,6 +4,21 @@ using System.Collections.ObjectModel;
 
 namespace CubeSatCommSim.Model
 {
+    public enum ErrorBehaviour
+    {
+        FATAL = 0,
+        unknown = 1,
+        unknown2 = 2,
+        unknown3 = 3,
+        unknown4 = 4,
+        unknown5 = 5,
+        RANDOM_PRIORITY = 6,
+        RANDOM_DESTINATION_ADDRESS = 7,
+        RANDOM_SOURCE_ADDRESS = 8,
+        RANDOM_DESTINATION_PORT = 9,
+        RANDOM_SOURCE_PORT = 10
+    }
+
     public class ErrorObject : ModelBase
     {
         private int _id;
@@ -16,16 +31,16 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        private bool _IsFatal;
-        public bool IsFatal
+        private ErrorBehaviour _Behaviour;
+        public ErrorBehaviour Behaviour
         {
-            get { return _IsFatal; }
+            get { return _Behaviour; }
             set
             {
-                if(_IsFatal != value)
+                if(!value.Equals(_Behaviour))
                 {
-                    _IsFatal = value;
-                    NotifyPropertyChanged("IsFatal");
+                    _Behaviour = value;
+                    NotifyPropertyChanged("Behaviour");
                 }
             }
         }
