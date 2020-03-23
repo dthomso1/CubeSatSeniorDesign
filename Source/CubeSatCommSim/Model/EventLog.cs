@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System;
+using System.IO;
+
 
 namespace CubeSatCommSim.Model
 {
@@ -21,13 +24,14 @@ namespace CubeSatCommSim.Model
 
         public static void SaveLog()
         {
-            /*
-            //EventList.Save();
+            //how to print to new file every month?
+            var filepath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data\EventLog.txt");
+            string filename = Path.GetFileName("C:\\Users\\Maurice\\source\\repos\\dthomso1\\CubeSatSeniorDesign\\Source\\CubeSatCommSim\\Data");
             foreach (SimEvent data in EventList) {
-                //printToFile(data.ToString());
+                Console.WriteLine(data.ToString(), Path.Combine("C:\\Users\\Maurice\\source\\repos\\dthomso1\\CubeSatSeniorDesign\\Source\\CubeSatCommSim\\Data"));
+                //Console.WriteLine(data.ToString(), filepath);
             }
-            //we can specify a file path, not sure what to do for a default program location
-            */
+            
         }
     }
 }
