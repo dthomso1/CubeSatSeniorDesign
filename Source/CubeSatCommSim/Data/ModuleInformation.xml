@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Module>
+	<name>OBC</name>
+	<address>0</address>
+	<priority>0</priority>
+	<connections>CANBUS</connections>
+</Module>
+<Module>
+	<name>SASI</name>
+	<address>1</address>
+	<priority>0</priority>
+	<connections>CANBUS</connections>
+</Module>
