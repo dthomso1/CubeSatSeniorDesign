@@ -105,6 +105,48 @@ namespace CubeSatCommSim.Model
             }
         }
 
+        private bool _CommunicationDisabled;
+        public bool CommunicationDisabled
+        {
+            get { return _CommunicationDisabled; }
+            set
+            {
+                if(_CommunicationDisabled != value)
+                {
+                    _CommunicationDisabled = value;
+                    NotifyPropertyChanged("CommunicationDisabled");
+                }
+            }
+        }
+
+        private bool _RetryAction;
+        public bool RetryAction
+        {
+            get { return _RetryAction; }
+            set
+            {
+                if (_RetryAction != value)
+                {
+                    _RetryAction = value;
+                    NotifyPropertyChanged("RetryAction");
+                }
+            }
+        }
+
+        private bool _GarbageOutput;
+        public bool GarbageOutput
+        {
+            get { return _GarbageOutput; }
+            set
+            {
+                if (_GarbageOutput != value)
+                {
+                    _GarbageOutput = value;
+                    NotifyPropertyChanged("GarbageOutput");
+                }
+            }
+        }
+
         private bool randomPriority, randomDestination, randomSource, randomDestinationPort, randomSourcePort;
 
         public Module(string name, int address)
@@ -116,6 +158,7 @@ namespace CubeSatCommSim.Model
             randomSourcePort = false;
             Idle = true;
             Crashed = false;
+            CommunicationDisabled = false;
             Name = name;
             Address = address;
             BusConnections = new ObservableCollection<Bus>();
@@ -129,40 +172,97 @@ namespace CubeSatCommSim.Model
             //Check for fatal errors
             foreach(ErrorObject err in RegisteredErrors)
             {
-                if (err.Behaviour == ErrorBehaviour.FATAL)
-                {
-                    if (err.IsActive)
-                    {
-                        Crashed = true;
-                        EventLog.AddLog(new SimEvent(
-                                                "Module " + Name +
-                                                " has ceased operation due to a fatal error: "
-                                                + err.Description,
-                                                EventSeverity.FATAL_ERROR
-                                            )
-                                        );
-                        return;
-                    }
-                }
-                else if (err.Behaviour == ErrorBehaviour.RANDOM_PRIORITY)
-                {
-                    randomPriority = err.IsActive;
-                }
-                else if (err.Behaviour == ErrorBehaviour.RANDOM_DESTINATION_ADDRESS)
-                {
-                    randomDestination = err.IsActive;
-                }
-                else if (err.Behaviour == ErrorBehaviour.RANDOM_SOURCE_ADDRESS)
-                {
-                    randomSource = err.IsActive;
-                }
-                else if (err.Behaviour == ErrorBehaviour.RANDOM_DESTINATION_PORT)
-                {
-                    randomDestinationPort = err.IsActive;
-                }
-                else if (err.Behaviour == ErrorBehaviour.RANDOM_SOURCE_PORT)
-                {
-                    randomSourcePort = err.IsActive;
+                switch(err.Behaviour){
+                    case ErrorBehaviour.FATAL:
+                        if (err.IsActive)
+                        {
+                            Crashed = true;
+                            EventLog.AddLog(new SimEvent(
+                                                    "Module " + Name +
+                                                    " has ceased operation due to a fatal error: "
+                                                    + err.Description,
+                                                    EventSeverity.FATAL_ERROR
+                                                )
+                                            );
+                            return;
+                        }
+                        break;
+                    case ErrorBehaviour.GARBAGE_DATA:
+                        if (err.IsActive)
+                        {
+                            GarbageOutput = true;
+                        }
+                        else
+                        {
+                            GarbageOutput = false;
+                        }
+                        break;
+                    case ErrorBehaviour.LOSE_POWER:
+                        if (err.IsActive)
+                        {
+                            Crashed = true;
+                            EventLog.AddLog(new SimEvent(
+                                                    "Module " + Name +
+                                                    " has lost power: "
+                                                    + err.Description,
+                                                    EventSeverity.ERROR
+                                                )
+                                            );
+                            return;
+                        }
+                        else
+                        {
+                            Crashed = false;
+                            EventLog.AddLog(new SimEvent(
+                                                    "Module " + Name +
+                                                    " has regained power: "
+                                                    + err.Description,
+                                                    EventSeverity.INFO
+                                                )
+                                            );
+                        }
+                        break;
+                    case ErrorBehaviour.LOSE_COMMUNICATION:
+                        if (err.IsActive)
+                        {
+                            CommunicationDisabled = true;
+                            EventLog.AddLog(new SimEvent(
+                                                    "Module " + Name +
+                                                    " has lost communication: "
+                                                    + err.Description,
+                                                    EventSeverity.ERROR
+                                                )
+                                            );
+                        }
+                        else
+                        {
+                            CommunicationDisabled = false;
+                            EventLog.AddLog(new SimEvent(
+                                                    "Module " + Name +
+                                                    " has regained communication: "
+                                                    + err.Description,
+                                                    EventSeverity.INFO
+                                                )
+                                            );
+                        }
+                        break;
+                    case ErrorBehaviour.RETRY_TASK:
+                        if (err.IsActive)
+                        {
+                            RetryAction = true;
+                        }
+                        else
+                        {
+                            RetryAction = false;
+                        }
+                        break;
+                    case ErrorBehaviour.RANDOM_PRIORITY:
+                    case ErrorBehaviour.RANDOM_DESTINATION_ADDRESS:
+                    case ErrorBehaviour.RANDOM_SOURCE_ADDRESS:
+                    case ErrorBehaviour.RANDOM_DESTINATION_PORT:
+                    case ErrorBehaviour.RANDOM_SOURCE_PORT:
+                        randomPriority = err.IsActive;
+                        break;
                 }
             }
 
@@ -206,7 +306,7 @@ namespace CubeSatCommSim.Model
             packetHeader[CSPPacket.DestinationPort] = randomDestinationPort ? ((byte)(rnd.Next(0, 64))) : destination_port;
             packetHeader[CSPPacket.Priority] = randomPriority ? ((byte)(rnd.Next(0,4))) : priority;
             CSPPacket packet = new CSPPacket(packetHeader, dataSize, command);
-            
+                        
             if(bus == null)
             {
                 //Log failed send
@@ -214,9 +314,16 @@ namespace CubeSatCommSim.Model
                     "Module " + Name + " failed to send a packet because the target bus does not exist (check that the bus in your script exists in the simulation)",
                     EventSeverity.ERROR));
             }
+            else if (CommunicationDisabled)
+            {
+                //Log failed send
+                EventLog.AddLog(new SimEvent(
+                    "Module " + Name + " failed to send packet " + packet.ToString() + " because it has lost connection",
+                    EventSeverity.ERROR));
+            }
             else if (BusConnections.Contains(bus))
             {
-                //We are assuming that all packets with randomized bits are considered in error because the
+                //We are assuming that all packets with wrong bits/data are considered in error because the
                 //probablity that the error is not detected is negligible
                 if (randomPriority)
                 {
@@ -259,6 +366,11 @@ namespace CubeSatCommSim.Model
                         EventSeverity.WARNING));
                 }
 
+                if (GarbageOutput)
+                {
+                    packet.ErrorDetected = true;
+                }
+
                 bus.EnqueuePacket(packet);
                 if(!(randomPriority || randomDestination || randomSource || randomDestinationPort || randomSourcePort))
                 {
@@ -284,6 +396,13 @@ namespace CubeSatCommSim.Model
                 //Log received packet
                 EventLog.AddLog(new SimEvent(
                     "Module " + Name + " detected an error in received packet: " + packet.ToString() + ", the packet was discarded",
+                    EventSeverity.ERROR));
+            }
+            else if (CommunicationDisabled)
+            {
+                //Log unreceived packet
+                EventLog.AddLog(new SimEvent(
+                    "Module " + Name + " could not receive packet " + packet.ToString() + " because it has lost connection",
                     EventSeverity.ERROR));
             }
             else

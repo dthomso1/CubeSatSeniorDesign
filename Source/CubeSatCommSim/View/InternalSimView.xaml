@@ -45,6 +45,11 @@
                     Height="24" Width="80"
                     Command="{Binding AddBusCommand}"
                 />
+                <CheckBox
+                    Content="Loop script"
+                    Margin="0,8,0,0"
+                    IsChecked="{Binding LoopSimulation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                />
             </StackPanel>
 
             <!--Buses-->

@@ -7,11 +7,11 @@ namespace CubeSatCommSim.Model
     public enum ErrorBehaviour
     {
         FATAL = 0,
-        unknown = 1,
-        unknown2 = 2,
-        unknown3 = 3,
-        unknown4 = 4,
-        unknown5 = 5,
+        GARBAGE_DATA = 1, //NYI
+        LOSE_POWER = 2, //NYI
+        LOSE_COMMUNICATION = 3, //NYI
+        RETRY_TASK = 4,
+        unknown = 5,
         RANDOM_PRIORITY = 6,
         RANDOM_DESTINATION_ADDRESS = 7,
         RANDOM_SOURCE_ADDRESS = 8,
@@ -44,6 +44,7 @@ namespace CubeSatCommSim.Model
                 }
             }
         }
+
         private bool _IsActive;
         public bool IsActive
         {
