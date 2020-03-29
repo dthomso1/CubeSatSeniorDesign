@@ -72,14 +72,8 @@ namespace CubeSatCommSim.Model
         //David: allows module and bus lists to be cleared before loading module and bus configuration
         public void clearModuleBusToLoad()
         {
-            foreach (Module m in Modules)
-            {
-                RemoveModule(m);
-            }
-            foreach (Bus b in Buses)
-            {
-                RemoveBus(b);
-            }
+            Modules.Clear();
+            Buses.Clear();
         }
 
         //Looks through the error list and applies the selected errors to the matching modules
@@ -316,7 +310,7 @@ namespace CubeSatCommSim.Model
                          IEnumerable<Module> ModuleResult = from c in doc.Descendants("Module")
                                              select new Module()
                                              {
-                                                 Name = (string) c.Element(c.Element("name").Value),
+                                                 Name = (string)c.Element(c.Element("name").Value),
                                                  Address = int.Parse(c.Element("address").Value),
                                                  //priority = int.Parse("priority").Value,
                                                  //BusConnections = c.Element("connections").Value
@@ -327,19 +321,19 @@ namespace CubeSatCommSim.Model
                              Modules.Add(mo);
                          }
                          //issue with Bus being abstract
-                         /*//using the selected filename, adds modules to list for modules
+                         //using the selected filename, adds modules to list for modules
                          XDocument doc2 = XDocument.Parse(File.ReadAllText(dlg.FileName));
                          IEnumerable<Bus> BusResult = from c in doc2.Descendants("Bus")
                                              select new Bus()
                                              {
-                                                 name = c.Element(c.Element("name").Value),
+                                                 Name = (string)c.Element(c.Element("name").Value),
                                                  //connectedModules = c.Element("connections").Value
                                              };
 
                          foreach (Bus bo in BusResult)
                          {
                              Buses.Add(bo);
-                         }*/
+                         }
                     }
                     catch(Exception ex)
                     {
@@ -359,6 +353,27 @@ namespace CubeSatCommSim.Model
             {
                 //Have to create ObjectXMLSerializer
                 //ObjectXMLSerializer<Module>.Save(mod, "ModuleBusConfiguration" + DateTime.Now.ToString() + ".xml");
+                using (XmlWriter xmlWriter = XmlWriter.Create("moduleBusConfiguration.xml")) //have to fix location and name
+                {
+                    xmlWriter.WriteStartDocument();
+                    xmlWriter.WriteStartElement("ModulesAndBuses");
+                    foreach(Module m in Modules)
+                    {
+                        xmlWriter.WriteStartElement("Module");
+                        xmlWriter.WriteStartElement("name");
+                        xmlWriter.WriteString(m.Name);
+                        xmlWriter.WriteStartElement("Priority");
+                        xmlWriter.WriteValue(m.Priority);
+                    }
+                    foreach(Bus b in Buses)
+                    {
+                        xmlWriter.WriteStartElement("Bus");
+                        xmlWriter.WriteStartElement("name");
+                        xmlWriter.WriteString(b.Name);
+                    }
+                    xmlWriter.WriteEndDocument();
+                    xmlWriter.Close();
+                }
             }
         }
     }
