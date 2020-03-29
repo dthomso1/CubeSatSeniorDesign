@@ -32,8 +32,10 @@
             Grid.ColumnSpan="3"
         >
             <MenuItem Header="File" Height="20">
-                <MenuItem Header="Placeholder 1"/>
-                <MenuItem Header="Placeholder 2"/>
+                <MenuItem x:Name="ImportFile"
+                          Header="Import File" />
+                <MenuItem x:Name="ÈxportFile" 
+                          Header="Export File"/>
                 <MenuItem Header="Placeholder 3"/>
             </MenuItem>
             <MenuItem x:Name="MenuBarStart"

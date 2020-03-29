@@ -8,6 +8,8 @@ using System.Threading;
 using System.IO;
 using System.Windows;
 using Microsoft.Win32;
+using System.Xml.Linq;
+using System.Xml;
 
 namespace CubeSatCommSim.Model
 {
@@ -65,6 +67,18 @@ namespace CubeSatCommSim.Model
             foreach (Module m in b.ConnectedModules)
             {
                 m.BusConnections.Remove(b);
+            }
+        }
+        //David: allows module and bus lists to be cleared before loading module and bus configuration
+        public void clearModuleBusToLoad()
+        {
+            foreach (Module m in Modules)
+            {
+                RemoveModule(m);
+            }
+            foreach (Bus b in Buses)
+            {
+                RemoveBus(b);
             }
         }
 
@@ -282,6 +296,68 @@ namespace CubeSatCommSim.Model
         public void StopSim()
         {
             abort = true;
+        }
+
+        private void LoadConfiguration()
+        {
+            var dlg = new OpenFileDialog();
+            dlg.Title = "Open Configuration File";
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "XML files (.xml)|*.xml";
+            dlg.CheckFileExists = true;
+            if(dlg.ShowDialog() == true)
+            {
+                //Open script file
+                if (File.Exists(dlg.FileName))
+                {
+                    try
+                    {    //using the selected filename, adds modules to list for modules
+                         XDocument doc = XDocument.Parse(File.ReadAllText(dlg.FileName));
+                         IEnumerable<Module> ModuleResult = from c in doc.Descendants("Module")
+                                             select new Module()
+                                             {
+                                                 name = c.Element(c.Element("name").Value),
+                                                 address = int.Parse(c.Element("address").Value),
+                                                 //priority = int.Parse("priority").Value,
+                                                 //connections = c.Element("connections").Value
+                                             };
+
+                         foreach (Module mo in ModuleResult)
+                         {
+                             Modules.Add(mo);
+                         }
+                         //using the selected filename, adds modules to list for modules
+                         XDocument doc2 = XDocument.Parse(File.ReadAllText(dlg.FileName));
+                         IEnumerable<Bus> BusResult = from c in doc2.Descendants("Bus")
+                                             select new Bus()
+                                             {
+                                                 name = c.Element(c.Element("name").Value),
+                                                 //connectedModules = c.Element("connections").Value
+                                             };
+
+                         foreach (Bus bo in BusResult)
+                         {
+                             Buses.Add(bo);
+                         }
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(
+                            "An error occured while trying to read the script file: " + ex.Message,
+                            "Error Reading File",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error
+                        );
+                    }            
+                }
+            }
+        }//end of LoadConfiguration
+        private void SaveConfiguration()
+        {
+            foreach (Module mod in Modules)
+            {
+                ObjectXMLSerializer<Module>.Save(mod, "ModuleBusConfiguration" + DateTime.Now.ToString() + ".xml");
+            }
         }
     }
 }

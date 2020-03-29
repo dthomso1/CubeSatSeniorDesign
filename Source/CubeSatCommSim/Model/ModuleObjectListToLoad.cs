@@ -9,11 +9,11 @@ using System.Xml;
 
 namespace CubeSatCommSim.Model
 {
-    public static class ModuleObjectList
+    public static class ModuleObjectListToLoad
     {
-        public static ObservableCollection<ModuleObject> ModuleList { get; private set; } = new ObservableCollection<ModuleObject>();
+        public static ObservableCollection<ModuleObjectToLoad> ModuleList { get; private set; } = new ObservableCollection<ModuleObjectToLoad>();
 
-        public static void AddModule(ModuleObject module)
+        public static void AddModule(ModuleObjectToLoad module)
         {
             ModuleList.Add(module);
         }
@@ -37,16 +37,16 @@ namespace CubeSatCommSim.Model
                                                   connections = c.Element("connections").Value
                                               };
 
-            foreach (ModuleObject mo in result)
+            foreach (ModuleObjectToLoad mo in result)
             {
                 ModuleList.Add(mo);
             }
         }
         public static void ListToXml()
         {
-            foreach (ModuleObject mod in ModuleList)
+            foreach (ModuleObjectToLoad mod in ModuleList)
             {
-                ObjectXMLSerializer<ModuleObject>.Save(mod, "ModuleInformation.xml");
+                ObjectXMLSerializer<ModuleObjectToLoad>.Save(mod, "ModuleInformation.xml");
             }
         }
     }

@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace CubeSatCommSim.Model
 {
-    public class ModuleObject : ModelBase
+    public class ModuleObjectToLoad : ModelBase
     {
         private String _name;
         public bool Name
