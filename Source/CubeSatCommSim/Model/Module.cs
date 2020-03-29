@@ -103,6 +103,10 @@ namespace CubeSatCommSim.Model
             BusConnections = new ObservableCollection<Bus>();
             RegisteredErrors = new ObservableCollection<ErrorObject>();
         }
+        public Module()
+        {
+        //blank constructor for InternalSimController to allow XDocument to function
+        }
 
         public void Process(int step)
         {

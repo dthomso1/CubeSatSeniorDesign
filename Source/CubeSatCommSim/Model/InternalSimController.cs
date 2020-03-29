@@ -298,7 +298,7 @@ namespace CubeSatCommSim.Model
             abort = true;
         }
 
-        private void LoadConfiguration()
+        public void LoadConfiguration()
         {
             var dlg = new OpenFileDialog();
             dlg.Title = "Open Configuration File";
@@ -316,17 +316,18 @@ namespace CubeSatCommSim.Model
                          IEnumerable<Module> ModuleResult = from c in doc.Descendants("Module")
                                              select new Module()
                                              {
-                                                 name = c.Element(c.Element("name").Value),
-                                                 address = int.Parse(c.Element("address").Value),
+                                                 Name = (string) c.Element(c.Element("name").Value),
+                                                 Address = int.Parse(c.Element("address").Value),
                                                  //priority = int.Parse("priority").Value,
-                                                 //connections = c.Element("connections").Value
+                                                 //BusConnections = c.Element("connections").Value
                                              };
 
                          foreach (Module mo in ModuleResult)
                          {
                              Modules.Add(mo);
                          }
-                         //using the selected filename, adds modules to list for modules
+                         //issue with Bus being abstract
+                         /*//using the selected filename, adds modules to list for modules
                          XDocument doc2 = XDocument.Parse(File.ReadAllText(dlg.FileName));
                          IEnumerable<Bus> BusResult = from c in doc2.Descendants("Bus")
                                              select new Bus()
@@ -338,7 +339,7 @@ namespace CubeSatCommSim.Model
                          foreach (Bus bo in BusResult)
                          {
                              Buses.Add(bo);
-                         }
+                         }*/
                     }
                     catch(Exception ex)
                     {
@@ -352,11 +353,12 @@ namespace CubeSatCommSim.Model
                 }
             }
         }//end of LoadConfiguration
-        private void SaveConfiguration()
+        public void SaveConfiguration()
         {
             foreach (Module mod in Modules)
             {
-                ObjectXMLSerializer<Module>.Save(mod, "ModuleBusConfiguration" + DateTime.Now.ToString() + ".xml");
+                //Have to create ObjectXMLSerializer
+                //ObjectXMLSerializer<Module>.Save(mod, "ModuleBusConfiguration" + DateTime.Now.ToString() + ".xml");
             }
         }
     }
