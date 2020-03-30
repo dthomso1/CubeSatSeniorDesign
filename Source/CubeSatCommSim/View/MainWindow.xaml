@@ -35,7 +35,7 @@
                 <MenuItem x:Name="ImportFile"
                           Header="Import File"
                           Click="ImportFile_Click"/>
-              <MenuItem x:Name="ÈxportFile" 
+              <MenuItem x:Name="ExportFile" 
                           Header="Export File"
                           Click="ExportFile_Click"/>
               <MenuItem Header="Placeholder 3"/>

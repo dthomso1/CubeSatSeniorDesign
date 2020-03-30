@@ -10,6 +10,7 @@ using System.Windows;
 using Microsoft.Win32;
 using System.Xml.Linq;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CubeSatCommSim.Model
 {
@@ -310,7 +311,7 @@ namespace CubeSatCommSim.Model
                          IEnumerable<Module> ModuleResult = from c in doc.Descendants("Module")
                                              select new Module()
                                              {
-                                                 Name = (string)c.Element(c.Element("name").Value),
+                                                 Name = c.Element("name").Value,
                                                  Address = int.Parse(c.Element("address").Value),
                                                  //priority = int.Parse("priority").Value,
                                                  //BusConnections = c.Element("connections").Value
@@ -322,9 +323,9 @@ namespace CubeSatCommSim.Model
                          }
                          //issue with Bus being abstract
                          //using the selected filename, adds modules to list for modules
-                         XDocument doc2 = XDocument.Parse(File.ReadAllText(dlg.FileName));
-                         IEnumerable<Bus> BusResult = from c in doc2.Descendants("Bus")
-                                             select new Bus()
+                         /*XDocument doc2 = XDocument.Parse(File.ReadAllText(dlg.FileName));
+                         IEnumerable<CSPBus> BusResult = from c in doc2.Descendants("Bus")
+                                             select new CSPBus()
                                              {
                                                  Name = (string)c.Element(c.Element("name").Value),
                                                  //connectedModules = c.Element("connections").Value
@@ -333,7 +334,7 @@ namespace CubeSatCommSim.Model
                          foreach (Bus bo in BusResult)
                          {
                              Buses.Add(bo);
-                         }
+                         }*/
                     }
                     catch(Exception ex)
                     {
@@ -349,32 +350,28 @@ namespace CubeSatCommSim.Model
         }//end of LoadConfiguration
         public void SaveConfiguration()
         {
-            foreach (Module mod in Modules)
-            {
-                //Have to create ObjectXMLSerializer
-                //ObjectXMLSerializer<Module>.Save(mod, "ModuleBusConfiguration" + DateTime.Now.ToString() + ".xml");
-                using (XmlWriter xmlWriter = XmlWriter.Create("moduleBusConfiguration.xml")) //have to fix location and name
+                XmlDocument xmlDoc = new XmlDocument();
+                XmlNode rootNode = xmlDoc.CreateElement("ModulesAndBuses");
+                xmlDoc.AppendChild(rootNode);
+                
+                foreach(Module m in Modules)
                 {
-                    xmlWriter.WriteStartDocument();
-                    xmlWriter.WriteStartElement("ModulesAndBuses");
-                    foreach(Module m in Modules)
-                    {
-                        xmlWriter.WriteStartElement("Module");
-                        xmlWriter.WriteStartElement("name");
-                        xmlWriter.WriteString(m.Name);
-                        xmlWriter.WriteStartElement("Priority");
-                        xmlWriter.WriteValue(m.Priority);
-                    }
-                    foreach(Bus b in Buses)
-                    {
-                        xmlWriter.WriteStartElement("Bus");
-                        xmlWriter.WriteStartElement("name");
-                        xmlWriter.WriteString(b.Name);
-                    }
-                    xmlWriter.WriteEndDocument();
-                    xmlWriter.Close();
+                    XmlNode ModuleNode = xmlDoc.CreateElement("Module");
+                    XmlNode ModuleNameNode = xmlDoc.CreateElement("name");
+                    ModuleNameNode.InnerText = m.Name;
+                    XmlNode ModulePriorityNode = xmlDoc.CreateElement("Priority");
+                    ModulePriorityNode.InnerText= m.Priority.ToString();
                 }
-            }
+                
+                foreach(Bus b in Buses)
+                {
+                    XmlNode BusNode = xmlDoc.CreateElement("Bus");
+                    XmlNode BusNameNode = xmlDoc.CreateElement("name");
+                    BusNameNode.InnerText = b.Name;
+                }
+                xmlDoc.Save(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedConfiguration.xml");
+
+         
         }
     }
 }
