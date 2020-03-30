@@ -350,28 +350,30 @@ namespace CubeSatCommSim.Model
         }//end of LoadConfiguration
         public void SaveConfiguration()
         {
-                XmlDocument xmlDoc = new XmlDocument();
-                XmlNode rootNode = xmlDoc.CreateElement("ModulesAndBuses");
-                xmlDoc.AppendChild(rootNode);
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = ("    "); 
+            XmlWriter writer = XmlWriter.Create(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedConfiguration.xml");
+            writer.WriteStartDocument();
                 
-                foreach(Module m in Modules)
-                {
-                    XmlNode ModuleNode = xmlDoc.CreateElement("Module");
-                    XmlNode ModuleNameNode = xmlDoc.CreateElement("name");
-                    ModuleNameNode.InnerText = m.Name;
-                    XmlNode ModulePriorityNode = xmlDoc.CreateElement("Priority");
-                    ModulePriorityNode.InnerText= m.Priority.ToString();
-                }
-                
-                foreach(Bus b in Buses)
-                {
-                    XmlNode BusNode = xmlDoc.CreateElement("Bus");
-                    XmlNode BusNameNode = xmlDoc.CreateElement("name");
-                    BusNameNode.InnerText = b.Name;
-                }
-                xmlDoc.Save(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedConfiguration.xml");
-
-         
+            writer.WriteStartElement("ModulesAndBuses");
+            writer.WriteStartElement("Modules");
+            
+            foreach(Module m in Modules)
+            {
+                writer.WriteStartElement("Module");
+                writer.WriteElementString("name", m.Name);
+                writer.WriteElementString("Priority", m.Priority.ToString());
+                writer.WriteEndElement();
+            }
+            foreach(Bus b in Buses)
+            {
+                writer.WriteStartElement("Bus");
+                writer.WriteElementString("name", b.Name);
+                writer.WriteEndElement();
+            }
+            writer.Flush();
+            writer.Close();
         }
     }
 }
