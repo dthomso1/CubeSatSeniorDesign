@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ErrorInfo>
-  <Error>
-    <id>26</id>
-    <description>EE-Battery pack failure</description>
+	<Error>
+		<id>26</id>
+		<description>EE-Battery pack failure</description>
     <moduleAffected>EPS</moduleAffected>
     <isFatal>true</isFatal>
     <behaviour>0</behaviour>

@@ -23,8 +23,8 @@
                 <DataGridTextColumn Binding="{Binding ModuleAffected, Mode=OneWay}"
                                     Header="Module Affected"
                                     IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding IsFatal, Mode=OneWay}"
-                                    Header="Fatal" 
+                <DataGridTextColumn Binding="{Binding Behaviour, Mode=OneWay}"
+                                    Header="Behaviour" 
                                     IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Description, Mode=OneWay}"
                                     Header="Description" 
