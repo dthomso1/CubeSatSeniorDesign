@@ -81,31 +81,31 @@
   <Error>
     <id>50</id>
     <description>Radiation or interference flips random bits in the priority</description>
-    <moduleAffected>?</moduleAffected>
+    <moduleAffected>OBC</moduleAffected>
     <behaviour>6</behaviour>
   </Error>
   <Error>
     <id>51</id>
     <description>Radiation or interference flips random bits in the destination address</description>
-    <moduleAffected>?</moduleAffected>
+    <moduleAffected>OBC</moduleAffected>
     <behaviour>7</behaviour>
   </Error>
   <Error>
     <id>52</id>
     <description>Radiation or interference flips random bits in the source adddress</description>
-    <moduleAffected>?</moduleAffected>
+    <moduleAffected>OBC</moduleAffected>
     <behaviour>8</behaviour>
   </Error>
   <Error>
     <id>53</id>
     <description>Radiation or interference flips random bits in the destination port</description>
-    <moduleAffected>?</moduleAffected>
+    <moduleAffected>OBC</moduleAffected>
     <behaviour>9</behaviour>
   </Error>
   <Error>
     <id>54</id>
     <description>Radiation or interference flips random bits in the source port</description>
-    <moduleAffected>?</moduleAffected>
+    <moduleAffected>OBC</moduleAffected>
     <behaviour>10</behaviour>
   </Error>
 </ErrorInfo>
