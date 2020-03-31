@@ -8,6 +8,9 @@ using System.Threading;
 using System.IO;
 using System.Windows;
 using Microsoft.Win32;
+using System.Xml.Linq;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace CubeSatCommSim.Model
 {
@@ -78,6 +81,12 @@ namespace CubeSatCommSim.Model
             {
                 m.BusConnections.Remove(b);
             }
+        }
+        //David: allows module and bus lists to be cleared before loading module and bus configuration
+        public void clearModuleBusToLoad()
+        {
+            Modules.Clear();
+            Buses.Clear();
         }
 
         //Looks through the error list and applies the selected errors to the matching modules
@@ -284,6 +293,90 @@ namespace CubeSatCommSim.Model
         public void StopSim()
         {
             abort = true;
+        }
+
+        public void LoadConfiguration()
+        {
+            var dlg = new OpenFileDialog();
+            dlg.Title = "Open Configuration File";
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "XML files (.xml)|*.xml";
+            dlg.CheckFileExists = true;
+            if(dlg.ShowDialog() == true)
+            {
+                //Open script file
+                if (File.Exists(dlg.FileName))
+                {
+                    try
+                    {    //using the selected filename, adds modules to list for modules
+                         XDocument doc = XDocument.Parse(File.ReadAllText(dlg.FileName));
+                         IEnumerable<Module> ModuleResult = from c in doc.Descendants("Module")
+                                             select new Module()
+                                             {
+                                                 Name = c.Element("name").Value,
+                                                 Address = int.Parse(c.Element("address").Value),
+                                                 BusConnections  = new ObservableCollection<Bus>(),
+                                                 RegisteredErrors = new ObservableCollection<ErrorObject>(),
+                                                 Idle = true,
+                                                 Crashed = false
+                                             };
+
+                         foreach (Module mo in ModuleResult)
+                         {
+                             Modules.Add(mo);
+                         }
+                         //issue with Bus being abstract
+                         //using the selected filename, adds modules to list for modules
+                        /* XDocument doc2 = XDocument.Parse(File.ReadAllText(dlg.FileName));
+                         IEnumerable<CSPBus> BusResult = from c in doc2.Descendants("Bus")
+                                             select new CSPBus()
+                                             {
+                                                 Name = (string)c.Element(c.Element("name").Value),
+                                                 //connectedModules = c.Element("connections").Value
+                                             };
+
+                         foreach (Bus bo in BusResult)
+                         {
+                             Buses.Add(bo);
+                         }*/
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(
+                            "An error occured while trying to read the script file: " + ex.Message,
+                            "Error Reading File",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error
+                        );
+                    }            
+                }
+            }
+        }//end of LoadConfiguration
+        public void SaveConfiguration()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = ("    "); 
+            XmlWriter writer = XmlWriter.Create(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedConfiguration.xml");
+            writer.WriteStartDocument();
+                
+            writer.WriteStartElement("ModulesAndBuses");
+            
+            foreach(Module m in Modules)
+            {
+                writer.WriteStartElement("Module");
+                writer.WriteElementString("name", m.Name);
+                writer.WriteElementString("address", m.Address.ToString());
+                writer.WriteEndElement();
+            }
+            foreach(Bus b in Buses)
+            {
+                writer.WriteStartElement("Bus");
+                writer.WriteElementString("name", b.Name);
+                writer.WriteEndElement();
+            }
+            writer.Flush();
+            writer.Close();
         }
 
         //Executes the event and returns true if the execution should halt
