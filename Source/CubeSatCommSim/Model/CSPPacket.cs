@@ -49,18 +49,44 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        public CSPPacket(int headerValues, short dataSize)
+        private bool _ErrorDetected;
+        public bool ErrorDetected
+        {
+            get { return _ErrorDetected; }
+            set
+            {
+                _ErrorDetected = value;
+                NotifyPropertyChanged("ErrorDetected");
+            }
+        }
+
+        private ModuleCommand _Command;
+        public ModuleCommand Command
+        {
+            get { return _Command; }
+            set
+            {
+                _Command = value;
+                NotifyPropertyChanged("Command");
+            }
+        }
+
+        public CSPPacket(int headerValues, short dataSize, ModuleCommand command)
         {
             PartTransmitted = 0;
             DataSize = dataSize;
             Header = new BitVector32(headerValues);
+            ErrorDetected = false;
+            Command = command;
         }
 
-        public CSPPacket(BitVector32 header, short dataSize)
+        public CSPPacket(BitVector32 header, short dataSize, ModuleCommand command)
         {
             PartTransmitted = 0;
             DataSize = dataSize;
             Header = header;
+            ErrorDetected = false;
+            Command = command;
         }
 
         public override string ToString()
@@ -80,7 +106,15 @@ namespace CubeSatCommSim.Model
 
         public int CompareTo(object obj)
         {
-            return this.Header[Priority].CompareTo(((CSPPacket)obj).Header[Priority]);
+            var priorityCompare = this.Header[Priority].CompareTo(((CSPPacket)obj).Header[Priority]);
+            if(priorityCompare == 0)
+            {
+                return this.Header[SourceAddress].CompareTo(((CSPPacket)obj).Header[SourceAddress]);
+            }
+            else
+            {
+                return priorityCompare;
+            }
         }
     }
 }

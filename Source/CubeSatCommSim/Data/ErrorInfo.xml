@@ -4,18 +4,77 @@
 		<id>26</id>
 		<description>EE-Battery pack failure</description>
     <moduleAffected>EPS</moduleAffected>
-		<isFatal>true</isFatal>
-	</Error>
+    <isFatal>true</isFatal>
+    <behaviour>0</behaviour>
+  </Error>
   <Error>
     <id>30</id>
     <description>EE-EPS microcontroller hardware failure</description>
     <moduleAffected>EPS</moduleAffected>
     <isFatal>true</isFatal>
+    <behaviour>0</behaviour>
   </Error>
   <Error>
     <id>47</id>
     <description>SWE-SASI mission software flow failure</description>
     <moduleAffected>SASI</moduleAffected>
     <isFatal>false</isFatal>
+    <behaviour>1</behaviour>
+  </Error>
+  <Error>
+    <id>21</id>
+    <description>S-Band antenna does not deploy due to mechanism/circuit failure</description>
+    <moduleAffected>S-band</moduleAffected>
+    <isFatal>false</isFatal>
+    <behaviour>5</behaviour>
+  </Error>
+  <Error>
+    <id>16</id>
+    <description>SASI detector temperature too high</description>
+    <moduleAffected>SASI</moduleAffected>
+    <isFatal>false</isFatal>
+    <behaviour>4</behaviour>
+  </Error>
+  <Error>
+    <id>14</id>
+    <description>CubeSat precession too great</description>
+    <moduleAffected>(picture module)</moduleAffected>
+    <isFatal>false</isFatal>
+    <behaviour>5</behaviour>
+  </Error>
+  <Error>
+    <id>28</id>
+    <description>EE-Load switch latchup prevents systems from being switched off</description>
+    <moduleAffected>ANY</moduleAffected>
+    <isFatal>false</isFatal>
+    <behaviour>4</behaviour>
+  </Error>
+  <Error>
+    <id>29</id>
+    <description>EE-Voltage regulation failure</description>
+    <moduleAffected>EPS</moduleAffected>
+    <isFatal>True</isFatal>
+    <behaviour>5</behaviour>
+  </Error>
+  <Error>
+    <id>37</id>
+    <description>COM-To much interference on the channel VIOLET uses</description>
+    <moduleAffected>VIOLET</moduleAffected>
+    <isFatal>False</isFatal>
+    <behaviour>5</behaviour>
+  </Error>
+  <Error>
+    <id>39</id>
+    <description>COM-Signal is too weak for the ground station to receive</description>
+    <moduleAffected>VIOLET</moduleAffected>
+    <isFatal>False</isFatal>
+    <behaviour>5</behaviour>
+  </Error>
+  <Error>
+    <id>44</id>
+    <description>SWE-MCU software not responding</description>
+    <moduleAffected>OBC</moduleAffected>
+    <isFatal>False</isFatal>
+    <behaviour>4</behaviour>
   </Error>
 </ErrorInfo>

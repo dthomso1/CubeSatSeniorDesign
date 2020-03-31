@@ -32,9 +32,12 @@
             Grid.ColumnSpan="3"
         >
             <MenuItem Header="File" Height="20">
-                <MenuItem Header="Placeholder 1"/>
-                <MenuItem Header="Placeholder 2"/>
-                <MenuItem Header="Placeholder 3"/>
+                <MenuItem x:Name="ImportFile"
+                          Header="Import File"
+                          Click="ImportFile_Click"/>
+                <MenuItem x:Name="ExportFile" 
+                          Header="Export File"
+                          Click="ExportFile_Click"/>
             </MenuItem>
             <MenuItem x:Name="MenuBarStart"
                       Header="Start" 
@@ -52,15 +55,12 @@
                                           Mode=OneWay,
                                           FallbackValue=false}">
             </MenuItem>
-            <MenuItem Header="View" Height="20">
+            <!--MenuItem Header="View" Height="20">
                 <MenuItem Header="Placeholder 1"/>
                 <MenuItem Header="Placeholder 2"/>
                 <MenuItem Header="Placeholder 3"/>
-            </MenuItem>
-            <MenuItem Header="Help" Height="20">
-                <MenuItem Header="Placeholder 1"/>
-                <MenuItem Header="Placeholder 2"/>
-                <MenuItem Header="Placeholder 3"/>
+            </-->
+            <MenuItem IsEnabled="False" Header="Help" Height="20">
             </MenuItem>
         </Menu>
 

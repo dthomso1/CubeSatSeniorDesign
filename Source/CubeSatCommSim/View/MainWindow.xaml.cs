@@ -48,5 +48,15 @@ namespace CubeSatCommSim
         {
             IntSimController.StopSim();
         }
+        //David:
+        private void ImportFile_Click(object sender, RoutedEventArgs e)
+        {
+            IntSimController.clearModuleBusToLoad();
+            IntSimController.LoadConfiguration();
+        }
+        private void ExportFile_Click(object sender, RoutedEventArgs e)
+        {
+            IntSimController.SaveConfiguration();
+        }
     }
 }

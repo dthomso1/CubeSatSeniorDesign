@@ -8,7 +8,8 @@ namespace CubeSatCommSim.Model
 {
     public enum ModuleCommand
     {
-        SEND
+        SEND,
+        PING
     }
 
     public class ScriptedEvent

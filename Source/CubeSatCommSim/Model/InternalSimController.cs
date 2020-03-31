@@ -8,6 +8,9 @@ using System.Threading;
 using System.IO;
 using System.Windows;
 using Microsoft.Win32;
+using System.Xml.Linq;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace CubeSatCommSim.Model
 {
@@ -15,6 +18,17 @@ namespace CubeSatCommSim.Model
     {
         public ObservableCollection<Module> Modules { get; }
         public ObservableCollection<Bus> Buses { get; }
+
+        private bool _LoopSimulation;
+        public bool LoopSimulation
+        {
+            get { return _LoopSimulation; }
+            set
+            {
+                _LoopSimulation = value;
+                NotifyPropertyChanged("LoopSimulation");
+            }
+        }
 
         private bool _SimulationRunning;
         public bool SimulationRunning
@@ -27,12 +41,13 @@ namespace CubeSatCommSim.Model
             }
         }
 
-        private List<ScriptedEvent> eventList;
+        private List<ScriptedEvent> eventList; //List as used by the program (retry events may be added)
         private bool abort;
+        private bool scriptWarningShown;
 
         //For testing
-        private CSPBus CSPBus1;
-        private Module Module1, Module2;
+        //private CSPBus CSPBus1;
+        //private Module Module1, Module2;
 
         public InternalSimController()
         {
@@ -40,14 +55,14 @@ namespace CubeSatCommSim.Model
             abort = false;
             Modules = new ObservableCollection<Module>();
             Buses = new ObservableCollection<Bus>();
-            
+            LoopSimulation = true;
             //TEMP CODE FOR TESTING
-            CSPBus1 = new CSPBus("CANBUS", 100);
-            Module1 = new Module("OBC", 0);
-            Module2 = new Module("SASI", 1);
-            Buses.Add(CSPBus1);
-            Modules.Add(Module1);
-            Modules.Add(Module2);
+            //CSPBus1 = new CSPBus("CANBUS", 100);
+            //Module1 = new Module("OBC", 0);
+            //Module2 = new Module("SASI", 1);
+            //Buses.Add(CSPBus1);
+            //Modules.Add(Module1);
+            //Modules.Add(Module2);
         }
         
         public void RemoveModule(Module m)
@@ -66,6 +81,12 @@ namespace CubeSatCommSim.Model
             {
                 m.BusConnections.Remove(b);
             }
+        }
+        //David: allows module and bus lists to be cleared before loading module and bus configuration
+        public void clearModuleBusToLoad()
+        {
+            Modules.Clear();
+            Buses.Clear();
         }
 
         //Looks through the error list and applies the selected errors to the matching modules
@@ -89,6 +110,15 @@ namespace CubeSatCommSim.Model
             foreach (Module m in Modules)
             {
                 m.RegisteredErrors.Clear();
+            }
+        }
+
+        //Resets all the modules
+        public void ResetCrashedModules()
+        {
+            foreach (Module m in Modules)
+            {
+                m.Reset();
             }
         }
 
@@ -182,11 +212,11 @@ namespace CubeSatCommSim.Model
         {
             if (SimulationRunning) return;
             abort = false;
-            bool scriptWarningShown = false;
+            scriptWarningShown = false;
 
             var latestEventTime = LoadScript();
             if (latestEventTime <= 0) return;
-
+            
             SimulationRunning = true;
 
             EventLog.AddLog(new SimEvent("Starting simulation...", EventSeverity.IMPORTANT));
@@ -195,60 +225,34 @@ namespace CubeSatCommSim.Model
             RegisterErrors();
 
             int step = 0;
-            //Continue the simulation until it is aborted, or until all modules and buses are idle after the last event occurs
-            while (!abort && (!(AllBusesIdle() && AllModulesIdle()) || step < latestEventTime))
+            //Continue the simulation until it is aborted, or until all modules and buses are idle after the last event occurs if not looping
+            while (!abort && (LoopSimulation || ((!(AllBusesIdle() && AllModulesIdle()) || step <= latestEventTime))))
             {
+                var retryList = new List<ScriptedEvent>();
+                var stepCheck = LoopSimulation ? step % (latestEventTime + 1) : step;
                 //Run each scripted event scheduled for the current time step
-                foreach(ScriptedEvent ev in eventList.Where(ev => ev.Time == step))
+                foreach (ScriptedEvent ev in eventList.Where(ev => ev.Time == stepCheck))
                 {
-                    switch (ev.Command)
+                    Module source = Modules.Where(m => m.Name.Equals(ev.Module)).FirstOrDefault();
+
+                    if (ExecuteScriptedEvent(ev))
                     {
-                        //Send packet with given data size from source to target over target bus 
-                        case ModuleCommand.SEND:
+                        break;
+                    }
 
-                            //Parse parameters
-                            Module source = Modules.Where(m => m.Name.Equals(ev.Module)).FirstOrDefault();
-                            byte dest_address;
-                            if(!byte.TryParse(ev.Parameters[0], out dest_address)){
-                                MessageBox.Show("An event in your script has an invalid parameter. This simulation will now abort.", "Parameter Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                abort = true;
-                                break;
-                            }
-                            Bus targetBus = Buses.Where(b => b.Name.Equals(ev.Parameters[1])).FirstOrDefault();
-                            short dataSize;
-                            if(!short.TryParse(ev.Parameters[2], out dataSize))
-                            {
-                                dataSize = 1;
-                            }
-
-                            //Check source module exists
-                            if(source == null)
-                            {
-                                if (!scriptWarningShown)
-                                {
-                                    scriptWarningShown = true;
-                                    if(MessageBox.Show("A scripted event cannot be run because the source module does not exist. Continue the simulation?", "Script Error", MessageBoxButton.YesNo, MessageBoxImage.Warning)
-                                        == MessageBoxResult.No)
-                                    {
-                                        abort = true;
-                                        break;
-                                    }
-                                }
-                                break;
-                            }
-
-                            //Send a packet
-                            if(targetBus is CSPBus)
-                            {
-                                source.SendCSPPacket((CSPBus)targetBus, dest_address, 0, 0, (byte)source.Priority, dataSize);
-                            }
-                            break;
-
-
-                        default:
-                            break;
+                    //If module needs to retry, trigger same action on next time step
+                    if (source.RetryAction)
+                    {
+                        EventLog.AddLog(
+                            new SimEvent(
+                                "Module " + source.Name + " is retrying its last action",
+                                EventSeverity.WARNING
+                            )
+                        );
+                        ev.Time++;
                     }
                 }
+                
 
                 if (!abort)
                 {
@@ -272,9 +276,16 @@ namespace CubeSatCommSim.Model
 
             //Unregister the errors so that they will be re-registered next time the sim runs
             UnregisterErrors();
+            ResetCrashedModules();
 
-            EventLog.AddLog(new SimEvent("Simulation complete", EventSeverity.IMPORTANT));
-
+            if (abort)
+            {
+                EventLog.AddLog(new SimEvent("Simulation aborted", EventSeverity.IMPORTANT));
+            }
+            else
+            {
+                EventLog.AddLog(new SimEvent("Simulation complete", EventSeverity.IMPORTANT));
+            }
             SimulationRunning = false;
         }
 
@@ -282,6 +293,139 @@ namespace CubeSatCommSim.Model
         public void StopSim()
         {
             abort = true;
+        }
+
+        public void LoadConfiguration()
+        {
+            var dlg = new OpenFileDialog();
+            dlg.Title = "Open Configuration File";
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "XML files (.xml)|*.xml";
+            dlg.CheckFileExists = true;
+            if(dlg.ShowDialog() == true)
+            {
+                //Open script file
+                if (File.Exists(dlg.FileName))
+                {
+                    try
+                    {    //using the selected filename, adds modules to list for modules
+                         XDocument doc = XDocument.Parse(File.ReadAllText(dlg.FileName));
+                         IEnumerable<Module> ModuleResult = from c in doc.Descendants("Module")
+                                             select new Module()
+                                             {
+                                                 Name = c.Element("name").Value,
+                                                 Address = int.Parse(c.Element("address").Value),
+                                                 BusConnections  = new ObservableCollection<Bus>(),
+                                                 RegisteredErrors = new ObservableCollection<ErrorObject>(),
+                                                 Idle = true,
+                                                 Crashed = false
+                                             };
+
+                         foreach (Module mo in ModuleResult)
+                         {
+                             Modules.Add(mo);
+                         }
+                         //issue with Bus being abstract
+                         //using the selected filename, adds modules to list for modules
+                        /* XDocument doc2 = XDocument.Parse(File.ReadAllText(dlg.FileName));
+                         IEnumerable<CSPBus> BusResult = from c in doc2.Descendants("Bus")
+                                             select new CSPBus()
+                                             {
+                                                 Name = (string)c.Element(c.Element("name").Value),
+                                                 //connectedModules = c.Element("connections").Value
+                                             };
+
+                         foreach (Bus bo in BusResult)
+                         {
+                             Buses.Add(bo);
+                         }*/
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(
+                            "An error occured while trying to read the script file: " + ex.Message,
+                            "Error Reading File",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error
+                        );
+                    }            
+                }
+            }
+        }//end of LoadConfiguration
+        public void SaveConfiguration()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = ("    "); 
+            XmlWriter writer = XmlWriter.Create(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedConfiguration.xml");
+            writer.WriteStartDocument();
+                
+            writer.WriteStartElement("ModulesAndBuses");
+            
+            foreach(Module m in Modules)
+            {
+                writer.WriteStartElement("Module");
+                writer.WriteElementString("name", m.Name);
+                writer.WriteElementString("address", m.Address.ToString());
+                writer.WriteEndElement();
+            }
+            foreach(Bus b in Buses)
+            {
+                writer.WriteStartElement("Bus");
+                writer.WriteElementString("name", b.Name);
+                writer.WriteEndElement();
+            }
+            writer.Flush();
+            writer.Close();
+        }
+
+        //Executes the event and returns true if the execution should halt
+        private bool ExecuteScriptedEvent(ScriptedEvent ev)
+        {
+            Module source = Modules.Where(m => m.Name.Equals(ev.Module)).FirstOrDefault();
+
+            //Send packet with given data size from source to target over target bus 
+            if (ev.Command == ModuleCommand.SEND || ev.Command == ModuleCommand.PING)
+            {
+                //Parse parameters
+                byte dest_address;
+                if (!byte.TryParse(ev.Parameters[0], out dest_address))
+                {
+                    MessageBox.Show("An event in your script has an invalid parameter. This simulation will now abort.", "Parameter Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    abort = true;
+                    return true;
+                }
+                Bus targetBus = Buses.Where(b => b.Name.Equals(ev.Parameters[1])).FirstOrDefault();
+                short dataSize;
+                if (!short.TryParse(ev.Parameters[2], out dataSize))
+                {
+                    dataSize = 1;
+                }
+
+                //Check source module exists
+                if (source == null)
+                {
+                    if (!scriptWarningShown)
+                    {
+                        scriptWarningShown = true;
+                        if (MessageBox.Show("A scripted event cannot be run because the source module does not exist. Continue the simulation?", "Script Error", MessageBoxButton.YesNo, MessageBoxImage.Warning)
+                            == MessageBoxResult.No)
+                        {
+                            abort = true;
+                            return true;
+                        }
+                    }
+                    return true;
+                }
+
+                //Send a packet
+                if (targetBus is CSPBus)
+                {
+                    source.SendCSPPacket((CSPBus)targetBus, dest_address, 0, 0, (byte)source.Priority, dataSize, ev.Command);
+                }
+            }
+
+            return false;
         }
     }
 }

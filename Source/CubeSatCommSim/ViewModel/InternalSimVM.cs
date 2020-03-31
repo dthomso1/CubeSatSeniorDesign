@@ -71,6 +71,16 @@ namespace CubeSatCommSim.ViewModel
                 return _AddBusCommand;
             }
         }
+        
+        public bool LoopSimulation
+        {
+            get { return md.LoopSimulation; }
+            set
+            {
+                md.LoopSimulation = value;
+                NotifyPropertyChanged("LoopSimulation");
+            }
+        }
 
         public bool SimulationRunning
         {
@@ -120,7 +130,15 @@ namespace CubeSatCommSim.ViewModel
 
         public void AddModule()
         {
-            Module m = new Module("New module", Math.Min(md.Modules.Last().Address + 1, 31));
+            Module m;
+            if (Modules.IsEmpty)
+            {
+                m = new Module("New Module", 0);
+            }
+            else
+            {
+                m = new Module("New module", Math.Min(md.Modules.Last().Address + 1, 31));
+            }
             ModuleVM vm = new ModuleVM(m);
             AddModuleDialog dlg = new AddModuleDialog();
             dlg.DataContext = vm;
