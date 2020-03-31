@@ -46,8 +46,8 @@ namespace CubeSatCommSim.Model
             
             //TEMP CODE FOR TESTING
             CSPBus1 = new CSPBus("CANBUS", 100);
-            Module1 = new Module("OBC", 0);
-            Module2 = new Module("SASI", 1);
+            Module1 = new Module("M1", 0);
+            Module2 = new Module("M2", 1);
             Buses.Add(CSPBus1);
             Modules.Add(Module1);
             Modules.Add(Module2);
@@ -313,8 +313,10 @@ namespace CubeSatCommSim.Model
                                              {
                                                  Name = c.Element("name").Value,
                                                  Address = int.Parse(c.Element("address").Value),
-                                                 //priority = int.Parse("priority").Value,
-                                                 //BusConnections = c.Element("connections").Value
+                                                 BusConnections  = new ObservableCollection<Bus>(),
+                                                 RegisteredErrors = new ObservableCollection<ErrorObject>(),
+                                                 Idle = true,
+                                                 Crashed = false
                                              };
 
                          foreach (Module mo in ModuleResult)
@@ -323,7 +325,7 @@ namespace CubeSatCommSim.Model
                          }
                          //issue with Bus being abstract
                          //using the selected filename, adds modules to list for modules
-                         /*XDocument doc2 = XDocument.Parse(File.ReadAllText(dlg.FileName));
+                        /* XDocument doc2 = XDocument.Parse(File.ReadAllText(dlg.FileName));
                          IEnumerable<CSPBus> BusResult = from c in doc2.Descendants("Bus")
                                              select new CSPBus()
                                              {
@@ -357,13 +359,12 @@ namespace CubeSatCommSim.Model
             writer.WriteStartDocument();
                 
             writer.WriteStartElement("ModulesAndBuses");
-            writer.WriteStartElement("Modules");
             
             foreach(Module m in Modules)
             {
                 writer.WriteStartElement("Module");
                 writer.WriteElementString("name", m.Name);
-                writer.WriteElementString("Priority", m.Priority.ToString());
+                writer.WriteElementString("address", m.Address.ToString());
                 writer.WriteEndElement();
             }
             foreach(Bus b in Buses)

@@ -62,7 +62,7 @@ namespace CubeSatCommSim.Model
         public ObservableCollection<Bus> BusConnections
         {
             get { return _BusConnections; }
-            private set
+            set
             {
                 _BusConnections = value;
                 NotifyPropertyChanged("BusConnections");
@@ -73,7 +73,7 @@ namespace CubeSatCommSim.Model
         public ObservableCollection<ErrorObject> RegisteredErrors
         {
             get { return _RegisteredErrors; }
-            private set
+            set
             {
                 _RegisteredErrors = value;
                 NotifyPropertyChanged("RegisteredErrors");
@@ -84,7 +84,7 @@ namespace CubeSatCommSim.Model
         public bool Crashed
         {
             get { return _Crashed; }
-            private set
+            set
             {
                 if(_Crashed != value)
                 {
