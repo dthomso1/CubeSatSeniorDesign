@@ -58,5 +58,11 @@ namespace CubeSatCommSim
         {
             IntSimController.SaveConfiguration();
         }
+
+        private void HelpMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var filepath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data\UserManual.pdf");
+            System.Diagnostics.Process.Start(filepath);
+        }
     }
 }
