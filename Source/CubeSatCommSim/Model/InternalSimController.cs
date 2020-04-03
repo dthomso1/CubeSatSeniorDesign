@@ -357,7 +357,7 @@ namespace CubeSatCommSim.Model
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
             settings.IndentChars = ("    "); 
-            XmlWriter writer = XmlWriter.Create(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedConfiguration.xml");
+            XmlWriter writer = XmlWriter.Create(@"Data\ErrorInfo.xml\SavedConfiguration.xml");
             writer.WriteStartDocument();
                 
             writer.WriteStartElement("ModulesAndBuses");
