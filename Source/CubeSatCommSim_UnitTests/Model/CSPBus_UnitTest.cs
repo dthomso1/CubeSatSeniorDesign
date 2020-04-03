@@ -133,13 +133,20 @@ namespace CubeSatCommSim_UnitTests.Model
 
             Assert.AreEqual(null, bus.CurrentPacket);
 
-            Assert.AreEqual(expectedLog1, EventLog.EventList.ElementAt(EventLog.EventList.Count - 2).Log);
+            //Interrupted packet log
+            String actualLog1 = EventLog.EventList.ElementAt(EventLog.EventList.Count - 2).Log;
+
+            //Assert Log and Severity
+            Assert.AreEqual(expectedLog1, actualLog1);
             Assert.AreEqual(CubeSatCommSim.Model.EventSeverity.INFO, EventLog.EventList.ElementAt(EventLog.EventList.Count - 2).Severity);
 
-            //Expected Received Packet Log
-            String expectedLog2 = "Module " + module1.Name + " received packet: " + packet2.ToString();
 
-            Assert.AreEqual(expectedLog2, EventLog.EventList.Last().Log);
+            //Received packet log
+            String expectedLog2 = "Module " + module1.Name + " received packet: " + packet2.ToString();
+            String actualLog2 = EventLog.EventList.Last().Log;
+
+            //Assert Log and Severity
+            Assert.AreEqual(expectedLog2, actualLog2);
             Assert.AreEqual(CubeSatCommSim.Model.EventSeverity.INFO, EventLog.EventList.Last().Severity);
         }
         /*
