@@ -21,7 +21,7 @@ namespace CubeSatCommSim.Model
         public ObservableCollection<Module> ConnectedModules
         {
             get { return _ConnectedModules; }
-            private set
+            set
             {
                 _ConnectedModules = value;
                 NotifyPropertyChanged("ConnectedModules");
@@ -44,6 +44,10 @@ namespace CubeSatCommSim.Model
             Idle = true;
             Name = name;
             ConnectedModules = new ObservableCollection<Module>();
+        }
+        public Bus()
+        {
+        ConnectedModules = new ObservableCollection<Module>();
         }
 
         public abstract void Process(int step);
