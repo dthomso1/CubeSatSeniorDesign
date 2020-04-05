@@ -306,6 +306,10 @@ namespace CubeSatCommSim.Model
             dlg.DefaultExt = ".xml";
             dlg.Filter = "XML files (.xml)|*.xml";
             dlg.CheckFileExists = true;
+
+            //for testing
+            //CSPBus bus1;
+
             if(dlg.ShowDialog() == true)
             {
                 //Open script file
@@ -319,13 +323,8 @@ namespace CubeSatCommSim.Model
                                              {
                                                  Name = c.Element("name").Value,
                                                  Address = int.Parse(c.Element("address").Value),
-                                                 BusConnections  = new ObservableCollection<Bus>(
-                                                     from b in doc.Descendants("connectedBuses")
-                                                     select new CSPBus()
-                                                     {
-                                                        Name = b.Element("name").Value,
-                                                     }
-                                                 ),
+                                                 BusConnections = new ObservableCollection<Bus>(),
+                                                 //BusConnections.Add(new CSPBus(c.Element("BusConnections").Value)),
                                                  RegisteredErrors = new ObservableCollection<ErrorObject>(),
                                                  Idle = true,
                                                  Crashed = false
@@ -333,6 +332,7 @@ namespace CubeSatCommSim.Model
 
                          foreach (Module mo in ModuleResult)
                          {
+                             //mo.BusConnections.Add(new CSPBus(("CANBUS")));
                              Modules.Add(mo);
                          }
 
@@ -342,14 +342,15 @@ namespace CubeSatCommSim.Model
                                              select new CSPBus()
                                              {
                                                  Name = c.Element("name").Value,
-                                                 ConnectedModules = new ObservableCollection<Module>(
-                                                     from b in doc.Descendants("connectedModule")
+                                                 ConnectedModules = new ObservableCollection<Module>()
+                                                 {/*
+                                                     from b in doc.Descendants("connectedModules")
                                                      select new Module()
                                                      {
                                                         Name = b.Element("name").Value,
                                                         Address = int.Parse(b.Element("address").Value),
-                                                     }
-                                                 ),
+                                                     }*/
+                                                 }
                                                  
                                                  //load in ConnectedModules from seperated by space string
                                              };
@@ -394,7 +395,15 @@ namespace CubeSatCommSim.Model
                 //loop through busConnections and add each one to a string
                 foreach(Bus b1 in m.BusConnections)
                 {
-                    //busConnectionString = busConnectionString + " " + b1.Name;
+                    /*if(busConnectionString == null)
+                    {
+                       busConnectionString = b1.Name;
+                    }
+                    else
+                    {
+                        busConnectionString = busConnectionString + "-" + b1.Name;
+                    }*/
+                    
                     writer.WriteStartElement("connectedBuses");
                     writer.WriteElementString("name", b1.Name);
                     writer.WriteEndElement();
@@ -409,7 +418,15 @@ namespace CubeSatCommSim.Model
                 writer.WriteElementString("name", b.Name);
                 foreach(Module m1 in b.ConnectedModules)
                 {
-                    //connectedModulesString = connectedModulesString + " " + m1.Name + "," + m1.Address;
+                    /*if(connectedModulesString == null)
+                    {
+                       connectedModulesString = m1.Name + "," + m1.Address;
+                    }
+                    else
+                    {
+                        connectedModulesString = connectedModulesString + "-" + m1.Name + "," + m1.Address;
+                    }*/
+
                     writer.WriteStartElement("connectedModules");
                     writer.WriteElementString("name", m1.Name);
                     writer.WriteElementString("address", m1.Address.ToString());
