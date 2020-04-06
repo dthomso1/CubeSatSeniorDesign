@@ -58,5 +58,9 @@ namespace CubeSatCommSim
         {
             IntSimController.SaveConfiguration();
         }
+        private void SaveLog_Click(object sender, RoutedEventArgs e)
+        {
+            IntSimController.SaveLog();
+        }
     }
 }

@@ -441,6 +441,13 @@ namespace CubeSatCommSim.Model
             writer.Close();
         }
 
+        public void SaveLog()
+        {
+            //File.WriteAllLines(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedLog.txt", 
+            string[] c = EventLog.writeLog();
+            File.WriteAllLines(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedLog.txt", c);
+        }
+
         //Executes the event and returns true if the execution should halt
         private bool ExecuteScriptedEvent(ScriptedEvent ev)
         {

@@ -38,7 +38,11 @@
                 <MenuItem x:Name="ExportFile" 
                           Header="Export File"
                           Click="ExportFile_Click"/>
+                <MenuItem x:Name="SaveLog"
+                          Header="Save Log"
+                          Click="SaveLog_Click"/>
             </MenuItem>
+          
             <MenuItem x:Name="MenuBarStart"
                       Header="Start" 
                       Height="20" 
