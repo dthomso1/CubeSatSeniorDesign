@@ -309,6 +309,7 @@ namespace CubeSatCommSim.Model
 
             //for testing
             //CSPBus bus1;
+            CSPBus CSPBus1 = new CSPBus("CANBUS", 100);
 
             if(dlg.ShowDialog() == true)
             {
@@ -333,6 +334,7 @@ namespace CubeSatCommSim.Model
                          foreach (Module mo in ModuleResult)
                          {
                              //mo.BusConnections.Add(new CSPBus(("CANBUS")));
+                             mo.ConnectBus(CSPBus1);
                              Modules.Add(mo);
                          }
 
@@ -343,14 +345,14 @@ namespace CubeSatCommSim.Model
                                              {
                                                  Name = c.Element("name").Value,
                                                  ConnectedModules = new ObservableCollection<Module>()
-                                                 {/*
+                                                 /*{
                                                      from b in doc.Descendants("connectedModules")
                                                      select new Module()
                                                      {
                                                         Name = b.Element("name").Value,
                                                         Address = int.Parse(b.Element("address").Value),
-                                                     }*/
-                                                 }
+                                                     }
+                                                 }*/
                                                  
                                                  //load in ConnectedModules from seperated by space string
                                              };
@@ -435,6 +437,13 @@ namespace CubeSatCommSim.Model
             }
             writer.Flush();
             writer.Close();
+        }
+
+        public void SaveLog()
+        {
+            //File.WriteAllLines(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedLog.txt", 
+            string[] c = EventLog.writeLog();
+            File.WriteAllLines(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedLog.txt", c);
         }
 
         //Executes the event and returns true if the execution should halt
