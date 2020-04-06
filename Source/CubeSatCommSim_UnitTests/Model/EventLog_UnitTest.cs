@@ -12,16 +12,14 @@ namespace CubeSatCommSim_UnitTests.Model
         public void EventLog_Test_AddEvent_ClearLog()
         {
 
-            EventLog eventLog = new EventLog();
             String log = "Test log";
-            EventSeverity severity = (EventSeverity)Enum.Parse(typeof(EventSeverity), "INFO");
-            SimEvent testEvent = new SimEvent(log, severity);
-            eventLog.EventList();
-            int initNumOfEvents = eventLog.Count();
-            eventLog.AddLog(testEvent);
-            Assert.areEquals(initNumOfEvents + 1, eventLog.Count());
-            eventLog.ClearLog();
-            Assert.areEquals(initNumOfEvents, eventLog.Count());
+            SimEvent testEvent = new SimEvent(log, CubeSatCommSim.Model.EventSeverity.WARNING);
+            
+            int initNumOfEvents = EventLog.EventList.Count;
+            EventLog.AddLog(testEvent);
+            Assert.AreEqual(initNumOfEvents + 1, EventLog.EventList.Count);
+            EventLog.ClearLog();
+            Assert.AreEqual(initNumOfEvents, EventLog.EventList.Count);
 
         }
         

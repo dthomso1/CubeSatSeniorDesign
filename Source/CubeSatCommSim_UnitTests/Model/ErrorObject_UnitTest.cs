@@ -22,20 +22,6 @@ namespace CubeSatCommSim_UnitTests.Model
         }
 
         [TestMethod]
-        public void ErrorObject_SetGetIsFatal()
-        {
-            bool expected = false;
-
-            ErrorObject newErrorObject = new ErrorObject();
-            newErrorObject.IsFatal = expected;
-
-            bool actual = newErrorObject.IsFatal;
-
-            Assert.AreEqual(expected, actual);
-
-        }
-        
-        [TestMethod]
         public void ErrorObject_SetGetIsActive()
         {
             bool expected = false;
