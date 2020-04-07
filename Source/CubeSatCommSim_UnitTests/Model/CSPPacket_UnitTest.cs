@@ -14,9 +14,8 @@ namespace CubeSatCommSim_UnitTests.Model
             int headerVal = 25;
             short exdataS = 5000;
             BitVector32 exheader = new BitVector32(headerVal);
-            ModuleCommand send = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), "SEND"));
-
-            CSPPacket newCSPPacket = new CSPPacket(exheader, exdataS, send);
+            
+            CSPPacket newCSPPacket = new CSPPacket(exheader, exdataS, ModuleCommand.SEND);
 
             BitVector32 actualHeader = newCSPPacket.Header;
 
@@ -29,9 +28,8 @@ namespace CubeSatCommSim_UnitTests.Model
             int headerVal = 25;
             short exdataS = 5000;
             BitVector32 exheader = new BitVector32(headerVal);
-            ModuleCommand send = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), "SEND"));
-
-            CSPPacket newCSPPacket = new CSPPacket(headerVal, exdataS, send);
+            
+            CSPPacket newCSPPacket = new CSPPacket(headerVal, exdataS, ModuleCommand.SEND);
 
             short actualDataSize = newCSPPacket.DataSize;
             Assert.AreEqual(exdataS, actualDataSize);
@@ -44,9 +42,8 @@ namespace CubeSatCommSim_UnitTests.Model
             short exdataS = 5000;
             BitVector32 exheader = new BitVector32(headerVal);
             short ExpectedPartTransmitted = 1500;
-            ModuleCommand send = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), "SEND"));
-
-            CSPPacket newCSPPacket = new CSPPacket(headerVal, exdataS, send);
+            
+            CSPPacket newCSPPacket = new CSPPacket(headerVal, exdataS, ModuleCommand.SEND);
 
             newCSPPacket.PartTransmitted = ExpectedPartTransmitted;
 
@@ -58,9 +55,8 @@ namespace CubeSatCommSim_UnitTests.Model
         public void CSPPacket_FromValue_ToString()
         {
             short size = 32000;
-            ModuleCommand send = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), "SEND"));
-
-            CSPPacket packet = new CSPPacket(-997195777, size, send);
+            
+            CSPPacket packet = new CSPPacket(-997195777, size, ModuleCommand.SEND);
             
             String expected = "Header={" + 3
                         + " " + 2
@@ -84,9 +80,8 @@ namespace CubeSatCommSim_UnitTests.Model
         {
             short size = 32000;
             BitVector32 header = new BitVector32(-997195777);
-            ModuleCommand send = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), "SEND"));
-
-            CSPPacket packet = new CSPPacket(header, size, send);
+            
+            CSPPacket packet = new CSPPacket(header, size, ModuleCommand.SEND);
             //76546047
             //-1040187392
             String expected = "Header={" + 3
@@ -108,15 +103,14 @@ namespace CubeSatCommSim_UnitTests.Model
 
         [TestMethod]
         public void CSPPacket_CompareTo() {
-            ModuleCommand send = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), "SEND"));
             //priority = 1
-            CSPPacket packet1 = new CSPPacket(2147483647, 10000, send);
+            CSPPacket packet1 = new CSPPacket(2147483647, 10000, ModuleCommand.SEND);
             //priority = 3, Address = 31
-            CSPPacket packet2 = new CSPPacket(-1, 10000, send);
+            CSPPacket packet2 = new CSPPacket(-1, 10000, ModuleCommand.SEND);
             //priority = 3, Address = 0
-            CSPPacket packet3 = new CSPPacket(-1073741824, 10000, send);
+            CSPPacket packet3 = new CSPPacket(-1073741824, 10000, ModuleCommand.SEND);
             //priority = 4, Address = 0, Destination = 2
-            CSPPacket packet4 = new CSPPacket(-1071644672, 10000, send);
+            CSPPacket packet4 = new CSPPacket(-1071644672, 10000, ModuleCommand.SEND);
 
             int actual;
             //Test - lower

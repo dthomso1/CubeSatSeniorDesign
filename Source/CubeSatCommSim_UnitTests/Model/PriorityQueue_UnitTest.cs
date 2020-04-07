@@ -25,9 +25,8 @@ namespace CubeSatCommSim_UnitTests.Model
         [TestMethod]
         public void PriorityQueue_CSPPacket_Enqueue()
         {
-            ModuleCommand send = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), "SEND"));
             PriorityQueue<CSPPacket> queue = new PriorityQueue<CSPPacket>();
-            CSPPacket packet = new CSPPacket(0, 10000, send);
+            CSPPacket packet = new CSPPacket(0, 10000, ModuleCommand.SEND);
 
             int actualCount = queue.Count;
 
@@ -47,9 +46,8 @@ namespace CubeSatCommSim_UnitTests.Model
         [TestMethod]
         public void PriorityQueue_CSPPacket_Dequeue()
         {
-            ModuleCommand send = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), "SEND"));
             PriorityQueue<CSPPacket> queue = new PriorityQueue<CSPPacket>();
-            CSPPacket packet = new CSPPacket(0, 10000, send);
+            CSPPacket packet = new CSPPacket(0, 10000, ModuleCommand.SEND);
 
             queue.Enqueue(packet);
             queue.Dequeue();
@@ -70,9 +68,8 @@ namespace CubeSatCommSim_UnitTests.Model
         [ExpectedException(typeof(Exception), "Empty heap")]
         public void PriorityQueue_CSPPacket_EnqueueEmptyDequeue()
         {
-            ModuleCommand send = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), "SEND"));
             PriorityQueue<CSPPacket> queue = new PriorityQueue<CSPPacket>();
-            CSPPacket packet = new CSPPacket(0, 10000, send);
+            CSPPacket packet = new CSPPacket(0, 10000, ModuleCommand.SEND);
             queue.Enqueue(packet);
             queue.Dequeue();
             queue.Dequeue();

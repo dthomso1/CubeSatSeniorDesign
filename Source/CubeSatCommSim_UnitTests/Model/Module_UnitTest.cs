@@ -96,11 +96,10 @@ namespace CubeSatCommSim_UnitTests.Model
             packetHeader[CSPPacket.SourcePort] = source_port;
             packetHeader[CSPPacket.DestinationPort] = destination_port;
             packetHeader[CSPPacket.Priority] = priority;
-            ModuleCommand send = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), "SEND"));
-            CSPPacket packet = new CSPPacket(packetHeader, dataSize, send);
+            CSPPacket packet = new CSPPacket(packetHeader, dataSize, ModuleCommand.SEND);
 
             //Log failed send
-            module1.SendCSPPacket(bus, destination_addr, destination_port, source_port, priority, dataSize, send);
+            module1.SendCSPPacket(bus, destination_addr, destination_port, source_port, priority, dataSize, ModuleCommand.SEND);
             String expected1 = "Module " + module1.Name + " failed to send packet " + packet.ToString() + 
                 " because it is not connected to bus " + bus.Name;
 
@@ -111,7 +110,7 @@ namespace CubeSatCommSim_UnitTests.Model
             module1.ConnectBus(bus);
 
             //Log sending packet
-            module1.SendCSPPacket(bus, destination_addr, destination_port, source_port, priority, dataSize, send);
+            module1.SendCSPPacket(bus, destination_addr, destination_port, source_port, priority, dataSize, ModuleCommand.SEND);
 
             String expected2 = "Module " + module1.Name + " sends packet " + packet.ToString() + " to bus " + bus.Name;
 
@@ -122,8 +121,7 @@ namespace CubeSatCommSim_UnitTests.Model
         [TestMethod]
         public void Module_ReceiveCSPPacket() {
             Module module1 = new Module("Module", 41);
-            ModuleCommand send = (ModuleCommand)(Enum.Parse(typeof(ModuleCommand), "SEND"));
-            CSPPacket packet = new CSPPacket(-1, 10000, send);
+            CSPPacket packet = new CSPPacket(-1, 10000, ModuleCommand.SEND);
             CSPBus bus1 = new CSPBus("Bus1");
 
             String expected1 = "Module " + module1.Name + " received packet: " + packet.ToString();
