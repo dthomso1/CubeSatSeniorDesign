@@ -379,8 +379,10 @@ namespace CubeSatCommSim.Model
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
             settings.IndentChars = ("    "); 
-            var filepath =  Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Data\ModuleConfig.xml");
-            XmlWriter writer = XmlWriter.Create(filepath);
+            //Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data\ErrorInfo.xml");
+            //@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\ErrorInfo.xml"
+            var filepath =  Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data\ModuleConfig.xml");
+            XmlWriter writer = XmlWriter.Create(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\ModuleConfiguration.xml");
             writer.WriteStartDocument();
             //String busConnectionString;
                 
