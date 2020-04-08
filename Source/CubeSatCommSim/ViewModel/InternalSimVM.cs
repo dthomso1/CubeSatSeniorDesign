@@ -133,11 +133,11 @@ namespace CubeSatCommSim.ViewModel
             Module m;
             if (Modules.IsEmpty)
             {
-                m = new Module("New Module", 0);
+                m = new Module("New Module", 0, 0);
             }
             else
             {
-                m = new Module("New module", Math.Min(md.Modules.Last().Address + 1, 31));
+                m = new Module("New module", Math.Min(md.Modules.Last().Address + 1, 31), 0);
             }
             ModuleVM vm = new ModuleVM(m);
             AddModuleDialog dlg = new AddModuleDialog();

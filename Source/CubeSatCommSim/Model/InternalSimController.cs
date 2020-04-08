@@ -324,6 +324,7 @@ namespace CubeSatCommSim.Model
                                              {
                                                  Name = c.Element("name").Value,
                                                  Address = int.Parse(c.Element("address").Value),
+                                                 Priority = int.Parse(c.Element("priority").Value),
                                                  BusConnections = new ObservableCollection<Bus>(),
                                                  //BusConnections.Add(new CSPBus(c.Element("BusConnections").Value)),
                                                  RegisteredErrors = new ObservableCollection<ErrorObject>(),
@@ -394,6 +395,7 @@ namespace CubeSatCommSim.Model
                 writer.WriteStartElement("Module");
                 writer.WriteElementString("name", m.Name);
                 writer.WriteElementString("address", m.Address.ToString());
+                writer.WriteElementString("priority", m.Priority.ToString());
                 //loop through busConnections and add each one to a string
                 foreach(Bus b1 in m.BusConnections)
                 {
