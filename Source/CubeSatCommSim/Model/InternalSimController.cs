@@ -44,10 +44,6 @@ namespace CubeSatCommSim.Model
         private List<ScriptedEvent> eventList; //List as used by the program (retry events may be added)
         private bool abort;
         private bool scriptWarningShown;
-       
-        //private String busConnectionString;
-        //private String connectedModulesString;
-        //private String[] modulesConnectedList;
 
         //For testing
         //private CSPBus CSPBus1;
@@ -309,7 +305,7 @@ namespace CubeSatCommSim.Model
 
             //for testing
             //CSPBus bus1;
-            CSPBus CSPBus1 = new CSPBus("CANBUS", 100);
+            //CSPBus CSPBus1 = new CSPBus("CANBUS", 100);
 
             if(dlg.ShowDialog() == true)
             {
@@ -334,9 +330,9 @@ namespace CubeSatCommSim.Model
 
                          foreach (Module mo in ModuleResult)
                          {
-                             //mo.BusConnections.Add(new CSPBus(("CANBUS")));
-                             mo.ConnectBus(CSPBus1);
-                             Modules.Add(mo);
+                             ////mo.BusConnections.Add(new CSPBus(("CANBUS")));
+                             //mo.ConnectBus(CSPBus1);
+                             //Modules.Add(mo);
                          }
 
                          //using the selected filename, adds bus to list for bus
@@ -354,8 +350,6 @@ namespace CubeSatCommSim.Model
                                                         Address = int.Parse(b.Element("address").Value),
                                                      }
                                                  }*/
-                                                 
-                                                 //load in ConnectedModules from seperated by space string
                                              };
 
                          foreach (Bus bo in BusResult)
@@ -381,61 +375,39 @@ namespace CubeSatCommSim.Model
             settings.Indent = true;
             settings.IndentChars = ("    "); 
             var filepath = Path.Combine(@"..\..\Data\ModuleConfiguration");
-            string filePathWithTime = string.Concat(filepath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"),".txt");
+            string filePathWithTime = string.Concat(filepath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"),".xml");
             XmlWriter writer = XmlWriter.Create(filePathWithTime);
             writer.WriteStartDocument();
-            //String busConnectionString;
                 
             writer.WriteStartElement("ModulesAndBuses");
             
             foreach(Module m in Modules)
             {
-                //busConnectionString = null;
                 writer.WriteStartElement("Module");
                 writer.WriteElementString("name", m.Name);
                 writer.WriteElementString("address", m.Address.ToString());
                 writer.WriteElementString("priority", m.Priority.ToString());
+                
                 //loop through busConnections and add each one to a string
                 foreach(Bus b1 in m.BusConnections)
                 {
-                    /*if(busConnectionString == null)
-                    {
-                       busConnectionString = b1.Name;
-                    }
-                    else
-                    {
-                        busConnectionString = busConnectionString + "-" + b1.Name;
-                    }*/
-                    
                     writer.WriteStartElement("connectedBuses");
                     writer.WriteElementString("name", b1.Name);
                     writer.WriteEndElement();
                 }
-                //writer.WriteElementString("BusConnections", busConnectionString);
                 writer.WriteEndElement();
             }
             foreach(Bus b in Buses)
             {
-                //connectedModulesString = null;
                 writer.WriteStartElement("Bus");
                 writer.WriteElementString("name", b.Name);
                 foreach(Module m1 in b.ConnectedModules)
                 {
-                    /*if(connectedModulesString == null)
-                    {
-                       connectedModulesString = m1.Name + "," + m1.Address;
-                    }
-                    else
-                    {
-                        connectedModulesString = connectedModulesString + "-" + m1.Name + "," + m1.Address;
-                    }*/
-
                     writer.WriteStartElement("connectedModules");
                     writer.WriteElementString("name", m1.Name);
                     writer.WriteElementString("address", m1.Address.ToString());
                     writer.WriteEndElement();
                 }
-                //writer.WriteElementString("connectedModules", connectedModulesString);
                 writer.WriteEndElement();
             }
             writer.Flush();
@@ -444,7 +416,6 @@ namespace CubeSatCommSim.Model
 
         public void SaveLog()
         {
-            //File.WriteAllLines(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedLog.txt", 
             string[] c = EventLog.writeLog();
             var filepath = Path.Combine(@"..\..\Data\SavedLog");
             string filePathWithTime = string.Concat(filepath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"),".txt");
