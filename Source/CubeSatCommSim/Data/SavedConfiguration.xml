@@ -1,1 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?><ModulesAndBuses><Module><name>OBC</name><address>0</address></Module><Module><name>SASI</name><address>1</address></Module><Module><name>GRIPS</name><address>2</address></Module><Module><name>EPS</name><address>3</address></Module><Bus><name>Data</name></Bus><Bus><name>Control</name></Bus></ModulesAndBuses>

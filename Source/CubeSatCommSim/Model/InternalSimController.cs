@@ -380,8 +380,9 @@ namespace CubeSatCommSim.Model
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
             settings.IndentChars = ("    "); 
-            var filepath =  Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Data\ModuleConfig.xml");
-            XmlWriter writer = XmlWriter.Create(filepath);
+            var filepath = Path.Combine(@"..\..\Data\ModuleConfiguration");
+            string filePathWithTime = string.Concat(filepath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"),".txt");
+            XmlWriter writer = XmlWriter.Create(filePathWithTime);
             writer.WriteStartDocument();
             //String busConnectionString;
                 
@@ -445,7 +446,9 @@ namespace CubeSatCommSim.Model
         {
             //File.WriteAllLines(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedLog.txt", 
             string[] c = EventLog.writeLog();
-            File.WriteAllLines(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedLog.txt", c);
+            var filepath = Path.Combine(@"..\..\Data\SavedLog");
+            string filePathWithTime = string.Concat(filepath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"),".txt");
+            File.WriteAllLines(filePathWithTime, c);
         }
 
         //Executes the event and returns true if the execution should halt
