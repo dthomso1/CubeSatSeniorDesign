@@ -329,15 +329,6 @@ namespace CubeSatCommSim.Model
                                                  Crashed = false
                                              };
 
-                         foreach (Module mo in ModuleResult)
-                         {
-                             foreach (XElement xe in doc.Descendants("connectedBus"))
-                             {
-                                mo.ConnectBus(new CSPBus(xe.ToString()));
-                             }
-                             Modules.Add(mo);
-                         }
-
                          //using the selected filename, adds bus to list for bus
                          XDocument doc2 = XDocument.Parse(File.ReadAllText(dlg.FileName));
                          IEnumerable<CSPBus> BusResult = from c in doc2.Descendants("Bus")
@@ -355,7 +346,11 @@ namespace CubeSatCommSim.Model
                                                  }*/
                                              };
 
-                         foreach (Bus bo in BusResult)
+                        foreach (Module mo in ModuleResult)
+                        {
+                             Modules.Add(mo);
+                        }
+                        foreach (Bus bo in BusResult)
                          {
                              foreach (XElement xe in doc.Descendants("connectedModules"))
                              {
@@ -371,6 +366,23 @@ namespace CubeSatCommSim.Model
                              }
                              Buses.Add(bo);
                          }
+                        foreach (Module mo in ModuleResult)
+                        {
+                             foreach (XElement xe in doc.Descendants("connectedBus"))
+                             {
+                                //get module where Modules.name == xe.ToString
+                                foreach(Bus bu in Buses)
+                                {
+                                    //add module to bo.ConnectModule(Modules(x))
+                                    if(bu.Name == xe.ToString())
+                                    {
+                                    mo.ConnectBus(bu);
+                                    }
+                                }
+                             }
+                             //Modules.Add(mo);
+                        }
+
                     }
                     catch(Exception ex)
                     {
