@@ -149,7 +149,7 @@ namespace CubeSatCommSim.Model
 
         private bool randomPriority, randomDestination, randomSource, randomDestinationPort, randomSourcePort;
 
-        public Module(string name, int address)
+        public Module(string name, int address, int priority)
         {
             randomPriority = false;
             randomDestination = false;
@@ -161,6 +161,7 @@ namespace CubeSatCommSim.Model
             CommunicationDisabled = false;
             Name = name;
             Address = address;
+            Priority = priority;
             BusConnections = new ObservableCollection<Bus>();
             RegisteredErrors = new ObservableCollection<ErrorObject>();
         }

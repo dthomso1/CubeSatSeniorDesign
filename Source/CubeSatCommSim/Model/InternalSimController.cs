@@ -87,6 +87,7 @@ namespace CubeSatCommSim.Model
         {
             Modules.Clear();
             Buses.Clear();
+            Module.UsedAddresses.Clear();
         }
 
         //Looks through the error list and applies the selected errors to the matching modules
@@ -302,6 +303,11 @@ namespace CubeSatCommSim.Model
             dlg.DefaultExt = ".xml";
             dlg.Filter = "XML files (.xml)|*.xml";
             dlg.CheckFileExists = true;
+
+            //for testing
+            //CSPBus bus1;
+            //CSPBus CSPBus1 = new CSPBus("CANBUS", 100);
+
             if(dlg.ShowDialog() == true)
             {
                 //Open script file
@@ -315,7 +321,9 @@ namespace CubeSatCommSim.Model
                                              {
                                                  Name = c.Element("name").Value,
                                                  Address = int.Parse(c.Element("address").Value),
-                                                 BusConnections  = new ObservableCollection<Bus>(),
+                                                 Priority = int.Parse(c.Element("priority").Value),
+                                                 BusConnections = new ObservableCollection<Bus>(),
+                                                 //BusConnections.Add(new CSPBus(c.Element("connectedBuses").Value)),
                                                  RegisteredErrors = new ObservableCollection<ErrorObject>(),
                                                  Idle = true,
                                                  Crashed = false
@@ -325,20 +333,43 @@ namespace CubeSatCommSim.Model
                          {
                              Modules.Add(mo);
                          }
-                         //issue with Bus being abstract
-                         //using the selected filename, adds modules to list for modules
-                        /* XDocument doc2 = XDocument.Parse(File.ReadAllText(dlg.FileName));
+
+                         //using the selected filename, adds bus to list for bus
+                         XDocument doc2 = XDocument.Parse(File.ReadAllText(dlg.FileName));
                          IEnumerable<CSPBus> BusResult = from c in doc2.Descendants("Bus")
                                              select new CSPBus()
                                              {
-                                                 Name = (string)c.Element(c.Element("name").Value),
-                                                 //connectedModules = c.Element("connections").Value
+                                                 Name = c.Element("name").Value,
+                                                 DataRate = int.Parse(c.Element("dataRate").Value),
+                                                 ConnectedModules = new ObservableCollection<Module>()
                                              };
-
+                        IEnumerable<string> textSegs;
+                        string str;
                          foreach (Bus bo in BusResult)
                          {
+                             foreach (XElement xe in doc.Descendants("connectedModules"))
+                             {
+                                //get module where Modules.name == xe.ToString
+                                foreach(Module mod in Modules)
+                                {
+                                    textSegs =
+                                        from seg in xe.Descendants("name")
+                                        select (string)seg;
+
+                                    str = textSegs.Aggregate(new StringBuilder(),
+                                        (sb, i) => sb.Append(i),
+                                        sp => sp.ToString()
+                                    );
+
+                                    //add module to bo.ConnectModule(Modules(x))
+                                    if (mod.Name.Equals(str))
+                                    {
+                                    mod.ConnectBus(bo);
+                                    }
+                                }
+                             }
                              Buses.Add(bo);
-                         }*/
+                         }
                     }
                     catch(Exception ex)
                     {
@@ -357,7 +388,9 @@ namespace CubeSatCommSim.Model
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
             settings.IndentChars = ("    "); 
-            XmlWriter writer = XmlWriter.Create(@"C:\Users\David\source\repos\SeniorDesignNewBranch\Source\CubeSatCommSim\Data\SavedConfiguration.xml");
+            var filepath = Path.Combine(@"..\..\Data\ModuleConfiguration");
+            string filePathWithTime = string.Concat(filepath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"),".xml");
+            XmlWriter writer = XmlWriter.Create(filePathWithTime);
             writer.WriteStartDocument();
                 
             writer.WriteStartElement("ModulesAndBuses");
@@ -367,16 +400,41 @@ namespace CubeSatCommSim.Model
                 writer.WriteStartElement("Module");
                 writer.WriteElementString("name", m.Name);
                 writer.WriteElementString("address", m.Address.ToString());
+                writer.WriteElementString("priority", m.Priority.ToString());
+                
+                //loop through busConnections and add each one to a string
+                foreach(Bus b1 in m.BusConnections)
+                {
+                    writer.WriteStartElement("connectedBuses");
+                    writer.WriteElementString("name", b1.Name);
+                    writer.WriteEndElement();
+                }
                 writer.WriteEndElement();
             }
-            foreach(Bus b in Buses)
+            foreach(CSPBus b in Buses)
             {
                 writer.WriteStartElement("Bus");
                 writer.WriteElementString("name", b.Name);
+                writer.WriteElementString("dataRate", b.DataRate.ToString());
+                foreach(Module m1 in b.ConnectedModules)
+                {
+                    writer.WriteStartElement("connectedModules");
+                    writer.WriteElementString("name", m1.Name);
+                    writer.WriteElementString("address", m1.Address.ToString());
+                    writer.WriteEndElement();
+                }
                 writer.WriteEndElement();
             }
             writer.Flush();
             writer.Close();
+        }
+
+        public void SaveLog()
+        {
+            string[] c = EventLog.writeLog();
+            var filepath = Path.Combine(@"..\..\Data\SavedLog");
+            string filePathWithTime = string.Concat(filepath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"),".txt");
+            File.WriteAllLines(filePathWithTime, c);
         }
 
         //Executes the event and returns true if the execution should halt

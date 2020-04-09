@@ -64,5 +64,9 @@ namespace CubeSatCommSim
             var filepath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data\UserManual.pdf");
             System.Diagnostics.Process.Start(filepath);
         }
+        private void SaveLog_Click(object sender, RoutedEventArgs e)
+        {
+            IntSimController.SaveLog();
+        }
     }
 }
