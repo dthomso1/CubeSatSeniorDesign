@@ -47,7 +47,8 @@ namespace CubeSatCommSim.Model
         }
         public Bus()
         {
-        ConnectedModules = new ObservableCollection<Module>();
+            Idle = true;
+            ConnectedModules = new ObservableCollection<Module>();
         }
 
         public abstract void Process(int step);

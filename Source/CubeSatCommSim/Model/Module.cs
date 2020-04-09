@@ -167,7 +167,18 @@ namespace CubeSatCommSim.Model
         }
         public Module()
         {
-        //blank constructor for InternalSimController to allow XDocument to function
+            //blank constructor for InternalSimController to allow XDocument to function
+
+            randomPriority = false;
+            randomDestination = false;
+            randomSource = false;
+            randomDestinationPort = false;
+            randomSourcePort = false;
+            Idle = true;
+            Crashed = false;
+            CommunicationDisabled = false;
+            BusConnections = new ObservableCollection<Bus>();
+            RegisteredErrors = new ObservableCollection<ErrorObject>();
         }
 
         public void Process(int step)
