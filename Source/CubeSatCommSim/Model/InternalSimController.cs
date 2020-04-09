@@ -362,9 +362,9 @@ namespace CubeSatCommSim.Model
                                 foreach(Bus bu in Buses)
                                 {
                                     //add module to bo.ConnectModule(Modules(x))
-                                    if(bu.Name == xe.ToString())
+                                    if((string.Compare(bu.Name, xe.ToString())) == 0 )
                                     {
-                                    mo.ConnectBus(bu);
+                                        mo.ConnectBus(bu);
                                     }
                                 }
                              }
