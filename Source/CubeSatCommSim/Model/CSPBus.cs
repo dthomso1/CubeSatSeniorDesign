@@ -39,10 +39,11 @@ namespace CubeSatCommSim.Model
             PacketQueue = new PriorityQueue<CSPPacket>();
             InterruptStack = new Stack<CSPPacket>();
         }
-        //David
+
         public CSPBus()
         {
-        
+            PacketQueue = new PriorityQueue<CSPPacket>();
+            InterruptStack = new Stack<CSPPacket>();
         }
 
         public void EnqueuePacket(CSPPacket pkt)

@@ -385,56 +385,76 @@ namespace CubeSatCommSim.Model
         }//end of LoadConfiguration
         public void SaveConfiguration()
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.IndentChars = ("    "); 
-            var filepath = Path.Combine(@"..\..\Data\ModuleConfiguration");
-            string filePathWithTime = string.Concat(filepath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"),".xml");
-            XmlWriter writer = XmlWriter.Create(filePathWithTime);
-            writer.WriteStartDocument();
-                
-            writer.WriteStartElement("ModulesAndBuses");
-            
-            foreach(Module m in Modules)
+            var dlg = new SaveFileDialog();
+            dlg.Title = "Save Configuration File";
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "XML files (.xml)|*.xml";
+            dlg.FileName = string.Concat("ModuleConfiguration_", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), ".xml");
+
+            if(dlg.ShowDialog() == true)
             {
-                writer.WriteStartElement("Module");
-                writer.WriteElementString("name", m.Name);
-                writer.WriteElementString("address", m.Address.ToString());
-                writer.WriteElementString("priority", m.Priority.ToString());
-                
-                //loop through busConnections and add each one to a string
-                foreach(Bus b1 in m.BusConnections)
+                XmlWriterSettings settings = new XmlWriterSettings();
+                settings.Indent = true;
+                settings.IndentChars = ("    ");
+                //var filepath = Path.Combine(@"..\..\Data\ModuleConfiguration");
+                //string filePathWithTime = string.Concat(filepath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), ".xml");
+                //XmlWriter writer = XmlWriter.Create(filePathWithTime);
+                XmlWriter writer = XmlWriter.Create(dlg.FileName);
+                writer.WriteStartDocument();
+
+                writer.WriteStartElement("ModulesAndBuses");
+
+                foreach (Module m in Modules)
                 {
-                    writer.WriteStartElement("connectedBuses");
-                    writer.WriteElementString("name", b1.Name);
+                    writer.WriteStartElement("Module");
+                    writer.WriteElementString("name", m.Name);
+                    writer.WriteElementString("address", m.Address.ToString());
+                    writer.WriteElementString("priority", m.Priority.ToString());
+
+                    //loop through busConnections and add each one to a string
+                    foreach (Bus b1 in m.BusConnections)
+                    {
+                        writer.WriteStartElement("connectedBuses");
+                        writer.WriteElementString("name", b1.Name);
+                        writer.WriteEndElement();
+                    }
                     writer.WriteEndElement();
                 }
-                writer.WriteEndElement();
-            }
-            foreach(CSPBus b in Buses)
-            {
-                writer.WriteStartElement("Bus");
-                writer.WriteElementString("name", b.Name);
-                writer.WriteElementString("dataRate", b.DataRate.ToString());
-                foreach(Module m1 in b.ConnectedModules)
+                foreach (CSPBus b in Buses)
                 {
-                    writer.WriteStartElement("connectedModules");
-                    writer.WriteElementString("name", m1.Name);
-                    writer.WriteElementString("address", m1.Address.ToString());
+                    writer.WriteStartElement("Bus");
+                    writer.WriteElementString("name", b.Name);
+                    writer.WriteElementString("dataRate", b.DataRate.ToString());
+                    foreach (Module m1 in b.ConnectedModules)
+                    {
+                        writer.WriteStartElement("connectedModules");
+                        writer.WriteElementString("name", m1.Name);
+                        writer.WriteElementString("address", m1.Address.ToString());
+                        writer.WriteEndElement();
+                    }
                     writer.WriteEndElement();
                 }
-                writer.WriteEndElement();
+                writer.Flush();
+                writer.Close();
             }
-            writer.Flush();
-            writer.Close();
         }
 
         public void SaveLog()
         {
-            string[] c = EventLog.writeLog();
-            var filepath = Path.Combine(@"..\..\Data\SavedLog");
-            string filePathWithTime = string.Concat(filepath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"),".txt");
-            File.WriteAllLines(filePathWithTime, c);
+            var dlg = new SaveFileDialog();
+            dlg.Title = "Save Log File";
+            dlg.DefaultExt = ".txt";
+            dlg.Filter = "Text files (.txt)|*.txt";
+            dlg.FileName = string.Concat("CubeSatCommSim-Log_", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), ".txt");
+
+            if (dlg.ShowDialog() == true)
+            {
+                string[] c = EventLog.writeLog();
+                //var filepath = Path.Combine(@"..\..\Data\SavedLog");
+                //string filePathWithTime = string.Concat(filepath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), ".txt");
+                //File.WriteAllLines(filePathWithTime, c);
+                File.WriteAllLines(dlg.FileName, c);
+            }
         }
 
         //Executes the event and returns true if the execution should halt
