@@ -331,10 +331,6 @@ namespace CubeSatCommSim.Model
 
                          foreach (Module mo in ModuleResult)
                          {
-                             foreach (XElement xe in doc.Descendants("connectedBus"))
-                             {
-                                mo.ConnectBus(new CSPBus(xe.ToString()));
-                             }
                              Modules.Add(mo);
                          }
 
@@ -354,7 +350,8 @@ namespace CubeSatCommSim.Model
                                                      }
                                                  }*/
                                              };
-
+                        IEnumerable<string> textSegs;
+                        string str;
                          foreach (Bus bo in BusResult)
                          {
                              foreach (XElement xe in doc.Descendants("connectedModules"))
@@ -362,10 +359,19 @@ namespace CubeSatCommSim.Model
                                 //get module where Modules.name == xe.ToString
                                 foreach(Module mod in Modules)
                                 {
+                                    textSegs =
+                                        from seg in xe.Descendants("name")
+                                        select (string)seg;
+
+                                    str = textSegs.Aggregate(new StringBuilder(),
+                                        (sb, i) => sb.Append(i),
+                                        sp => sp.ToString()
+                                    );
+
                                     //add module to bo.ConnectModule(Modules(x))
-                                    if(mod.Name == xe.ToString())
+                                    if (mod.Name.Equals(str))
                                     {
-                                    bo.ConnectModule(mod);
+                                    mod.ConnectBus(bo);
                                     }
                                 }
                              }
