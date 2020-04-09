@@ -331,7 +331,10 @@ namespace CubeSatCommSim.Model
 
                          foreach (Module mo in ModuleResult)
                          {
-                            
+                             foreach (XElement xe in doc.Descendants("connectedBus"))
+                             {
+                                mo.ConnectBus(new CSPBus(xe.ToString()));
+                             }
                              Modules.Add(mo);
                          }
 
@@ -354,6 +357,18 @@ namespace CubeSatCommSim.Model
 
                          foreach (Bus bo in BusResult)
                          {
+                             foreach (XElement xe in doc.Descendants("connectedModules"))
+                             {
+                                //get module where Modules.name == xe.ToString
+                                foreach(Module mod in Modules)
+                                {
+                                    //add module to bo.ConnectModule(Modules(x))
+                                    if(mod.Name == xe.ToString())
+                                    {
+                                    bo.ConnectModule(mod);
+                                    }
+                                }
+                             }
                              Buses.Add(bo);
                          }
                     }
