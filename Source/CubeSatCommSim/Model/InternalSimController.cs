@@ -87,6 +87,7 @@ namespace CubeSatCommSim.Model
         {
             Modules.Clear();
             Buses.Clear();
+            Module.UsedAddresses.Clear();
         }
 
         //Looks through the error list and applies the selected errors to the matching modules
