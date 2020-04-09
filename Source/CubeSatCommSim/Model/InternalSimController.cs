@@ -322,7 +322,7 @@ namespace CubeSatCommSim.Model
                                                  Address = int.Parse(c.Element("address").Value),
                                                  Priority = int.Parse(c.Element("priority").Value),
                                                  BusConnections = new ObservableCollection<Bus>(),
-                                                 //BusConnections.Add(new CSPBus(c.Element("BusConnections").Value)),
+                                                 //BusConnections.Add(new CSPBus(c.Element("connectedBuses").Value)),
                                                  RegisteredErrors = new ObservableCollection<ErrorObject>(),
                                                  Idle = true,
                                                  Crashed = false
@@ -330,9 +330,8 @@ namespace CubeSatCommSim.Model
 
                          foreach (Module mo in ModuleResult)
                          {
-                             ////mo.BusConnections.Add(new CSPBus(("CANBUS")));
-                             //mo.ConnectBus(CSPBus1);
-                             //Modules.Add(mo);
+                            
+                             Modules.Add(mo);
                          }
 
                          //using the selected filename, adds bus to list for bus
