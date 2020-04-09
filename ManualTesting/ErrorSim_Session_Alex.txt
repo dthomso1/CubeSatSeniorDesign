@@ -1,0 +1,34 @@
+=============================================================================================
+CHARTER
+My mission is to test the internal simulation functionality for the CubeSat Communication Simulator
+=============================================================================================
+SETUP
+To be tested:
+- Errors on included modules
+- Errors on not-included modules
+- Errors that fatally affect system
+- Errors that cause packets to be rejected
+
+---------------------------------------------------------------------------------------------
+TEST
+#TEST
+[x] Errors on inculded modules
+	[x] Affect only modules included in the error and as expected
+
+#TEST
+[x] Errors on not-included modules
+	[x] No errors appear within simulation
+
+#TEST
+[x] Errors that fatally affect system
+	[x] System is halted until the script is ran again either manually or by looping the script
+
+#TEST
+[x] Errors that cause packets to be rejected
+	[x] Packet is rejected and script continues
+=============================================================================================
+ISSUES/BUGS
+
+
+=============================================================================================
+DATA FILES

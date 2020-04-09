@@ -1,0 +1,49 @@
+=============================================================================================
+CHARTER
+My mission is to test the missing final operation issue for the CubeSat Communication Simulator internal simulation.
+=============================================================================================
+Start Time:
+2020/03/10 12:55PM
+---------------------------------------------------------------------------------------------
+Duration:
+30 mins
+=============================================================================================
+AREA
+Internal | Module/Bus
+Errors | Not Tested
+=============================================================================================
+SETUP
+Tested on branch: ErrorIntegration
+
+To be tested:
+- The last operation within the .csv input file
+
+
+---------------------------------------------------------------------------------------------
+TEST
+#TEST
+Ensure the last operation (packet transfer) is properly processed in every base case.
+[] Last operation:
+	[] interrupt on the last operation
+	[] new packet transmit on the last operation
+	[] new packet Queued on the last operation
+	[] partly transmitted
+	[] packet dropped:
+		[] due to non-existent destination
+		[] due to zero size
+
+=============================================================================================
+ISSUES/BUGS
+#ISSUE
+Last operation was not run after a packet was dropped on the before last step.
+Not continuing testing because this confirms that its not fixed.
+
+=============================================================================================
+% of the session spent on (total of 100%):
+Charter/Opportunity
+100/0
+--------------------------------------------------
+Test/Setup/Bugs
+70/20/10
+=============================================================================================
+DATA FILES

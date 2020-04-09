@@ -1,0 +1,21 @@
+=============================================================================================
+CHARTER
+My mission is to test the save log functionality for the CubeSat Communication Simulator
+=============================================================================================
+SETUP
+Simulation event log must be functional to test the save feature.
+---------------------------------------------------------------------------------------------
+TEST
+#TEST
+[] 
+
+=============================================================================================
+ISSUES/BUGS
+#ISSUE
+Export sends file to the /bin/Release/Data folder instead of the data root data folder.
+
+#ISSUE
+Import does not count the connections and only import buses and modules.
+
+=============================================================================================
+DATA FILES

@@ -1,0 +1,30 @@
+=============================================================================================
+CHARTER
+My mission is to test the internal simulation functionality for the CubeSat Communication Simulator
+=============================================================================================
+SETUP
+To be tested:
+- Packet Interrupt
+- Packet Queueing
+- Bus transfer rate
+- Packet prioritization
+
+---------------------------------------------------------------------------------------------
+TEST
+#TEST
+[x] Packet dropped
+	[x] Destination Address Not found
+
+#TEST
+[x] Partly transmitted packet
+	[x] Packet on bus taken off by packet from a module with higher priority 
+		and then initial packet put back onto bus to complete
+#TEST
+[x] Transfer Rate
+	[x] Transfer rate and packet size affect the speed at which packets are transfered
+=============================================================================================
+ISSUES/BUGS
+
+
+=============================================================================================
+DATA FILES

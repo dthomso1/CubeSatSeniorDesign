@@ -1,0 +1,56 @@
+=============================================================================================
+CHARTER
+My mission is to test the import and export functionality for the CubeSat Communication Simulator
+=============================================================================================
+SETUP
+Tests for import and export are based on the xml structure designed for these functions.
+XML Format:
+
+<ModulesAndBuses>
+	<Module>
+		<name></name>
+		<address></address>
+		<priority></priority>
+		<connectedBuses>
+			<name></name>
+		</connectedBuses>
+	</Module>
+	<Bus>
+		<name></name>
+		<connectedModules>
+			<name></name>
+			<address></address>
+		</connectedModules>
+	</Bus>
+</ModulesAndBuses>
+
+---------------------------------------------------------------------------------------------
+TEST
+#TEST
+[*] Ensure import properly reads:
+	[*] Module name and address
+	[*] Buses in the correct order with appropriate name.
+	[*] Modules are connections to specified buses
+[*] Ensure export properly exports (in the xml format as show above):
+	[*] Module name and address with their Bus connections
+	[*] Buse names with their Module connections
+
+#TEST
+[*] Ensure values match for
+	[*] Import of Bus Data rates
+	[*] Export of Bus Data rates
+
+=============================================================================================
+ISSUES/BUGS
+#ISSUE (Fixed)
+Export sends file to the /bin/Release/Data folder instead of the data root data folder.
+
+#ISSUE (fixed)
+Import does not count the connections and only import buses and modules.
+
+#ISSUE (fixed)
+Export and Import do not take care of Data Rate
+-> (solution) user needs to input Data Rate after importing
+
+=============================================================================================
+DATA FILES
