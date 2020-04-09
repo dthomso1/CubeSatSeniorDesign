@@ -64,7 +64,7 @@
                 <MenuItem Header="Placeholder 2"/>
                 <MenuItem Header="Placeholder 3"/>
             </-->
-            <MenuItem IsEnabled="False" Header="Help" Height="20">
+            <MenuItem Header="Help" Height="20" Click="HelpMenu_Click">
             </MenuItem>
         </Menu>
 

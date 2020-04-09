@@ -7,7 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <DataGrid Name="ErrorGrid" 
+        <DataGrid Name="ErrorGrid"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
                   AutoGenerateColumns="False"
                   ItemsSource="{Binding ErrorList}">
 
