@@ -362,7 +362,7 @@ namespace CubeSatCommSim.Model
                                 foreach(Bus bu in Buses)
                                 {
                                     //add module to bo.ConnectModule(Modules(x))
-                                    if((string.Compare(bu.Name, xe.ToString())) == 0 )
+                                    if((string.Equals(bu.Name, xe.ToString())))
                                     {
                                         mo.ConnectBus(bu);
                                     }
@@ -406,9 +406,9 @@ namespace CubeSatCommSim.Model
                 //loop through busConnections and add each one to a string
                 foreach(Bus b1 in m.BusConnections)
                 {
-                    //writer.WriteStartElement("connectedBuses");
-                    writer.WriteElementString("connectedBuses", b1.Name);
-                    //writer.WriteEndElement();
+                    writer.WriteStartElement("connectedBuses");
+                    writer.WriteElementString("name", b1.Name);
+                    writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
             }
@@ -418,10 +418,10 @@ namespace CubeSatCommSim.Model
                 writer.WriteElementString("name", b.Name);
                 foreach(Module m1 in b.ConnectedModules)
                 {
-                    //writer.WriteStartElement("connectedModules");
-                    writer.WriteElementString("connectedModules", m1.Name);
+                    writer.WriteStartElement("connectedModules");
+                    writer.WriteElementString("name", m1.Name);
                     writer.WriteElementString("address", m1.Address.ToString());
-                    //writer.WriteEndElement();
+                    writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
             }
