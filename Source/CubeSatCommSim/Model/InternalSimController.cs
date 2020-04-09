@@ -351,21 +351,9 @@ namespace CubeSatCommSim.Model
                              Modules.Add(mo);
                         }
                         foreach (Bus bo in BusResult)
-                         {
-                             foreach (XElement xe in doc.Descendants("connectedModules"))
-                             {
-                                //get module where Modules.name == xe.ToString
-                                foreach(Module mod in Modules)
-                                {
-                                    //add module to bo.ConnectModule(Modules(x))
-                                    if(mod.Name == xe.ToString())
-                                    {
-                                    bo.ConnectModule(mod);
-                                    }
-                                }
-                             }
-                             Buses.Add(bo);
-                         }
+                        {
+                            Buses.Add(bo);
+                        }
                         foreach (Module mo in ModuleResult)
                         {
                              foreach (XElement xe in doc.Descendants("connectedBus"))
@@ -418,9 +406,9 @@ namespace CubeSatCommSim.Model
                 //loop through busConnections and add each one to a string
                 foreach(Bus b1 in m.BusConnections)
                 {
-                    writer.WriteStartElement("connectedBuses");
-                    writer.WriteElementString("name", b1.Name);
-                    writer.WriteEndElement();
+                    //writer.WriteStartElement("connectedBuses");
+                    writer.WriteElementString("connectedBuses", b1.Name);
+                    //writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
             }
@@ -430,10 +418,10 @@ namespace CubeSatCommSim.Model
                 writer.WriteElementString("name", b.Name);
                 foreach(Module m1 in b.ConnectedModules)
                 {
-                    writer.WriteStartElement("connectedModules");
-                    writer.WriteElementString("name", m1.Name);
+                    //writer.WriteStartElement("connectedModules");
+                    writer.WriteElementString("connectedModules", m1.Name);
                     writer.WriteElementString("address", m1.Address.ToString());
-                    writer.WriteEndElement();
+                    //writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
             }
