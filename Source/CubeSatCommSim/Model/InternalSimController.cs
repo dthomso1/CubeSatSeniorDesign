@@ -340,15 +340,8 @@ namespace CubeSatCommSim.Model
                                              select new CSPBus()
                                              {
                                                  Name = c.Element("name").Value,
+                                                 DataRate = int.Parse(c.Element("dataRate").Value),
                                                  ConnectedModules = new ObservableCollection<Module>()
-                                                 /*{
-                                                     from b in doc.Descendants("connectedModules")
-                                                     select new Module()
-                                                     {
-                                                        Name = b.Element("name").Value,
-                                                        Address = int.Parse(b.Element("address").Value),
-                                                     }
-                                                 }*/
                                              };
                         IEnumerable<string> textSegs;
                         string str;
@@ -418,10 +411,11 @@ namespace CubeSatCommSim.Model
                 }
                 writer.WriteEndElement();
             }
-            foreach(Bus b in Buses)
+            foreach(CSPBus b in Buses)
             {
                 writer.WriteStartElement("Bus");
                 writer.WriteElementString("name", b.Name);
+                writer.WriteElementString("dataRate", b.DataRate.ToString());
                 foreach(Module m1 in b.ConnectedModules)
                 {
                     writer.WriteStartElement("connectedModules");

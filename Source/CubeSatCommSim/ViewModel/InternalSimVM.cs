@@ -152,7 +152,7 @@ namespace CubeSatCommSim.ViewModel
 
         public void AddBus()
         {
-            CSPBus b = new CSPBus("New bus");
+            CSPBus b = new CSPBus("New bus", 1);
             CSPBusVM vm = new CSPBusVM(b);
             AddBusDialog dlg = new AddBusDialog();
             dlg.DataContext = vm;
